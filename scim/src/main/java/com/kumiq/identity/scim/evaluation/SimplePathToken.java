@@ -1,0 +1,51 @@
+package com.kumiq.identity.scim.evaluation;
+
+import org.springframework.util.Assert;
+
+import java.util.Map;
+
+import static com.kumiq.identity.scim.utils.TypeUtils.*;
+
+/**
+ * A simple path token indicating a key on the map.
+ *
+ * @author Weinan Qiu
+ * @since 1.0.0
+ */
+public class SimplePathToken extends PathToken {
+
+    private final String pathFragment;
+
+    public SimplePathToken(String pathFragment) {
+        super();
+        this.pathFragment = pathFragment;
+    }
+
+    @Override
+    public EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+        Object value = cursor.get(pathFragment);
+
+        if (!isLeaf()) {
+            if (value == null) {
+                return new EvaluationContext(root);
+            } else {
+                Assert.isTrue(this.getNext().size() == 1, "Multiple next found. Evaluation should only deal with linked list.");
+                Assert.isTrue(isMap(value), "Evaluation cannot continue as map is not the result of evaluation for a non-leaf token.");
+                return this.getNext().get(0).evaluate(root, asMap(value));
+            }
+        } else {
+            EvaluationContext context = new EvaluationContext(root);
+            context.setValue(value);
+            return context;
+        }
+    }
+
+    @Override
+    public String pathFragment() {
+        return this.pathFragment;
+    }
+
+    public String getPathFragment() {
+        return pathFragment;
+    }
+}

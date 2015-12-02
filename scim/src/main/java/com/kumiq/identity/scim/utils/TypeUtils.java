@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.utils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author Weinan Qiu
@@ -29,6 +30,10 @@ public class TypeUtils {
 
     public static boolean isDate(Object object) {
         return object instanceof Date;
+    }
+
+    public static boolean isMap(Object object) {
+        return object instanceof Map;
     }
 
     public static boolean isComplex(Object object) {
@@ -61,5 +66,11 @@ public class TypeUtils {
         if (!isDate(object))
             throw new IllegalArgumentException(object.toString() + " cannot be cast to date");
         return (Date) object;
+    }
+
+    public static Map asMap(Object object) {
+        if (!isMap(object))
+            throw new IllegalArgumentException(object.toString() + " cannot be cast to map");
+        return (Map) object;
     }
 }

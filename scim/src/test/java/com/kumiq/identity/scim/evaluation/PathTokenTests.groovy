@@ -1,0 +1,79 @@
+package com.kumiq.identity.scim.evaluation
+
+import org.junit.Assert
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
+
+/**
+ *
+ *
+ * @author Weinan Qiu
+ * @since 1.0.0
+ */
+@RunWith(JUnit4)
+class PathTokenTests {
+
+    @Test
+    void testPathTokenAppending() {
+        PathToken first = createSimpleTokenList()
+
+        Assert.assertTrue(first.isRoot())
+        Assert.assertFalse(first.isLeaf())
+
+        Assert.assertFalse(first.next[0].isRoot())
+        Assert.assertFalse(first.next[0].isLeaf())
+
+        Assert.assertFalse(first.next[0].next[0].isRoot())
+        Assert.assertTrue(first.next[0].next[0].isLeaf())
+    }
+
+    @Test
+    void testPathTokenReplacement() {
+        PathToken first = createSimpleTokenList()
+        first.replaceTokens(first.next[0], [PathTokenFactory.simplePathToken('second-1'), PathTokenFactory.simplePathToken('second-2')])
+
+        Assert.assertEquals(2, first.next.size())
+        Assert.assertEquals('second-1', first.next[0].pathFragment())
+        Assert.assertEquals('second-2', first.next[1].pathFragment())
+        Assert.assertEquals('third', first.next[0].next[0].pathFragment())
+        Assert.assertEquals('third', first.next[1].next[0].pathFragment())
+    }
+
+    @Test
+    void testSimpleTokenListEvaluation() {
+        PathToken first = createSimpleTokenList()
+        Map root = [
+                'first': [
+                        'second': [
+                                'third': 'foo'
+                        ]
+                ]
+        ]
+        EvaluationContext context = first.evaluate(root, root)
+        Assert.assertEquals('foo', context.getValue())
+    }
+
+    @Test
+    void testSimpleTokenListEvaluationExistPremature() {
+        PathToken first = createSimpleTokenList()
+        Map root = [
+                'first': [
+                        'second': [:]
+                ]
+        ]
+        EvaluationContext context = first.evaluate(root, root)
+        Assert.assertNull(context.getValue())
+    }
+
+    private static PathToken createSimpleTokenList() {
+        PathToken first = PathTokenFactory.simplePathToken('first')
+        PathToken second = PathTokenFactory.simplePathToken('second')
+        PathToken third = PathTokenFactory.simplePathToken('third')
+
+        first.appendToken(second)
+        second.appendToken(third)
+
+        return first;
+    }
+}

@@ -27,6 +27,8 @@ public abstract class PathToken {
 
     public abstract String pathFragment();
 
+    public abstract EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor);
+
     public void appendToken(PathToken pathToken) {
         if (this.next == null)
             this.next = new LinkedList<>();
@@ -49,6 +51,10 @@ public abstract class PathToken {
 
         next.addAll(newTokens);
         next.remove(originalToken);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public List<PathToken> getNext() {
