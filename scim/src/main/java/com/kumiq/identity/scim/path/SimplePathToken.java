@@ -22,19 +22,19 @@ public class SimplePathToken extends PathToken {
     }
 
     @Override
-    public EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+    public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
         Object value = cursor.get(pathFragment);
 
         if (!isLeaf()) {
             if (value == null) {
-                return new EvaluationContext(root);
+                return new PathEvaluationContext(root);
             } else {
                 Assert.isTrue(this.getNext().size() == 1, "Multiple next found. Evaluation should only deal with linked list.");
                 Assert.isTrue(isMap(value), "Evaluation cannot continue as map is not the result of evaluation for a non-leaf token.");
                 return this.getNext().get(0).evaluate(root, asMap(value));
             }
         } else {
-            EvaluationContext context = new EvaluationContext(root);
+            PathEvaluationContext context = new PathEvaluationContext(root);
             context.setValue(value);
             return context;
         }

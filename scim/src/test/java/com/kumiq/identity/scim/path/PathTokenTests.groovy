@@ -50,7 +50,7 @@ class PathTokenTests {
                         ]
                 ]
         ]
-        EvaluationContext context = first.evaluate(root, root)
+        PathEvaluationContext context = first.evaluate(root, root)
         Assert.assertEquals('foo', context.getValue())
     }
 
@@ -62,7 +62,7 @@ class PathTokenTests {
                         'second': [:]
                 ]
         ]
-        EvaluationContext context = first.evaluate(root, root)
+        PathEvaluationContext context = first.evaluate(root, root)
         Assert.assertNull(context.getValue())
     }
 
@@ -77,7 +77,7 @@ class PathTokenTests {
                         ]
                 ]
         ]
-        EvaluationContext context = first.evaluate(root, root)
+        PathEvaluationContext context = first.evaluate(root, root)
         Assert.assertEquals('bar', context.getValue())
     }
 

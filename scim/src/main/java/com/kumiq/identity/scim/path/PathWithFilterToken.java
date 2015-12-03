@@ -24,7 +24,7 @@ public class PathWithFilterToken extends SimplePathToken {
     }
 
     @Override
-    public EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+    public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
         throw new RuntimeException("PathWithFilterToken does not support evaluation. Compile it to PathWithIndexToken instead.");
     }
 

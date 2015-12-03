@@ -32,9 +32,9 @@ public class PathWithIndexToken extends SimplePathToken {
     }
 
     @Override
-    public EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+    public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
         if (cursor.get(pathComponent) == null) {
-            return new EvaluationContext(root);
+            return new PathEvaluationContext(root);
         }
 
         Assert.isTrue(isList(cursor.get(pathComponent)), "Evaluation cannot continue as list cannot be resolved");
@@ -46,7 +46,7 @@ public class PathWithIndexToken extends SimplePathToken {
 
             return this.getNext().get(0).evaluate(root, asMap(value));
         } else {
-            EvaluationContext context = new EvaluationContext(root);
+            PathEvaluationContext context = new PathEvaluationContext(root);
             context.setValue(value);
             return context;
         }
