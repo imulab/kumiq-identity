@@ -1,9 +1,6 @@
 package com.kumiq.identity.scim.evaluation;
 
-import org.springframework.util.Assert;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 
 /**
  * A path token with filter component after the path
@@ -13,20 +10,46 @@ import java.util.regex.Pattern;
  */
 public class PathWithFilterToken extends SimplePathToken {
 
-    private static final Pattern pattern = Pattern.compile("(.*?)\\[(.*?)\\]");
-
     private final String pathComponent;
     private final String filterComponent;
 
     public PathWithFilterToken(String pathWithFilter) {
         super(pathWithFilter);
-        Matcher matcher = pattern.matcher(pathWithFilter);
-        if (matcher.find()) {
-            Assert.isTrue(matcher.groupCount() == 3, pathWithFilter + " is not a valid path with filter token");
-            this.pathComponent = matcher.group(1);
-            this.filterComponent = matcher.group(2);
-        } else {
+        try {
+            this.pathComponent = pathWithFilter.split("\\[")[0];
+            this.filterComponent = pathWithFilter.split("\\[")[1].split("]")[0];
+        } catch (Exception ex) {
             throw new IllegalArgumentException(pathWithFilter + " is not a valid path with filter token");
         }
+    }
+
+    @Override
+    public EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+        throw new RuntimeException("PathWithFilterToken does not support evaluation. Compile it to PathWithIndexToken instead.");
+    }
+
+    @Override
+    public PathToken cloneSelfAndDownStream(PathToken prev) {
+        PathWithFilterToken cloned = (PathWithFilterToken) cloneSelfSimple();
+        cloned.setPrev(prev);
+        if (this.getNext() != null) {
+            for (PathToken next : this.getNext()) {
+                cloned.appendToken(next.cloneSelfAndDownStream(cloned));
+            }
+        }
+        return cloned;
+    }
+
+    @Override
+    public PathToken cloneSelfSimple() {
+        return new PathWithFilterToken(super.pathFragment());
+    }
+
+    public String getPathComponent() {
+        return pathComponent;
+    }
+
+    public String getFilterComponent() {
+        return filterComponent;
     }
 }

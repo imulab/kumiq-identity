@@ -41,6 +41,23 @@ public class SimplePathToken extends PathToken {
     }
 
     @Override
+    public PathToken cloneSelfAndDownStream(PathToken prev) {
+        SimplePathToken cloned = (SimplePathToken) cloneSelfSimple();
+        cloned.setPrev(prev);
+        if (this.getNext() != null) {
+            for (PathToken next : this.getNext()) {
+                cloned.appendToken(next.cloneSelfAndDownStream(cloned));
+            }
+        }
+        return cloned;
+    }
+
+    @Override
+    public PathToken cloneSelfSimple() {
+        return new SimplePathToken(this.pathFragment);
+    }
+
+    @Override
     public String pathFragment() {
         return this.pathFragment;
     }

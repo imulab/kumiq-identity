@@ -8,6 +8,10 @@ package com.kumiq.identity.scim.evaluation;
  */
 public class PathTokenFactory {
 
+    public static PathToken root() {
+        return new PathRoot();
+    }
+
     public static PathToken simplePathToken(String path) {
         return new SimplePathToken(path);
     }

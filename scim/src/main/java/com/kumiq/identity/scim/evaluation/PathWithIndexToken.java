@@ -2,8 +2,10 @@ package com.kumiq.identity.scim.evaluation;
 
 import org.springframework.util.Assert;
 
-import java.util.regex.Matcher;
+import java.util.Map;
 import java.util.regex.Pattern;
+
+import static com.kumiq.identity.scim.utils.TypeUtils.*;
 
 /**
  * A path token with index component after the path
@@ -13,20 +15,65 @@ import java.util.regex.Pattern;
  */
 public class PathWithIndexToken extends SimplePathToken {
 
-    private static final Pattern pattern = Pattern.compile("(.*?)\\[([0-9]+)\\]");
+    private static final Pattern pattern = Pattern.compile("(.*?)\\[(.*?)\\]");
 
     private final String pathComponent;
     private final Integer indexComponent;
 
     public PathWithIndexToken(String pathWithIndex) {
         super(pathWithIndex);
-        Matcher matcher = pattern.matcher(pathWithIndex);
-        if (matcher.find()) {
-            Assert.isTrue(matcher.groupCount() == 3, pathWithIndex + " is not a valid path with index token");
-            this.pathComponent = matcher.group(1);
-            this.indexComponent = Integer.parseInt(matcher.group(2));
-        } else {
+
+        try {
+            this.pathComponent = pathWithIndex.split("\\[")[0];
+            this.indexComponent = Integer.parseInt(pathWithIndex.split("\\[")[1].split("]")[0]);
+        } catch (Exception ex) {
             throw new IllegalArgumentException(pathWithIndex + " is not a valid path with index token");
         }
+    }
+
+    @Override
+    public EvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+        if (cursor.get(pathComponent) == null) {
+            return new EvaluationContext(root);
+        }
+
+        Assert.isTrue(isList(cursor.get(pathComponent)), "Evaluation cannot continue as list cannot be resolved");
+        Object value = asList(cursor.get(pathComponent)).get(indexComponent);
+
+        if (!isLeaf()) {
+            Assert.isTrue(this.getNext().size() == 1, "Multiple next found. Evaluation should only deal with linked list.");
+            Assert.isTrue(isMap(value), "Evaluation cannot continue as map is not the result of evaluation for a non-leaf token.");
+
+            return this.getNext().get(0).evaluate(root, asMap(value));
+        } else {
+            EvaluationContext context = new EvaluationContext(root);
+            context.setValue(value);
+            return context;
+        }
+    }
+
+    @Override
+    public PathToken cloneSelfAndDownStream(PathToken prev) {
+        PathWithIndexToken cloned = (PathWithIndexToken) cloneSelfSimple();
+        cloned.setPrev(prev);
+        if (this.getNext() != null) {
+            for (PathToken next : this.getNext()) {
+                cloned.appendToken(next.cloneSelfAndDownStream(cloned));
+            }
+        }
+        return cloned;
+    }
+
+    @Override
+    public PathToken cloneSelfSimple() {
+        return new PathWithIndexToken(super.pathFragment());
+    }
+
+    public String getPathComponent() {
+        return pathComponent;
+    }
+
+    public Integer getIndexComponent() {
+        return indexComponent;
     }
 }
