@@ -1,13 +1,11 @@
-package com.kumiq.identity.scim.evaluation;
+package com.kumiq.identity.scim.path;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.kumiq.identity.scim.resource.constant.ScimConstants.*;
-
 /**
- * Generic tokenizer providing functionality for {@link com.kumiq.identity.scim.evaluation.Tokenizer.PathTokenizer}
+ * Generic tokenizer providing functionality for {@link com.kumiq.identity.scim.path.Tokenizer.PathTokenizer}
  *
  *
  * Subclass can call {@code nextSequence} to obtain the next token and call {@link i}

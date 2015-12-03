@@ -1,4 +1,4 @@
-package com.kumiq.identity.scim.evaluation;
+package com.kumiq.identity.scim.path;
 
 import java.util.*;
 

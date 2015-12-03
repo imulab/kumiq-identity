@@ -1,4 +1,4 @@
-package com.kumiq.identity.scim.evaluation;
+package com.kumiq.identity.scim.path;
 
 /**
  * Simple factory for {@link PathToken}
