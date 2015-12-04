@@ -56,4 +56,8 @@ public class ValueNodeFactory {
     public static ValueNode.ObjectNode objectNode(Object value) {
         return new ValueNode.ObjectNode(value);
     }
+
+    public static ValueNode.PredicateNode predicateNode(Predicate predicate) {
+        return new ValueNode.PredicateNode(predicate);
+    }
 }

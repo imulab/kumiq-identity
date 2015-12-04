@@ -52,23 +52,23 @@ public abstract class ExpressionNode<T> implements Predicate {
     /**
      * A node presenting a logical expression, usually AND, OR and NOT.
      */
-    public static class LogicalExpressionNode extends ExpressionNode<LogicalExpressionNode> {
+    public static class LogicalExpressionNode extends ExpressionNode<Predicate> {
 
         private final LogicalOperator operator;
 
-        public static LogicalExpressionNode andNode(LogicalExpressionNode left, LogicalExpressionNode right) {
+        public static LogicalExpressionNode andNode(Predicate left, Predicate right) {
             return new LogicalExpressionNode(left, LogicalOperator.AND, right);
         }
 
-        public static LogicalExpressionNode orNode(LogicalExpressionNode left, LogicalExpressionNode right) {
+        public static LogicalExpressionNode orNode(Predicate left, Predicate right) {
             return new LogicalExpressionNode(left, LogicalOperator.OR, right);
         }
 
-        public static LogicalExpressionNode notNode(LogicalExpressionNode left) {
+        public static LogicalExpressionNode notNode(Predicate left) {
             return new LogicalExpressionNode(left, LogicalOperator.NOT, null);
         }
 
-        public LogicalExpressionNode(LogicalExpressionNode left, LogicalOperator operator, LogicalExpressionNode right) {
+        public LogicalExpressionNode(Predicate left, LogicalOperator operator, Predicate right) {
             super(operator.getOperatorString());
             Assert.isTrue(LogicalOperator.AND == operator
                     || LogicalOperator.OR == operator

@@ -10,7 +10,7 @@ public enum LogicalOperator implements OperatorAware {
 
     AND(ScimConstants.FILTER_AND, DEFAULT_PRECEDENCE, Associtivity.LEFT),
     OR(ScimConstants.FILTER_OR, DEFAULT_PRECEDENCE, Associtivity.LEFT),
-    NOT(ScimConstants.FILTER_NOT, DEFAULT_PRECEDENCE, Associtivity.LEFT);
+    NOT(ScimConstants.FILTER_NOT, DEFAULT_PRECEDENCE, Associtivity.RIGHT);
 
     private final String operatorString;
     private final int precedence;

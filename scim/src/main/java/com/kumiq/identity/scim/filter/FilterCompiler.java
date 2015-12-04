@@ -94,7 +94,8 @@ public class FilterCompiler {
     private Queue<FilterToken> popFromOperatorStackWithPrecedenceNoLessThan(int precedence) {
         Queue<FilterToken> queue = new LinkedList<>();
         try {
-            for (FilterToken first = this.operatorStack.peek(); this.operatorStack.size() > 0; first = this.operatorStack.peek()) {
+            while (this.operatorStack.size() > 0) {
+                FilterToken first = this.operatorStack.peek();
                 if (first.isOperator()) {
                     if (((OperatorAware) first).precedence() >= precedence)
                         queue.add(this.operatorStack.pop());
@@ -142,20 +143,28 @@ public class FilterCompiler {
                 fail();
 
             if (isPrNode(filterToken) || isNotNode(filterToken)) {
-                ((ExpressionNode) filterToken).setLeft(firstToken);
-                ((ExpressionNode) filterToken).setRight(ValueNodeFactory.nullNode());
+                setChildren((ExpressionNode) filterToken, firstToken, ValueNodeFactory.nullNode());
             } else {
-                ((ExpressionNode) filterToken).setRight(firstToken);
                 FilterToken secondToken = this.outputStack.pop();
                 if (secondToken == null)
                     fail();
-                ((ExpressionNode) filterToken).setLeft(secondToken);
+                setChildren((ExpressionNode) filterToken, secondToken, firstToken);
             }
         } else if (filterToken.isParenthesis()) {
             fail();
         }
 
         this.outputStack.push(filterToken);
+    }
+
+    private void setChildren(ExpressionNode father, FilterToken left, FilterToken right) {
+        if (father instanceof ExpressionNode.RelationalExpressionNode && left instanceof Predicate)
+            left = ValueNodeFactory.predicateNode((Predicate) left);
+        if (father instanceof ExpressionNode.RelationalExpressionNode && right instanceof Predicate)
+            right = ValueNodeFactory.predicateNode((Predicate) right);
+
+        father.setLeft(left);
+        father.setRight(right);
     }
 
     private boolean isPrNode(FilterToken token) {

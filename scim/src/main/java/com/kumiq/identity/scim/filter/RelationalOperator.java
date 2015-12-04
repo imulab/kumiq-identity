@@ -41,7 +41,7 @@ public enum RelationalOperator implements OperatorAware {
 
     public static RelationalOperator fromString(String operatorString){
         for (RelationalOperator operator : RelationalOperator.values()) {
-            if(operator.operatorString.equals(operatorString.toUpperCase()) ){
+            if(operator.operatorString.toUpperCase().equals(operatorString.toUpperCase()) ){
                 return operator;
             }
         }
