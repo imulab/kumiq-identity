@@ -1,11 +1,8 @@
 package com.kumiq.identity.scim.filter;
 
-import com.kumiq.identity.scim.utils.ValueUtils;
-
 import java.text.ParseException;
 
 import static com.kumiq.identity.scim.utils.ValueUtils.*;
-import static com.kumiq.identity.scim.utils.ValueUtils.isQuoted;
 
 /**
  * @author Weinan Qiu
@@ -13,22 +10,19 @@ import static com.kumiq.identity.scim.utils.ValueUtils.isQuoted;
  */
 public class ValueNodeFactory {
 
-    public static ValueNode node(Object object) {
-        if (object == null)
-            return nullNode();
-
-        String value = object.toString();
-        if (isQuoted(value)) {
-            if (valueIsDate(stripQuotes(value)))
-                return dateNode(value);
+    public static ValueNode nodeFromFilterToken(String token) {
+        if (isQuoted(token)) {
+            if (valueIsDate(token))
+                return dateNode(token);
             else
-                return stringNode(value);
-        } else if (valueIsBoolean(value))
-            return booleanNode(value);
-        else if (valueIsNumber(value))
-            return numberNode(value);
-        else
-            return pathNode(value);
+                return stringNode(token);
+        } else if (valueIsBoolean(token)) {
+            return booleanNode(token);
+        } else if (valueIsNumber(token)) {
+            return numberNode(token);
+        } else {
+            return pathNode(token);
+        }
     }
 
     public static ValueNode.StringNode stringNode(String value) {
@@ -57,5 +51,9 @@ public class ValueNodeFactory {
 
     public static ValueNode.PathNode pathNode(String value) {
         return new ValueNode.PathNode(value);
+    }
+
+    public static ValueNode.ObjectNode objectNode(Object value) {
+        return new ValueNode.ObjectNode(value);
     }
 }

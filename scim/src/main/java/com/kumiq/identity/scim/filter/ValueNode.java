@@ -7,6 +7,8 @@ import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.utils.ValueUtils;
 import com.kumiq.identity.scim.utils.TypeUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -30,6 +32,11 @@ public abstract class ValueNode implements FilterToken {
         this.faceValue = faceValue;
     }
 
+    @Override
+    public boolean isOperand() {
+        return true;
+    }
+
     public String getFaceValue() {
         return faceValue;
     }
@@ -44,6 +51,12 @@ public abstract class ValueNode implements FilterToken {
     }
 
     public StringNode asStringNode() {
+        throw new RuntimeException("not supported");
+    }
+
+    public abstract boolean isValuePresent();
+
+    public int compareTo(ValueNode that) {
         throw new RuntimeException("not supported");
     }
 
@@ -129,6 +142,37 @@ public abstract class ValueNode implements FilterToken {
             StringNode that = (StringNode) obj;
             return !(value != null ? !value.equals(that.value) : that.value != null);
         }
+
+        public boolean contains(StringNode that) {
+            return this.value != null &&
+                    that.value != null &&
+                    this.value.contains(that.value);
+        }
+
+        public boolean startsWith(StringNode that) {
+            return this.value != null &&
+                    that.value != null &&
+                    this.value.startsWith(that.value);
+        }
+
+        public boolean endsWith(StringNode that) {
+            return this.value != null &&
+                    that.value != null &&
+                    this.value.endsWith(that.value);
+        }
+
+        @Override
+        public boolean isValuePresent() {
+            return !StringUtils.isEmpty(this.value);
+        }
+
+        @Override
+        public int compareTo(ValueNode that) {
+            if (that.isStringNode()) {
+                return this.value.compareTo(that.asStringNode().value);
+            }
+            throw new RuntimeException("not supported");
+        }
     }
 
     /**
@@ -167,6 +211,19 @@ public abstract class ValueNode implements FilterToken {
             DateNode that = (DateNode) obj;
             return this.date != null && that.date != null && this.date.equals(that.date);
         }
+
+        @Override
+        public boolean isValuePresent() {
+            return date != null;
+        }
+
+        @Override
+        public int compareTo(ValueNode that) {
+            if (that.isDateNode()) {
+                return this.date.compareTo(that.asDateNode().date);
+            }
+            throw new RuntimeException("not supported");
+        }
     }
 
     /**
@@ -202,6 +259,19 @@ public abstract class ValueNode implements FilterToken {
 
             NumberNode that = (NumberNode) obj;
             return this.number != null && that.number != null && this.number.compareTo(that.number) == 0;
+        }
+
+        @Override
+        public boolean isValuePresent() {
+            return number != null;
+        }
+
+        @Override
+        public int compareTo(ValueNode that) {
+            if (that.isNumberNode()) {
+                return this.number.compareTo(that.asNumberNode().number);
+            }
+            throw new RuntimeException("not supported");
         }
     }
 
@@ -240,6 +310,11 @@ public abstract class ValueNode implements FilterToken {
 
             return !(value != null ? !value.equals(that.value) : that.value != null);
         }
+
+        @Override
+        public boolean isValuePresent() {
+            return value != null;
+        }
     }
 
     /**
@@ -267,6 +342,40 @@ public abstract class ValueNode implements FilterToken {
             if (!(o instanceof NullNode)) return false;
 
             return true;
+        }
+
+        @Override
+        public boolean isValuePresent() {
+            return false;
+        }
+    }
+
+    /**
+     * A value node representing a generic object
+     */
+    public static class ObjectNode extends ValueNode {
+        private final Object object;
+
+        public ObjectNode(Object object) {
+            super(object.toString());
+            this.object = object;
+        }
+
+        public Object getObject() {
+            return object;
+        }
+
+        @Override
+        public boolean isValuePresent() {
+            if (object == null)
+                return false;
+
+            if (TypeUtils.isCollection(object))
+                return CollectionUtils.isEmpty(TypeUtils.asCollection(object));
+            else if (TypeUtils.isMap(object))
+                return CollectionUtils.isEmpty(TypeUtils.asMap(object));
+            else
+                return true;
         }
     }
 
@@ -305,6 +414,11 @@ public abstract class ValueNode implements FilterToken {
         public boolean equals(Object obj) {
             return false;
         }
+
+        @Override
+        public boolean isValuePresent() {
+            return true;
+        }
     }
 
     /**
@@ -341,7 +455,7 @@ public abstract class ValueNode implements FilterToken {
             } else if (TypeUtils.isBoolean(value)) {
                 return ValueNodeFactory.booleanNode(ValueUtils.asScimBoolean(TypeUtils.asBoolean(value)));
             } else {
-                throw new RuntimeException(value.toString() + " is not a supported value node");
+                return ValueNodeFactory.objectNode(value);
             }
         }
 
@@ -358,6 +472,11 @@ public abstract class ValueNode implements FilterToken {
         @Override
         public boolean equals(Object obj) {
             return false;
+        }
+
+        @Override
+        public boolean isValuePresent() {
+            return true;
         }
     }
 }

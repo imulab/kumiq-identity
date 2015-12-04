@@ -49,6 +49,8 @@ public class ScimConstants {
     public static final String REF_TYPE_USER = "User";
     public static final String REF_TYPE_GROUP = "Group";
 
+    public static final String FILTER_LEFT_BRACKET = "(";
+    public static final String FILTER_RIGHT_BRACKET = ")";
     public static final String FILTER_AND = "and";
     public static final String FILTER_OR = "or";
     public static final String FILTER_NOT = "not";

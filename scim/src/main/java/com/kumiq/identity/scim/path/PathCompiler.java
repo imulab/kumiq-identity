@@ -1,9 +1,15 @@
 package com.kumiq.identity.scim.path;
 
+import com.kumiq.identity.scim.filter.FilterCompiler;
+import com.kumiq.identity.scim.filter.Predicate;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static com.kumiq.identity.scim.utils.TypeUtils.*;
 
@@ -46,7 +52,10 @@ public class PathCompiler {
         PathToken pathRoot = tokens.get(0);
         traverseAndReplace(pathRoot, data);
 
-        return null;
+        List<List<PathToken>> paths = new ArrayList<>();
+        pathRoot.traverse(paths);
+        paths.forEach(PathToken::linkTokenList);
+        return paths.stream().map(pathTokens -> pathTokens.get(0)).collect(Collectors.toList());
     }
 
     /**
@@ -103,10 +112,26 @@ public class PathCompiler {
         Assert.isTrue(!result.isPresent(), "Cloned path cannot contain another token with filter before the one supplied to evaluate.");
 
         Object value = clonedRoot.evaluate(data, data);
-        Assert.isTrue(isList(value), "evaluation didn't result in list.");
-        //asList(value).stream().filter()
+        Assert.isTrue(isMap(value));
+        Assert.isTrue(isList(asMap(value).get(token.getPathComponent())));
+        List list = asList(asMap(value).get(token.getPathComponent()));
+        if (list.size() == 0)
+            return new ArrayList<>();
 
-        return new ArrayList<>();
+        List<Integer> qualifiedIndex = new ArrayList<>();
+        Predicate predicate = FilterCompiler.compile(token.getFilterComponent());
+        for (int i = 0; i < list.size(); i++) {
+            if (isMap(list.get(i))) {
+                if (predicate.apply(asMap(list.get(i)))) {
+                    qualifiedIndex.add(i);
+                }
+            }
+        }
+
+        return qualifiedIndex
+                .stream()
+                .map(integer -> new PathWithIndexToken(token.getPathComponent() + "[" + integer + "]"))
+                .collect(Collectors.toList());
     }
 
     private boolean containsFilter(String token) {

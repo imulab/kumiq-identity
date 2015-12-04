@@ -72,6 +72,14 @@ public class ValueUtils {
         return quotedValue;
     }
 
+    public static String stripSquareBrackets(String value) {
+        while (value.startsWith("["))
+            value = value.substring(1);
+        while (value.endsWith("]"))
+            value = value.substring(0, value.length() - 1);
+        return value;
+    }
+
     public static boolean isQuoted(String value) {
         return value.startsWith("\"") || value.endsWith("\"");
     }

@@ -1,6 +1,7 @@
 package com.kumiq.identity.scim.utils;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,10 @@ public class TypeUtils {
 
     public static boolean isList(Object object) {
         return object instanceof List;
+    }
+
+    public static boolean isCollection(Object object) {
+        return object instanceof Collection;
     }
 
     public static boolean isComplex(Object object) {
@@ -98,5 +103,11 @@ public class TypeUtils {
         if (!isList(object))
             throw new IllegalArgumentException(object.toString() + " cannot be cast to list");
         return (List) object;
+    }
+
+    public static Collection asCollection(Object object) {
+        if (!isCollection(object))
+            throw new IllegalArgumentException(object.toString() + " cannot be cast to collection");
+        return (Collection) object;
     }
 }

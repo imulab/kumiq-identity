@@ -12,4 +12,16 @@ public interface FilterToken {
      * @return
      */
     String faceValue();
+
+    default boolean isOperand() {
+        return false;
+    }
+
+    default boolean isOperator() {
+        return false;
+    }
+    
+    default boolean isParenthesis() {
+        return false;
+    }
 }

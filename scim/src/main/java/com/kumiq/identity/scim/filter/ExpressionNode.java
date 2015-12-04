@@ -9,9 +9,11 @@ import java.util.Map;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public abstract class ExpressionNode implements Predicate {
+public abstract class ExpressionNode<T> implements Predicate {
 
     private final String expressionValue;
+    private T left;
+    private T right;
 
     protected ExpressionNode(String expressionValue) {
         this.expressionValue = expressionValue;
@@ -26,14 +28,33 @@ public abstract class ExpressionNode implements Predicate {
         return this.getExpressionValue();
     }
 
+    @Override
+    public boolean isOperator() {
+        return true;
+    }
+
+    public T getLeft() {
+        return left;
+    }
+
+    public void setLeft(T left) {
+        this.left = left;
+    }
+
+    public T getRight() {
+        return right;
+    }
+
+    public void setRight(T right) {
+        this.right = right;
+    }
+
     /**
      * A node presenting a logical expression, usually AND, OR and NOT.
      */
-    public static class LogicalExpressionNode extends ExpressionNode {
+    public static class LogicalExpressionNode extends ExpressionNode<LogicalExpressionNode> {
 
         private final LogicalOperator operator;
-        private final LogicalExpressionNode left;
-        private final LogicalExpressionNode right;
 
         public static LogicalExpressionNode andNode(LogicalExpressionNode left, LogicalExpressionNode right) {
             return new LogicalExpressionNode(left, LogicalOperator.AND, right);
@@ -52,31 +73,33 @@ public abstract class ExpressionNode implements Predicate {
             Assert.isTrue(LogicalOperator.AND == operator
                     || LogicalOperator.OR == operator
                     || LogicalOperator.NOT == operator);
-            this.left = left;
-            this.right = right;
+            setLeft(left);
+            setRight(right);
             this.operator = operator;
         }
 
         @Override
         public boolean apply(Map<String, Object> data) {
             if (LogicalOperator.AND == operator)
-                return Boolean.logicalAnd(left.apply(data), right.apply(data));
+                return Boolean.logicalAnd(getLeft().apply(data), getRight().apply(data));
             else if (LogicalOperator.OR == operator)
-                return Boolean.logicalOr(left.apply(data), right.apply(data));
+                return Boolean.logicalOr(getLeft().apply(data), getRight().apply(data));
             else
-                return !left.apply(data);       // TODO confirm is left child instead of right child
+                return !getLeft().apply(data);       // TODO confirm is left child instead of right child
+        }
+
+        @Override
+        public int precedence() {
+            return this.operator.precedence();
+        }
+
+        @Override
+        public Associtivity associtivity() {
+            return this.operator.associtivity();
         }
 
         public LogicalOperator getOperator() {
             return operator;
-        }
-
-        public LogicalExpressionNode getLeft() {
-            return left;
-        }
-
-        public LogicalExpressionNode getRight() {
-            return right;
         }
     }
 
@@ -84,16 +107,14 @@ public abstract class ExpressionNode implements Predicate {
      * A node presenting a relational expression, usually involves one or two {@link ValueNode} operand and a
      * relational operator.
      */
-    public static class RelationalExpressionNode extends ExpressionNode {
+    public static class RelationalExpressionNode extends ExpressionNode<ValueNode> {
 
-        private final ValueNode left;
-        private final ValueNode right;
         private final RelationalOperator operator;
 
         public RelationalExpressionNode(ValueNode left, RelationalOperator operator, ValueNode right) {
             super(operator.getOperatorString());
-            this.left = left;
-            this.right = right;
+            setLeft(left);
+            setRight(right);
             this.operator = operator;
         }
 
@@ -101,15 +122,17 @@ public abstract class ExpressionNode implements Predicate {
         public boolean apply(Map<String, Object> data) {
             return EvaluatorFactory
                     .createEvaluator(this.operator)
-                    .evaluate(this.left, this.right, new Evaluator.EvaluationContext(data));
+                    .evaluate(getLeft(), getRight(), new Evaluator.EvaluationContext(data));
         }
 
-        public ValueNode getLeft() {
-            return left;
+        @Override
+        public int precedence() {
+            return this.operator.precedence();
         }
 
-        public ValueNode getRight() {
-            return right;
+        @Override
+        public Associtivity associtivity() {
+            return this.operator.associtivity();
         }
 
         public RelationalOperator getOperator() {
