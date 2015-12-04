@@ -25,7 +25,7 @@ public class PathCompiler {
      * @param data the object used for index evaluation
      * @return head of the path token tree
      */
-    List<PathToken> compile(String path, Map<String, Object> data) {
+    public List<PathToken> compile(String path, Map<String, Object> data) {
         Tokenizer pathTokenizer = new Tokenizer.PathTokenizer(path);
         List<PathToken> tokens = new ArrayList<>();
         tokens.add(PathTokenFactory.root());

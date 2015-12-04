@@ -21,6 +21,15 @@ public class TypeUtils {
                 (object instanceof BigDecimal);
     }
 
+    public static boolean isNumber(Object object) {
+        try {
+            new BigDecimal(object.toString());
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
     public static boolean isBoolean(Object object) {
         return object instanceof Boolean;
     }
@@ -53,6 +62,12 @@ public class TypeUtils {
         if (!isInteger(object))
             throw new IllegalArgumentException(object.toString() + " cannot be cast to integer");
         return (Integer) object;
+    }
+
+    public static BigDecimal asNumber(Object object) {
+        if (!isNumber(object))
+            throw new IllegalArgumentException(object.toString() + " cannot be cast to big decimal");
+        return new BigDecimal(object.toString());
     }
 
     public static Boolean asBoolean(Object object) {
