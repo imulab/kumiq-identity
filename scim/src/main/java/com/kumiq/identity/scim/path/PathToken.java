@@ -1,6 +1,7 @@
 package com.kumiq.identity.scim.path;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Weinan Qiu
@@ -73,12 +74,14 @@ public abstract class PathToken {
      * Replace all {@code next} with clones. A link list will remain a link list. A map will become a tree.
      */
     public void replaceDownstreamWithClones() {
+        if (this.getNext() == null)
+            return;
+
         Map<PathToken, PathToken> replacement = new HashMap<>();
-        for (PathToken next : this.getNext()) {
+        this.getNext().forEach(next -> {
             PathToken nextCloned = next.cloneSelfAndDownStream(this);
             replacement.put(next, nextCloned);
-        }
-
+        });
         replacement.forEach(this::replaceTokenAndDownstream);
     }
 
@@ -123,15 +126,22 @@ public abstract class PathToken {
 
     /**
      * Traverse and report every possible paths
-     *
-     * @param paths
      */
-    public void traverse(List<List<PathToken>> paths) {
+    public List<PathRef> traverse() {
+        List<List<PathToken>> paths = new ArrayList<>();
         traverse(new ArrayList<>(), paths);
+
+        List<PathRef> heads = new ArrayList<>();
+        for (List<PathToken> path : paths) {
+            PathRef head = PathRef.linkList(path.stream().map(PathRef::new).collect(Collectors.toList()));
+            heads.add(head);
+        }
+
+        return heads;
     }
 
     private void traverse(List<PathToken> path, List<List<PathToken>> paths) {
-        path.add(this.cloneSelfSimple());
+        path.add(this);
         if (this.isLeaf()) {
             paths.add(path);
         } else {

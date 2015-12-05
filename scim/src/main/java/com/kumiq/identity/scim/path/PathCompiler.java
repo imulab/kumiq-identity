@@ -5,10 +5,7 @@ import com.kumiq.identity.scim.filter.Predicate;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.kumiq.identity.scim.utils.TypeUtils.*;
@@ -23,6 +20,10 @@ import static com.kumiq.identity.scim.utils.TypeUtils.*;
  */
 public class PathCompiler {
 
+    public static List<PathRef> compile(String path, Map<String, Object> data) {
+        return new PathCompiler().doCompile(path, data);
+    }
+
     /**
      * Compile the SCIM path and return the head for the token list. The
      * list shall only contain {@link SimplePathToken} and {@link PathWithIndexToken}
@@ -31,11 +32,12 @@ public class PathCompiler {
      * @param data the object used for index evaluation
      * @return head of the path token tree
      */
-    public List<PathToken> compile(String path, Map<String, Object> data) {
+    private List<PathRef> doCompile(String path, Map<String, Object> data) {
         Tokenizer pathTokenizer = new Tokenizer.PathTokenizer(path);
         List<PathToken> tokens = new ArrayList<>();
         tokens.add(PathTokenFactory.root());
 
+        /* form linked list of path tokens, led by the root token */
         while (true) {
             try {
                 String tokenValue = pathTokenizer.nextSequence().toString();
@@ -49,13 +51,9 @@ public class PathCompiler {
         }
         PathToken.linkTokenList(tokens);
 
+        /* expand filter tokens and replace them with index tokens */
         PathToken pathRoot = tokens.get(0);
-        traverseAndReplace(pathRoot, data);
-
-        List<List<PathToken>> paths = new ArrayList<>();
-        pathRoot.traverse(paths);
-        paths.forEach(PathToken::linkTokenList);
-        return paths.stream().map(pathTokens -> pathTokens.get(0)).collect(Collectors.toList());
+        return traverseAndReplace(pathRoot, data);
     }
 
     /**
@@ -65,15 +63,17 @@ public class PathCompiler {
      *
      * @param root
      */
-    private void traverseAndReplace(PathToken root, Map<String, Object> data) {
-        boolean acquireNewPaths = true;
-        do {
-            List<List<PathToken>> paths = new ArrayList<>();
-            root.traverse(paths);
-            paths.forEach(PathToken::linkTokenList);
+    private List<PathRef> traverseAndReplace(PathToken root, Map<String, Object> data) {
+        List<PathRef> filterFreeRoots = new ArrayList<>();
+        Queue<PathToken> traverseBacklog = new LinkedList<>();
+        traverseBacklog.add(root);
 
-            for (List<PathToken> path : paths) {
-                Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(path.get(0));
+        while (traverseBacklog.size() > 0) {
+            PathToken rootToTraverse = traverseBacklog.poll();
+            List<PathRef> pathHeads = rootToTraverse.traverse();
+
+            for (PathRef head : pathHeads) {
+                Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(head);
                 if (result.isPresent()) {
                     PathWithFilterToken tokenToReplace = result.get();
                     List<PathWithIndexToken> replacementTokens = resolvePathWithFilterToken(tokenToReplace, data);
@@ -85,22 +85,23 @@ public class PathCompiler {
                     prev.replaceTokens(tokenToReplace, replacementTokens);
                     prev.getNext().forEach(PathToken::replaceDownstreamWithClones);
 
-                    acquireNewPaths = true;
+                    traverseBacklog.add(head.getPathToken());
                     break;
                 } else {
-                    acquireNewPaths = false;
+                    filterFreeRoots.add(head);
                 }
             }
+        }
 
-        } while (acquireNewPaths);
+        return filterFreeRoots;
     }
 
-    private Optional<PathWithFilterToken> findFirstPathWithReferenceToken(PathToken root) {
-        PathToken cursor = root;
+    private Optional<PathWithFilterToken> findFirstPathWithReferenceToken(PathRef root) {
+        PathRef cursor = root;
         while (cursor != null) {
-            if (cursor instanceof PathWithFilterToken)
-                return Optional.of((PathWithFilterToken) cursor);
-            cursor = cursor.firstNext();
+            if (cursor.getPathToken() instanceof PathWithFilterToken)
+                return Optional.of((PathWithFilterToken) cursor.getPathToken());
+            cursor = cursor.getNext();
         }
         return Optional.empty();
     }
@@ -108,10 +109,10 @@ public class PathCompiler {
     private List<PathWithIndexToken> resolvePathWithFilterToken(PathWithFilterToken token, Map<String, Object> data) {
         PathToken clonedRoot = token.getPrev().clonedSubListWithSelfAsLeaf();
 
-        Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(clonedRoot);
+        Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(new PathRef(clonedRoot));
         Assert.isTrue(!result.isPresent(), "Cloned path cannot contain another token with filter before the one supplied to evaluate.");
 
-        Object value = clonedRoot.evaluate(data, data);
+        Object value = clonedRoot.evaluate(data, data).getValue();
         Assert.isTrue(isMap(value));
         Assert.isTrue(isList(asMap(value).get(token.getPathComponent())));
         List list = asList(asMap(value).get(token.getPathComponent()));

@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.filter;
 
 import com.kumiq.identity.scim.path.PathCompiler;
 import com.kumiq.identity.scim.path.PathEvaluationContext;
+import com.kumiq.identity.scim.path.PathRef;
 import com.kumiq.identity.scim.path.PathToken;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.utils.ValueUtils;
@@ -425,14 +426,13 @@ public abstract class ValueNode implements FilterToken {
      * A value node presenting a SCIM path.
      */
     public static class PathNode extends ValueNode {
-        private final PathCompiler compiler = new PathCompiler();
         private final PathToken pathHead;
 
         public PathNode(String faceValue) {
             super(faceValue);
-            List<PathToken> compiledPaths = compiler.compile(faceValue, null);
+            List<PathRef> compiledPaths = PathCompiler.compile(faceValue, null);
             Assert.isTrue(compiledPaths.size() == 1, "Path node path should just be a simple path");
-            this.pathHead = compiledPaths.get(0);
+            this.pathHead = compiledPaths.get(0).getPathToken();
         }
 
         public PathToken getPathHead() {

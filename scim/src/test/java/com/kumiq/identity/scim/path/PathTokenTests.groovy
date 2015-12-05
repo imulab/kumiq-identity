@@ -136,15 +136,15 @@ class PathTokenTests {
     void testPathTraversal() {
         PathToken root = createTreeLike()
 
-        List<List<PathToken>> paths = []
-        root.traverse(paths)
-        Assert.assertEquals('first[1]', paths[0][1].pathFragment())
-        Assert.assertEquals('second', paths[0][2].pathFragment())
-        Assert.assertEquals('third', paths[0][3].pathFragment())
+        List<PathRef> paths = root.traverse()
 
-        Assert.assertEquals('first[2]', paths[1][1].pathFragment())
-        Assert.assertEquals('second', paths[1][2].pathFragment())
-        Assert.assertEquals('third', paths[1][3].pathFragment())
+        Assert.assertEquals('first[1]', paths[0].next.pathToken.pathFragment())
+        Assert.assertEquals('second', paths[0].next.next.pathToken.pathFragment())
+        Assert.assertEquals('third', paths[0].next.next.next.pathToken.pathFragment())
+
+        Assert.assertEquals('first[2]', paths[1].next.pathToken.pathFragment())
+        Assert.assertEquals('second', paths[1].next.next.pathToken.pathFragment())
+        Assert.assertEquals('third', paths[1].next.next.next.pathToken.pathFragment())
     }
 
     @Test

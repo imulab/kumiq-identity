@@ -1,6 +1,7 @@
 package com.kumiq.identity.scim.path;
 
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
 
@@ -23,8 +24,12 @@ public class PathRoot extends PathToken {
 
     @Override
     public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
-        Assert.isTrue(this.getNext().size() == 1, "Evaluation should only deal with linked list (exactly 1 next token).");
-        Assert.isTrue(isRoot() && !isLeaf(), "Root token cannot be leaf.");
+        if (CollectionUtils.isEmpty(this.getNext())) {
+            PathEvaluationContext context = new PathEvaluationContext(root);
+            context.setValue(cursor);
+            return context;
+        }
+
         return this.getNext().get(0).evaluate(root, cursor);
     }
 
