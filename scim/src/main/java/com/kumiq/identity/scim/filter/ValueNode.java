@@ -371,9 +371,9 @@ public abstract class ValueNode implements FilterToken {
                 return false;
 
             if (TypeUtils.isCollection(object))
-                return CollectionUtils.isEmpty(TypeUtils.asCollection(object));
+                return !CollectionUtils.isEmpty(TypeUtils.asCollection(object));
             else if (TypeUtils.isMap(object))
-                return CollectionUtils.isEmpty(TypeUtils.asMap(object));
+                return !CollectionUtils.isEmpty(TypeUtils.asMap(object));
             else
                 return true;
         }
