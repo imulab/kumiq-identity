@@ -16,10 +16,10 @@ class TokenizerTests {
 
     @Test
     void testPathTokenizer() {
-        Tokenizer tokenizer = new Tokenizer.PathTokenizer('foo.bar[x eq 100].foobar')
+        Tokenizer tokenizer = new Tokenizer.PathTokenizer('foo.bar[a.b eq "foo@bar.com"].foobar')
 
         Assert.assertEquals('foo', tokenizer.nextSequence())
-        Assert.assertEquals('bar[x eq 100]', tokenizer.nextSequence())
+        Assert.assertEquals('bar[a.b eq "foo@bar.com"]', tokenizer.nextSequence())
         Assert.assertEquals('foobar', tokenizer.nextSequence())
 
         try {

@@ -15,6 +15,8 @@ import java.util.List;
  */
 public abstract class Tokenizer {
 
+    public static final String LEFT_SQUARE_BRACKET = "[";
+    public static final String RIGHT_SQUARE_BRACKET = "]";
     private static final String PERIOD = ".";
     private static final String SPACE = " ";
 
@@ -25,6 +27,9 @@ public abstract class Tokenizer {
     private int cursorEndPos;
     private boolean lastMatchWasDelimiter = true;
     private boolean sequenceHasExhausted = false;
+    private int ignoreLevel = 0;
+    private Character ignoreStart;
+    private Character ignoreEnd;
 
     protected Tokenizer(CharSequence charSequence) {
         this.charSequence = charSequence;
@@ -43,29 +48,38 @@ public abstract class Tokenizer {
             while (isEndPosInBounds()) {
                 CharSequence current = currentSubSequence();
 
-                for (CharSequence delimiter : delimiters) {
-                    if (currentMatches(delimiter)) {
-                        lastMatchWasDelimiter = true;
-                        incrementPosition(delimiter.length());
-                        syncStartPosition();
-
-                        if (current.length() > 0)
-                            return current;
-                        else
-                            continue;
-                    }
+                if (ignoreStart != null && ignoreEnd != null) {
+                    if (endsWith(current, ignoreStart))
+                        ignoreLevel++;
+                    else if (endsWith(current, ignoreEnd))
+                        ignoreLevel--;
                 }
 
-                for (CharSequence keywordToken : keywordTokens) {
-                    if ((currentMatches(keywordToken) && lastMatchWasDelimiter) ||
-                            keywordToken.equals(current)) {
-                        lastMatchWasDelimiter = false;
-                        syncStartPosition();
+                if (!ignored()) {
+                    for (CharSequence delimiter : delimiters) {
+                        if (currentMatches(delimiter)) {
+                            lastMatchWasDelimiter = true;
+                            incrementPosition(delimiter.length());
+                            syncStartPosition();
 
-                        if (current.length() > 0)
-                            return current;
-                        else
-                            continue;
+                            if (current.length() > 0)
+                                return current;
+                            else
+                                continue;
+                        }
+                    }
+
+                    for (CharSequence keywordToken : keywordTokens) {
+                        if ((currentMatches(keywordToken) && lastMatchWasDelimiter) ||
+                                keywordToken.equals(current)) {
+                            lastMatchWasDelimiter = false;
+                            syncStartPosition();
+
+                            if (current.length() > 0)
+                                return current;
+                            else
+                                continue;
+                        }
                     }
                 }
 
@@ -132,6 +146,30 @@ public abstract class Tokenizer {
         this.keywordTokens = keywordTokens;
     }
 
+    public Character getIgnoreStart() {
+        return ignoreStart;
+    }
+
+    public void setIgnoreStart(Character ignoreStart) {
+        this.ignoreStart = ignoreStart;
+    }
+
+    public Character getIgnoreEnd() {
+        return ignoreEnd;
+    }
+
+    public void setIgnoreEnd(Character ignoreEnd) {
+        this.ignoreEnd = ignoreEnd;
+    }
+
+    public boolean endsWith(CharSequence charSequence, Character keyword) {
+        return charSequence.toString().endsWith(keyword.toString());
+    }
+
+    public boolean ignored() {
+        return this.ignoreLevel > 0;
+    }
+
     /**
      * Tokenizer for SCIM paths. For example, path like <code>name.firstName</code> will be tokenized
      * to <code>name</code> and <code>firstName</code>
@@ -142,6 +180,8 @@ public abstract class Tokenizer {
         public PathTokenizer(CharSequence charSequence) {
             super(charSequence);
             super.setDelimiters(Arrays.asList(PERIOD));
+            super.setIgnoreStart(LEFT_SQUARE_BRACKET.charAt(0));
+            super.setIgnoreEnd(RIGHT_SQUARE_BRACKET.charAt(0));
         }
     }
 
@@ -152,8 +192,6 @@ public abstract class Tokenizer {
 
         public static final String LEFT_BRACKET = "(";
         public static final String RIGHT_BRACKET = ")";
-        public static final String LEFT_SQUARE_BRACKET = "[";
-        public static final String RIGHT_SQUARE_BRACKET = "]";
 
         public FilterTokenizer(CharSequence charSequence) {
             super(charSequence);
