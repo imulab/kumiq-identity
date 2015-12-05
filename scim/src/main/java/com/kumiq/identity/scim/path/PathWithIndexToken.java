@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.path;
 
 import org.springframework.util.Assert;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,12 @@ public class PathWithIndexToken extends SimplePathToken {
         } catch (Exception ex) {
             throw new IllegalArgumentException(pathWithIndex + " is not a valid path with index token");
         }
+    }
+
+    @Override
+    public Object evaluateSelf(Map<String, Object> cursor) {
+        Assert.isTrue(isList(cursor.get(pathComponent)), "Evaluation cannot continue as list cannot be resolved");
+        return asList(cursor.get(pathComponent)).get(indexComponent);
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.kumiq.identity.scim.path;
 
+import com.kumiq.identity.scim.utils.TypeUtils;
+import org.springframework.util.Assert;
+
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Weinan Qiu
@@ -37,6 +41,18 @@ public class PathRef {
     public void append(PathRef that) {
         that.setPrev(this);
         this.setNext(that);
+    }
+
+    public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
+        if (this.isTail()) {
+            PathEvaluationContext context = new PathEvaluationContext(root);
+            context.setValue(this.pathToken.evaluateSelf(cursor));
+            return context;
+        } else {
+            Object value = this.pathToken.evaluateSelf(cursor);
+            Assert.isTrue(TypeUtils.isMap(value));
+            return this.next.evaluate(root, TypeUtils.asMap(value));
+        }
     }
 
     public boolean isHead() {

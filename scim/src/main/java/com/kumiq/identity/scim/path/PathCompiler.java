@@ -77,6 +77,7 @@ public class PathCompiler {
                 if (result.isPresent()) {
                     PathWithFilterToken tokenToReplace = result.get();
                     List<PathWithIndexToken> replacementTokens = resolvePathWithFilterToken(tokenToReplace, data);
+                    // TODO sort replacement tokens by index from high to low
                     if (CollectionUtils.isEmpty(replacementTokens)) {
                         throw new FilterTokenResolvedToNothingException(tokenToReplace);
                     }

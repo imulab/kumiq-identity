@@ -46,6 +46,8 @@ public abstract class PathToken {
 
     public abstract PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor);
 
+    public abstract Object evaluateSelf(Map<String, Object> cursor);
+
     /**
      * Set {@code this} as the {@code prev} of the {@code pathToken} and {@pathToken} as one of the {@code next}
      * of {@code this}.

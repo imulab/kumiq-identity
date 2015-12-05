@@ -426,16 +426,16 @@ public abstract class ValueNode implements FilterToken {
      * A value node presenting a SCIM path.
      */
     public static class PathNode extends ValueNode {
-        private final PathToken pathHead;
+        private final PathRef pathHead;
 
         public PathNode(String faceValue) {
             super(faceValue);
             List<PathRef> compiledPaths = PathCompiler.compile(faceValue, null);
             Assert.isTrue(compiledPaths.size() == 1, "Path node path should just be a simple path");
-            this.pathHead = compiledPaths.get(0).getPathToken();
+            this.pathHead = compiledPaths.get(0);
         }
 
-        public PathToken getPathHead() {
+        public PathRef getPathHead() {
             return pathHead;
         }
 

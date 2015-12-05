@@ -1,6 +1,5 @@
 package com.kumiq.identity.scim.path;
 
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Map;
@@ -20,6 +19,11 @@ public class PathRoot extends PathToken {
     @Override
     public String pathFragment() {
         return "";
+    }
+
+    @Override
+    public Object evaluateSelf(Map<String, Object> cursor) {
+        return cursor;
     }
 
     @Override
