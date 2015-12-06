@@ -54,6 +54,11 @@ public class PathWithFilterToken extends SimplePathToken {
         return pathComponent;
     }
 
+    @Override
+    public String queryFreePath() {
+        return this.getPathComponent();
+    }
+
     public String getFilterComponent() {
         return filterComponent;
     }

@@ -28,6 +28,8 @@ public abstract class PathToken {
 
     public abstract String pathFragment();
 
+    public abstract String queryFreePath();
+
     /**
      * Clone only {@code pathFragment}, leave the {@code prev} and {@code next} as null. Note new {@code id} will be
      * generated to differentiate cloned with the original.

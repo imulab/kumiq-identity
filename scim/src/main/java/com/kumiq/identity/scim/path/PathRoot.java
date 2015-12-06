@@ -22,6 +22,11 @@ public class PathRoot extends PathToken {
     }
 
     @Override
+    public String queryFreePath() {
+        return "";
+    }
+
+    @Override
     public Object evaluateSelf(Map<String, Object> cursor) {
         return cursor;
     }

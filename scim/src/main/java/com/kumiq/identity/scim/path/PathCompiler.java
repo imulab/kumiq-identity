@@ -84,7 +84,7 @@ public class PathCompiler {
 
                     PathToken prev = tokenToReplace.getPrev();
                     prev.replaceTokens(tokenToReplace, replacementTokens);
-                    prev.getNext().forEach(PathToken::replaceDownstreamWithClones);
+                    //prev.getNext().forEach(PathToken::replaceDownstreamWithClones);
 
                     traverseBacklog.add(head.getPathToken());
                     break;

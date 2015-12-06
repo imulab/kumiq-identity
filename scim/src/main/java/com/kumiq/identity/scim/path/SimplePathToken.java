@@ -67,6 +67,11 @@ public class SimplePathToken extends PathToken {
         return this.pathFragment;
     }
 
+    @Override
+    public String queryFreePath() {
+        return this.pathFragment;
+    }
+
     public String getPathFragment() {
         return pathFragment;
     }

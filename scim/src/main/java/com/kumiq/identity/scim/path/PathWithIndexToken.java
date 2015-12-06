@@ -80,6 +80,11 @@ public class PathWithIndexToken extends SimplePathToken {
         return pathComponent;
     }
 
+    @Override
+    public String queryFreePath() {
+        return this.getPathComponent();
+    }
+
     public Integer getIndexComponent() {
         return indexComponent;
     }
