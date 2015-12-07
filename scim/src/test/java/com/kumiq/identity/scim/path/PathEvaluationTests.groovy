@@ -1,6 +1,5 @@
 package com.kumiq.identity.scim.path
 
-import com.kumiq.identity.scim.filter.Predicate
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,8 +19,9 @@ class PathEvaluationTests {
         Map data = ['name': ['firstName': 'David']]
         List<PathRef> paths = PathCompiler.compile('name.firstName', data)
 
-        PathEvaluationContext context = paths[0].evaluate(data, data)
-        Assert.assertEquals('David', context.getValue())
+        EvaluationContext context = new EvaluationContext(data)
+        context = paths[0].evaluate(context, Configuration.withMapObjectProvider())
+        Assert.assertEquals('David', context.getCursor())
     }
 
     @Test
@@ -38,7 +38,12 @@ class PathEvaluationTests {
         List<PathRef> paths = PathCompiler.compile('me.emails[active eq true].value', data)
 
         Assert.assertEquals(2, paths.size())
-        Assert.assertEquals('foo@bar.com', paths[0].evaluate(data, data).getValue())
-        Assert.assertEquals('foo@gmail.com', paths[1].evaluate(data, data).getValue())
+        EvaluationContext context
+
+        context = new EvaluationContext(data)
+        Assert.assertEquals('foo@bar.com', paths[0].evaluate(context, Configuration.withMapObjectProvider()).getCursor())
+
+        context = new EvaluationContext(data)
+        Assert.assertEquals('foo@gmail.com', paths[1].evaluate(context, Configuration.withMapObjectProvider()).getCursor())
     }
 }

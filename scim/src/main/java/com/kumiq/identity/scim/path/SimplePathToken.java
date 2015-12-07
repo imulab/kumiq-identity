@@ -22,6 +22,11 @@ public class SimplePathToken extends PathToken {
     }
 
     @Override
+    public Object evaluate(Object cursor, Configuration configuration) {
+        return configuration.getObjectProvider().getPropertyValue(cursor, this.pathFragment);
+    }
+
+    @Override
     public Object evaluateSelf(Map<String, Object> cursor) {
         return cursor.get(pathFragment);
     }

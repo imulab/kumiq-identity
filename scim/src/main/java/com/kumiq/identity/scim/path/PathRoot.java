@@ -27,6 +27,11 @@ public class PathRoot extends PathToken {
     }
 
     @Override
+    public Object evaluate(Object cursor, Configuration configuration) {
+        return cursor;
+    }
+
+    @Override
     public Object evaluateSelf(Map<String, Object> cursor) {
         return cursor;
     }

@@ -49,6 +49,23 @@ public class PathRef {
         this.setNext(that);
     }
 
+    public void modify(ModificationContext context, Configuration configuration) {
+        if (!this.isTail()) {
+            context.setCursor(this.pathToken.evaluate(context.getCursor(), configuration));
+            this.next.modify(context, configuration);
+        } else {
+            // TODO do actual modify work on last node
+        }
+    }
+    
+    public EvaluationContext evaluate(EvaluationContext context, Configuration configuration) {
+        context.setCursor(this.pathToken.evaluate(context.getCursor(), configuration));
+        if (this.isTail())
+            return context;
+
+        return this.next.evaluate(context, configuration);
+    }
+
     public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
         if (this.isTail()) {
             PathEvaluationContext context = new PathEvaluationContext(root);

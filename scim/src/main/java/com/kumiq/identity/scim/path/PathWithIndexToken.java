@@ -33,6 +33,12 @@ public class PathWithIndexToken extends SimplePathToken {
     }
 
     @Override
+    public Object evaluate(Object cursor, Configuration configuration) {
+        Object list = configuration.getObjectProvider().getPropertyValue(cursor, this.pathComponent);
+        return configuration.getObjectProvider().getArrayIndex(list, this.indexComponent);
+    }
+
+    @Override
     public Object evaluateSelf(Map<String, Object> cursor) {
         Assert.isTrue(isList(cursor.get(pathComponent)), "Evaluation cannot continue as list cannot be resolved");
         return asList(cursor.get(pathComponent)).get(indexComponent);
