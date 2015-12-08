@@ -6,6 +6,8 @@ import com.kumiq.identity.scim.resource.core.Resource
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
+import java.util.jar.Attributes
+
 import static com.kumiq.identity.scim.resource.constant.ScimConstants.RESOURCE_TYPE_SCHEMA
 import static com.kumiq.identity.scim.resource.constant.ScimConstants.URN_SCHEMA
 
@@ -49,5 +51,19 @@ final class Schema extends Resource {
         @JsonProperty('referenceTypes') List<String> referenceTypes = []
         @JsonProperty('subAttributes') List<Attribute> subAttributes = []
         @JsonProperty('class') Class clazz;
+    }
+
+    public Attribute findAttributeByPath(String path) {
+        List<String> paths = Arrays.asList(path.split("\\."))
+        Attribute attribute = this.attributes.find { it.name == paths[0] }
+        if (!attribute)
+            return null
+
+        if (paths.size() > 1) {
+            for (int i = 1; i < paths.size(); i++) {
+                attribute = attribute.subAttributes.find { it.name == paths[i] }
+            }
+        }
+        return attribute
     }
 }
