@@ -42,6 +42,12 @@ public class Configuration {
     }
 
     public enum Option {
+
+        /**
+         * Suppress any exception during evaluation or modification.
+         */
         SUPPRESS_EXCEPTION
+
+
     }
 }

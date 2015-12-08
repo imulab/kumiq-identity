@@ -1,12 +1,6 @@
 package com.kumiq.identity.scim.path;
 
-import org.springframework.util.Assert;
-
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
-
-import static com.kumiq.identity.scim.utils.TypeUtils.*;
 
 /**
  * A path token with index component after the path
@@ -45,6 +39,11 @@ public class PathWithIndexToken extends SimplePathToken {
     @Override
     public String queryFreePath() {
         return this.getPathComponent();
+    }
+
+    @Override
+    public boolean isPathWithIndex() {
+        return true;
     }
 
     public Integer getIndexComponent() {

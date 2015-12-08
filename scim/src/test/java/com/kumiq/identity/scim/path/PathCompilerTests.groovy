@@ -44,12 +44,12 @@ class PathCompilerTests {
         Assert.assertTrue(paths.size() == 2)
         Assert.assertEquals('attributes', ((SimplePathToken) paths[0].next.pathToken).pathFragment())
         Assert.assertEquals('emails', ((PathWithIndexToken) paths[0].next.next.pathToken).pathComponent)
-        Assert.assertEquals(0, ((PathWithIndexToken) paths[0].next.next.pathToken).indexComponent)
+        Assert.assertEquals(2, ((PathWithIndexToken) paths[0].next.next.pathToken).indexComponent)
         Assert.assertEquals('primary', ((SimplePathToken) paths[0].next.next.next.pathToken).pathFragment())
 
         Assert.assertEquals('attributes', ((SimplePathToken) paths[1].next.pathToken).pathFragment())
         Assert.assertEquals('emails', ((PathWithIndexToken) paths[1].next.next.pathToken).pathComponent)
-        Assert.assertEquals(2, ((PathWithIndexToken) paths[1].next.next.pathToken).indexComponent)
+        Assert.assertEquals(0, ((PathWithIndexToken) paths[1].next.next.pathToken).indexComponent)
         Assert.assertEquals('primary', ((SimplePathToken) paths[1].next.next.next.pathToken).pathFragment())
     }
 }

@@ -30,6 +30,11 @@ public class SimplePathToken extends PathToken {
         return this.pathFragment;
     }
 
+    @Override
+    public boolean isSimplePath() {
+        return true;
+    }
+
     public String getPathFragment() {
         return pathFragment;
     }

@@ -1,16 +1,12 @@
 package com.kumiq.identity.scim.path;
 
 import com.kumiq.identity.scim.resource.misc.Schema;
-import com.kumiq.identity.scim.utils.TypeUtils;
-import org.springframework.util.Assert;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 /**
  * @author Weinan Qiu
@@ -73,12 +69,7 @@ public class PathRef {
     }
 
     public void modify(ModificationContext context, Configuration configuration) {
-        if (!this.isTail()) {
-            context.setCursor(this.pathToken.evaluate(context.getCursor(), configuration));
-            this.next.modify(context, configuration);
-        } else {
-            // TODO do actual modify work on last node
-        }
+        Modifier.create(this, context, configuration).modify();
     }
 
     public EvaluationContext evaluate(EvaluationContext context, Configuration configuration) {

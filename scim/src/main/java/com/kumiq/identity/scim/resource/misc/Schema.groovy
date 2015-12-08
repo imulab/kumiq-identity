@@ -48,5 +48,6 @@ final class Schema extends Resource {
         @JsonProperty('canonicalValues') List<String> canonicalValues = []
         @JsonProperty('referenceTypes') List<String> referenceTypes = []
         @JsonProperty('subAttributes') List<Attribute> subAttributes = []
+        @JsonProperty('class') Class clazz;
     }
 }

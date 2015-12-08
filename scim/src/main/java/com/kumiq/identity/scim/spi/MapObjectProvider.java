@@ -1,8 +1,11 @@
 package com.kumiq.identity.scim.spi;
 
+import com.kumiq.identity.scim.resource.misc.Schema;
 import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
 import static com.kumiq.identity.scim.utils.TypeUtils.*;
@@ -17,6 +20,12 @@ import static com.kumiq.identity.scim.utils.TypeUtils.*;
 public class MapObjectProvider implements ObjectProvider {
 
     @Override
+    public boolean containsKey(Object obj, String key) {
+        Assert.isTrue(isMap(obj), "only map is supported.");
+        return getPropertyValue(obj, key) != null;
+    }
+
+    @Override
     public Collection<String> getPropertyKeys(Object obj) {
         Assert.isTrue(isMap(obj), "only map is supported.");
         return asMap(obj).keySet();
@@ -26,6 +35,12 @@ public class MapObjectProvider implements ObjectProvider {
     public Object getArrayIndex(Object obj, int idx) {
         Assert.isTrue(isList(obj), "only list is supported");
         return asList(obj).get(idx);
+    }
+
+    @Override
+    public void removeFromArray(Object array, int idx) {
+        Assert.isTrue(isList(array), "only list is supported");
+        asList(array).remove(idx);
     }
 
     @Override
@@ -62,5 +77,20 @@ public class MapObjectProvider implements ObjectProvider {
     public void removePropertyValue(Object obj, String key) {
         Assert.isTrue(isMap(obj), "only map is supported.");
         asMap(obj).remove(key);
+    }
+
+    @Override
+    public void createMissingPropertyStructure(Object obj, String key, Schema.Attribute hint) {
+        if (getPropertyValue(obj, key) != null)
+            return;
+
+        Assert.isTrue(key.equals(hint.getName()));
+        Object newValue;
+        if (hint.isMultiValued()) {
+            newValue = new ArrayList<>();
+        } else {
+            newValue = new HashMap<>();
+        }
+        setPropertyValue(obj, key, newValue);
     }
 }

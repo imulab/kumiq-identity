@@ -41,9 +41,9 @@ class PathEvaluationTests {
         EvaluationContext context
 
         context = new EvaluationContext(data)
-        Assert.assertEquals('foo@bar.com', paths[0].evaluate(context, Configuration.withMapObjectProvider()).getCursor())
+        Assert.assertEquals('foo@gmail.com', paths[0].evaluate(context, Configuration.withMapObjectProvider()).getCursor())
 
         context = new EvaluationContext(data)
-        Assert.assertEquals('foo@gmail.com', paths[1].evaluate(context, Configuration.withMapObjectProvider()).getCursor())
+        Assert.assertEquals('foo@bar.com', paths[1].evaluate(context, Configuration.withMapObjectProvider()).getCursor())
     }
 }

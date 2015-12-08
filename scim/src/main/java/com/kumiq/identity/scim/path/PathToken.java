@@ -39,6 +39,14 @@ public abstract class PathToken {
 
     public abstract Object evaluate(Object cursor, Configuration configuration);
 
+    public boolean isSimplePath() {
+        return false;
+    }
+
+    public boolean isPathWithIndex() {
+        return false;
+    }
+
     /**
      * Set {@code this} as the {@code prev} of the {@code pathToken} and {@pathToken} as one of the {@code next}
      * of {@code this}.
