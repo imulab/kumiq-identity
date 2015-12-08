@@ -28,33 +28,6 @@ public class PathWithFilterToken extends SimplePathToken {
         throw new RuntimeException("PathWithFilterToken does not support evaluation. Compile it to PathWithIndexToken instead.");
     }
 
-    @Override
-    public Object evaluateSelf(Map<String, Object> cursor) {
-        throw new RuntimeException("PathWithFilterToken does not support evaluation. Compile it to PathWithIndexToken instead.");
-    }
-
-    @Override
-    public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
-        throw new RuntimeException("PathWithFilterToken does not support evaluation. Compile it to PathWithIndexToken instead.");
-    }
-
-    @Override
-    public PathToken cloneSelfAndDownStream(PathToken prev) {
-        PathWithFilterToken cloned = (PathWithFilterToken) cloneSelfSimple();
-        cloned.setPrev(prev);
-        if (this.getNext() != null) {
-            for (PathToken next : this.getNext()) {
-                cloned.appendToken(next.cloneSelfAndDownStream(cloned));
-            }
-        }
-        return cloned;
-    }
-
-    @Override
-    public PathToken cloneSelfSimple() {
-        return new PathWithFilterToken(super.pathFragment());
-    }
-
     public String getPathComponent() {
         return pathComponent;
     }

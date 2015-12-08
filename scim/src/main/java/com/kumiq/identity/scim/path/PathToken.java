@@ -26,29 +26,16 @@ public abstract class PathToken {
         return prev == null;
     }
 
+    public PathToken getRoot() {
+        PathToken cursor = this;
+        while (!cursor.isRoot())
+            cursor = cursor.getPrev();
+        return cursor;
+    }
+
     public abstract String pathFragment();
 
     public abstract String queryFreePath();
-
-    /**
-     * Clone only {@code pathFragment}, leave the {@code prev} and {@code next} as null. Note new {@code id} will be
-     * generated to differentiate cloned with the original.
-     *
-     * @return
-     */
-    public abstract PathToken cloneSelfSimple();
-
-    /**
-     * Clone {@code pathFragment} and set the {@code prev}. Then call {@lin cloneSelfAndDownStream} on every {@code next}.
-     *
-     * @param prev
-     * @return
-     */
-    public abstract PathToken cloneSelfAndDownStream(PathToken prev);
-
-    public abstract PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor);
-
-    public abstract Object evaluateSelf(Map<String, Object> cursor);
 
     public abstract Object evaluate(Object cursor, Configuration configuration);
 
@@ -74,40 +61,6 @@ public abstract class PathToken {
         for (int i = 0; i < tokenList.size() - 1; i++) {
             tokenList.get(i).appendToken(tokenList.get(i+1));
         }
-    }
-
-    /**
-     * Replace all {@code next} with clones. A link list will remain a link list. A map will become a tree.
-     */
-    public void replaceDownstreamWithClones() {
-        if (this.getNext() == null)
-            return;
-
-        Map<PathToken, PathToken> replacement = new HashMap<>();
-        this.getNext().forEach(next -> {
-            PathToken nextCloned = next.cloneSelfAndDownStream(this);
-            replacement.put(next, nextCloned);
-        });
-        replacement.forEach(this::replaceTokenAndDownstream);
-    }
-
-    /**
-     * Break link with {@code originalToken} entirely and append {@code newToken} to {@code this}. This method
-     * will assume downstream of {@code newToken} as its own downstream.
-     *
-     * @param originalToken
-     * @param newToken
-     */
-    public void replaceTokenAndDownstream(PathToken originalToken, PathToken newToken) {
-        if (this.next == null || !this.next.contains(originalToken))
-            return;
-
-        this.appendToken(newToken);
-        this.next.remove(originalToken);
-    }
-
-    public void replaceToken(PathToken originalToken, PathToken newToken) {
-        this.replaceTokens(originalToken, Arrays.asList(newToken));
     }
 
     /**
@@ -155,24 +108,6 @@ public abstract class PathToken {
                 next.traverse(new ArrayList<>(path), paths);
             }
         }
-    }
-
-    /**
-     * Traverse back to root following {@code prev} and make a linked list starting from root and stops at {@code this}
-     *
-     * @return
-     */
-    public PathToken clonedSubListWithSelfAsLeaf() {
-        PathToken cursor = this;
-        List<PathToken> list = new ArrayList<>();
-
-        while (cursor != null) {
-            list.add(0, cursor.cloneSelfSimple());
-            cursor = cursor.getPrev();
-        }
-
-        linkTokenList(list);
-        return list.get(0);
     }
 
     public String getId() {

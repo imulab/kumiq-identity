@@ -108,12 +108,15 @@ public class PathCompiler {
     }
 
     private List<PathWithIndexToken> resolvePathWithFilterToken(PathWithFilterToken token, Map<String, Object> data) {
-        PathToken clonedRoot = token.getPrev().clonedSubListWithSelfAsLeaf();
+        PathRef pathHead = PathRef.createReferenceTo(token.getPrev());
 
-        Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(new PathRef(clonedRoot));
+        Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(pathHead);
         Assert.isTrue(!result.isPresent(), "Cloned path cannot contain another token with filter before the one supplied to evaluate.");
 
-        Object value = clonedRoot.evaluate(data, data).getValue();
+        EvaluationContext context = new EvaluationContext(data);
+        context = pathHead.evaluate(context, Configuration.withMapObjectProvider());
+        Object value = context.getCursor();
+
         Assert.isTrue(isMap(value));
         Assert.isTrue(isList(asMap(value).get(token.getPathComponent())));
         List list = asList(asMap(value).get(token.getPathComponent()));

@@ -1,9 +1,6 @@
 package com.kumiq.identity.scim.filter;
 
-import com.kumiq.identity.scim.path.PathCompiler;
-import com.kumiq.identity.scim.path.PathEvaluationContext;
-import com.kumiq.identity.scim.path.PathRef;
-import com.kumiq.identity.scim.path.PathToken;
+import com.kumiq.identity.scim.path.*;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.utils.ValueUtils;
 import com.kumiq.identity.scim.utils.TypeUtils;
@@ -440,8 +437,9 @@ public abstract class ValueNode implements FilterToken {
         }
 
         public ValueNode evaluate(Map<String, Object> data) {
-            PathEvaluationContext context = this.pathHead.evaluate(data, data);
-            Object value = context.getValue();
+            EvaluationContext context = new EvaluationContext(data);
+            context = this.pathHead.evaluate(context, Configuration.withMapObjectProvider());
+            Object value = context.getCursor();
 
             if (value == null)
                 return ValueNodeFactory.nullNode();

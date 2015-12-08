@@ -1,7 +1,5 @@
 package com.kumiq.identity.scim.filter;
 
-import org.springframework.expression.EvaluationContext;
-
 import java.util.Map;
 
 /**

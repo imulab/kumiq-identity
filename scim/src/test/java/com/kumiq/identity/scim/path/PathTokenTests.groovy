@@ -41,98 +41,6 @@ class PathTokenTests {
     }
 
     @Test
-    void testSimpleTokenListEvaluation() {
-        PathToken first = createSimpleTokenList()
-        Map root = [
-                'first': [
-                        'second': [
-                                'third': 'foo'
-                        ]
-                ]
-        ]
-        PathEvaluationContext context = first.evaluate(root, root)
-        Assert.assertEquals('foo', context.getValue())
-    }
-
-    @Test
-    void testSimpleTokenListEvaluationExistPremature() {
-        PathToken first = createSimpleTokenList()
-        Map root = [
-                'first': [
-                        'second': [:]
-                ]
-        ]
-        PathEvaluationContext context = first.evaluate(root, root)
-        Assert.assertNull(context.getValue())
-    }
-
-    @Test
-    void testHybridTokenListEvaluation() {
-        PathToken first = createHybridTokenList()
-        Map root = [
-                'first': [
-                        'second': [
-                                ['third': 'foo'],
-                                ['third': 'bar']
-                        ]
-                ]
-        ]
-        PathEvaluationContext context = first.evaluate(root, root)
-        Assert.assertEquals('bar', context.getValue())
-    }
-
-    @Test
-    void testCloneSimpleDownStream() {
-        PathToken root = PathTokenFactory.root()
-        PathToken first = createSimpleTokenList()
-        root.appendToken(first)
-
-        PathToken firstCloned = first.cloneSelfAndDownStream(root)
-        root.replaceTokenAndDownstream(first, firstCloned)
-
-        Assert.assertEquals(first.pathFragment(), root.firstNext().pathFragment())
-        Assert.assertNotEquals(first.id, root.firstNext().id)
-
-        Assert.assertEquals(first.firstNext().pathFragment(), root.firstNext().firstNext().pathFragment())
-        Assert.assertNotEquals(first.firstNext().id, root.firstNext().firstNext().id)
-
-        Assert.assertEquals(first.firstNext().firstNext().pathFragment(), root.firstNext().firstNext().firstNext().pathFragment())
-        Assert.assertNotEquals(first.firstNext().firstNext().id, root.firstNext().firstNext().firstNext().id)
-    }
-
-    @Test
-    void testCloneHybridDownStream() {
-        PathToken root = PathTokenFactory.root()
-        PathToken first1 = PathTokenFactory.pathWithIndex('first[1]')
-        PathToken first2 = PathTokenFactory.pathWithIndex('first[2]')
-        PathToken second = PathTokenFactory.simplePathToken('second')
-        PathToken third = PathTokenFactory.simplePathToken('third')
-
-        root.appendToken(first1)
-        root.appendToken(first2)
-        first1.appendToken(second)
-        first2.appendToken(second)
-        second.appendToken(third)
-
-        String origFirst1Id = root.next[0].id
-        String origFirst2Id = root.next[1].id
-        String origSecondId = root.next[0].next[0].id
-        String origThirdId = root.next[0].next[0].next[0].id
-
-        root.replaceDownstreamWithClones()
-
-        String newFirst1Id = root.next[0].id
-        String newFirst2Id = root.next[1].id
-        String newSecondId = root.next[0].next[0].id
-        String newThirdId = root.next[0].next[0].next[0].id
-
-        Assert.assertNotEquals(origFirst1Id, newFirst1Id)
-        Assert.assertNotEquals(origFirst2Id, newFirst2Id)
-        Assert.assertNotEquals(origSecondId, newSecondId)
-        Assert.assertNotEquals(origThirdId, newThirdId)
-    }
-
-    @Test
     void testPathTraversal() {
         PathToken root = createTreeLike()
 
@@ -145,18 +53,6 @@ class PathTokenTests {
         Assert.assertEquals('first[2]', paths[1].next.pathToken.pathFragment())
         Assert.assertEquals('second', paths[1].next.next.pathToken.pathFragment())
         Assert.assertEquals('third', paths[1].next.next.next.pathToken.pathFragment())
-    }
-
-    @Test
-    void testClonedSubListWithLeaf() {
-        PathToken root = PathTokenFactory.root()
-        root.appendToken(createSimpleTokenList())
-
-        PathToken newRoot = root.firstNext().firstNext().clonedSubListWithSelfAsLeaf()
-
-        Assert.assertEquals('first', newRoot.firstNext().pathFragment())
-        Assert.assertEquals('second', newRoot.firstNext().firstNext().pathFragment())
-        Assert.assertNull(newRoot.firstNext().firstNext().firstNext())
     }
 
     private static PathToken createSimpleTokenList() {

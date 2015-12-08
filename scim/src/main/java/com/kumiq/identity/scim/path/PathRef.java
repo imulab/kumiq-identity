@@ -29,6 +29,29 @@ public class PathRef {
         return list.get(0).getHead();
     }
 
+    /**
+     * Wrap a path token list in path reference list. Assume {@link PathToken#firstNext()} when
+     * traversing the path list. The reference list will stop at {@code lastToken}
+     *
+     * @param lastToken
+     * @return
+     */
+    public static PathRef createReferenceTo(PathToken lastToken) {
+        PathToken cursor = lastToken.getRoot();
+
+        List<PathToken> tokens = new ArrayList<>();
+        while (cursor != lastToken.firstNext()) {
+            tokens.add(cursor);
+            cursor = cursor.firstNext();
+        }
+
+        List<PathRef> referenceList = tokens
+                .stream()
+                .map(PathRef::new)
+                .collect(Collectors.toList());
+        return PathRef.linkList(referenceList);
+    }
+
     public PathRef(PathToken token) {
         this.pathToken = token;
     }
@@ -57,25 +80,13 @@ public class PathRef {
             // TODO do actual modify work on last node
         }
     }
-    
+
     public EvaluationContext evaluate(EvaluationContext context, Configuration configuration) {
         context.setCursor(this.pathToken.evaluate(context.getCursor(), configuration));
         if (this.isTail())
             return context;
 
         return this.next.evaluate(context, configuration);
-    }
-
-    public PathEvaluationContext evaluate(Map<String, Object> root, Map<String, Object> cursor) {
-        if (this.isTail()) {
-            PathEvaluationContext context = new PathEvaluationContext(root);
-            context.setValue(this.pathToken.evaluateSelf(cursor));
-            return context;
-        } else {
-            Object value = this.pathToken.evaluateSelf(cursor);
-            Assert.isTrue(TypeUtils.isMap(value));
-            return this.next.evaluate(root, TypeUtils.asMap(value));
-        }
     }
 
     public boolean isHead() {
