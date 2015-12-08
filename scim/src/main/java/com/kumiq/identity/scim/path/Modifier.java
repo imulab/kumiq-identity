@@ -4,7 +4,6 @@ import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.utils.TypeUtils;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -95,22 +94,6 @@ abstract public class Modifier {
                         subject,
                         pathRef.getPathToken().queryFreePath(),
                         attribute);
-
-//                Object newValue;
-//                if (attribute.isMultiValued()) {
-//                    newValue = new ArrayList<>();
-//                } else {
-//                    try {
-//                        newValue = attribute.getClazz().getConstructor().newInstance();
-//                    } catch (Exception ex) {
-//                        throw new RuntimeException(ex.getMessage());
-//                    }
-//                }
-//
-//                this.configuration.getObjectProvider().setPropertyValue(
-//                        subject,
-//                        pathRef.getPathToken().queryFreePath(),
-//                        newValue);
             } else {
                 throw new IllegalStateException("Impossible state: accessing missing property with index");
             }

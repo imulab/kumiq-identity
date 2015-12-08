@@ -1,8 +1,7 @@
 package com.kumiq.identity.scim.filter;
 
+import com.kumiq.identity.scim.path.Configuration;
 import org.springframework.util.Assert;
-
-import java.util.Map;
 
 /**
  *
@@ -79,13 +78,13 @@ public abstract class ExpressionNode<T> implements Predicate {
         }
 
         @Override
-        public boolean apply(Map<String, Object> data) {
+        public boolean apply(Object data, Configuration configuration) {
             if (LogicalOperator.AND == operator)
-                return Boolean.logicalAnd(getLeft().apply(data), getRight().apply(data));
+                return Boolean.logicalAnd(getLeft().apply(data, configuration), getRight().apply(data, configuration));
             else if (LogicalOperator.OR == operator)
-                return Boolean.logicalOr(getLeft().apply(data), getRight().apply(data));
+                return Boolean.logicalOr(getLeft().apply(data, configuration), getRight().apply(data, configuration));
             else
-                return !getLeft().apply(data);       // TODO confirm is left child instead of right child
+                return !getLeft().apply(data, configuration);
         }
 
         @Override
@@ -119,10 +118,10 @@ public abstract class ExpressionNode<T> implements Predicate {
         }
 
         @Override
-        public boolean apply(Map<String, Object> data) {
+        public boolean apply(Object data, Configuration configuration) {
             return EvaluatorFactory
                     .createEvaluator(this.operator)
-                    .evaluate(getLeft(), getRight(), new Evaluator.EvaluationContext(data));
+                    .evaluate(getLeft(), getRight(), data, configuration);
         }
 
         @Override

@@ -1,5 +1,6 @@
 package com.kumiq.identity.scim.filter;
 
+import com.kumiq.identity.scim.path.Configuration;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
@@ -38,19 +39,19 @@ public class EvaluatorFactory {
      */
     public static class EqualEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
             ValueNode leftEvaluated = left;
             ValueNode rightEvaluated = right;
 
             if (left.isPathNode())
-                leftEvaluated = left.asPathNode().evaluate(context.getData());
+                leftEvaluated = left.asPathNode().evaluate(data, configuration);
             else if (left.isPredicateNode())
-                leftEvaluated = left.asPredicateNode().evaluate(context.getData());
+                leftEvaluated = left.asPredicateNode().evaluate(data, configuration);
 
             if (right.isPathNode())
-                rightEvaluated = right.asPathNode().evaluate(context.getData());
+                rightEvaluated = right.asPathNode().evaluate(data, configuration);
             else if (right.isPredicateNode())
-                rightEvaluated = right.asPredicateNode().evaluate(context.getData());
+                rightEvaluated = right.asPredicateNode().evaluate(data, configuration);
 
             return leftEvaluated.equals(rightEvaluated);
         }
@@ -61,8 +62,8 @@ public class EvaluatorFactory {
      */
     public static class NotEqualEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
-            return !EvaluatorFactory.createEvaluator(RelationalOperator.EQ).evaluate(left, right, context);
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
+            return !EvaluatorFactory.createEvaluator(RelationalOperator.EQ).evaluate(left, right, data, configuration);
         }
     }
 
@@ -71,14 +72,14 @@ public class EvaluatorFactory {
      */
     public static class ContainsEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
             ValueNode leftEvaluated = left;
             ValueNode rightEvaluated = right;
 
             if (left.isPathNode())
-                leftEvaluated = left.asPathNode().evaluate(context.getData());
+                leftEvaluated = left.asPathNode().evaluate(data, configuration);
             if (right.isPathNode())
-                rightEvaluated = right.asPathNode().evaluate(context.getData());
+                rightEvaluated = right.asPathNode().evaluate(data, configuration);
 
             Assert.isTrue(leftEvaluated.isStringNode(), "left is not string node in contains evaluator");
             Assert.isTrue(rightEvaluated.isStringNode(), "right is not string node in contains evaluator");
@@ -92,14 +93,14 @@ public class EvaluatorFactory {
      */
     public static class StartsWithEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
             ValueNode leftEvaluated = left;
             ValueNode rightEvaluated = right;
 
             if (left.isPathNode())
-                leftEvaluated = left.asPathNode().evaluate(context.getData());
+                leftEvaluated = left.asPathNode().evaluate(data, configuration);
             if (right.isPathNode())
-                rightEvaluated = right.asPathNode().evaluate(context.getData());
+                rightEvaluated = right.asPathNode().evaluate(data, configuration);
 
             Assert.isTrue(leftEvaluated.isStringNode(), "left is not string node in starts with evaluator");
             Assert.isTrue(rightEvaluated.isStringNode(), "right is not string node in starts with evaluator");
@@ -113,14 +114,14 @@ public class EvaluatorFactory {
      */
     public static class EndsWithEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
             ValueNode leftEvaluated = left;
             ValueNode rightEvaluated = right;
 
             if (left.isPathNode())
-                leftEvaluated = left.asPathNode().evaluate(context.getData());
+                leftEvaluated = left.asPathNode().evaluate(data, configuration);
             if (right.isPathNode())
-                rightEvaluated = right.asPathNode().evaluate(context.getData());
+                rightEvaluated = right.asPathNode().evaluate(data, configuration);
 
             Assert.isTrue(leftEvaluated.isStringNode(), "left is not string node in ends with evaluator");
             Assert.isTrue(rightEvaluated.isStringNode(), "right is not string node in ends with evaluator");
@@ -134,10 +135,10 @@ public class EvaluatorFactory {
      */
     public static class PresentsEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
             ValueNode leftEvaluated = left;
             if (left.isPathNode())
-                leftEvaluated = left.asPathNode().evaluate(context.getData());
+                leftEvaluated = left.asPathNode().evaluate(data, configuration);
 
             return leftEvaluated.isValuePresent();
         }
@@ -148,14 +149,14 @@ public class EvaluatorFactory {
      */
     public static abstract class CompareToEvaluator implements Evaluator {
         @Override
-        public boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context) {
+        public boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration) {
             ValueNode leftEvaluated = left;
             ValueNode rightEvaluated = right;
 
             if (left.isPathNode())
-                leftEvaluated = left.asPathNode().evaluate(context.getData());
+                leftEvaluated = left.asPathNode().evaluate(data, configuration);
             if (right.isPathNode())
-                rightEvaluated = right.asPathNode().evaluate(context.getData());
+                rightEvaluated = right.asPathNode().evaluate(data, configuration);
 
             int result = leftEvaluated.compareTo(rightEvaluated);
             return evaluateInternal(result);

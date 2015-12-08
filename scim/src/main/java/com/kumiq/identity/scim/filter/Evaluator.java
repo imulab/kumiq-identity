@@ -1,6 +1,6 @@
 package com.kumiq.identity.scim.filter;
 
-import java.util.Map;
+import com.kumiq.identity.scim.path.Configuration;
 
 /**
  * @author Weinan Qiu
@@ -8,18 +8,5 @@ import java.util.Map;
  */
 public interface Evaluator {
 
-    boolean evaluate(ValueNode left, ValueNode right, EvaluationContext context);
-
-    class EvaluationContext {
-
-        private final Map<String, Object> data;
-
-        public EvaluationContext(Map<String, Object> data) {
-            this.data = data;
-        }
-
-        public Map<String, Object> getData() {
-            return data;
-        }
-    }
+    boolean evaluate(ValueNode left, ValueNode right, Object data, Configuration configuration);
 }

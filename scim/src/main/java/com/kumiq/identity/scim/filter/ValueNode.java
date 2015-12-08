@@ -389,8 +389,8 @@ public abstract class ValueNode implements FilterToken {
             this.predicate = predicate;
         }
 
-        public BooleanNode evaluate(Map<String, Object> data) {
-            Boolean result = predicate.apply(data);
+        public BooleanNode evaluate(Object data, Configuration configuration) {
+            Boolean result = predicate.apply(data, configuration);
             return ValueNodeFactory.booleanNode(result.toString());
         }
 
@@ -436,9 +436,9 @@ public abstract class ValueNode implements FilterToken {
             return pathHead;
         }
 
-        public ValueNode evaluate(Map<String, Object> data) {
+        public ValueNode evaluate(Object data, Configuration configuration) {
             EvaluationContext context = new EvaluationContext(data);
-            context = this.pathHead.evaluate(context, Configuration.withMapObjectProvider());
+            context = this.pathHead.evaluate(context, configuration);
             Object value = context.getCursor();
 
             if (value == null)

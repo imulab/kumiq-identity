@@ -145,8 +145,7 @@ public class PathCompiler {
         Predicate predicate = FilterCompiler.compile(token.getFilterComponent());
         for (int i = 0; i < list.size(); i++) {
             if (isMap(list.get(i))) {
-                // TODO transform predicate evaluator to use object too
-                if (predicate.apply(asMap(list.get(i)))) {
+                if (predicate.apply(list.get(i), this.configuration)) {
                     qualifiedIndex.add(i);
                 }
             }
