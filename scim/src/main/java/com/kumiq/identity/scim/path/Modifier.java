@@ -34,7 +34,7 @@ abstract public class Modifier {
         this.configuration = configuration;
     }
 
-    void modify() {
+    public void modify() {
         doModification(pathHead, context.getData());
     }
 

@@ -1,6 +1,5 @@
 package com.kumiq.identity.scim.path
 
-import com.kumiq.identity.scim.mapper.MappingContext
 import com.kumiq.identity.scim.resource.constant.ScimConstants
 import com.kumiq.identity.scim.resource.misc.Schema
 import org.junit.Assert

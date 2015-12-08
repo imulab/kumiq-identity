@@ -1,4 +1,4 @@
-package com.kumiq.identity.scim.mapper;
+package com.kumiq.identity.scim.path;
 
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.resource.misc.Schema;
@@ -14,22 +14,34 @@ import java.util.List;
  */
 public class MappingContext {
 
+    /**
+     * Data to convert to map
+     */
     private final Object data;
 
-    private final List<Schema> schemas;
+    /**
+     * Internal schema describing all fields in resource. Could be different than the one defined and returned in SCIM API.
+     */
+    private final Schema schema;
 
+    /**
+     * SCIM paths to include
+     */
     private List<String> includePaths;
 
+    /**
+     * SCIM paths to exclude
+     */
     private List<String> excludePaths;
 
-    public MappingContext(Object data, List<Schema> schemas, List<String> includePaths, List<String> excludePaths) {
+    public MappingContext(Object data, Schema schema, List<String> includePaths, List<String> excludePaths) {
         this.data = data;
-        this.schemas = schemas;
+        this.schema = schema;
         this.includePaths = !CollectionUtils.isEmpty(includePaths) ? includePaths : defaultPaths();
         this.excludePaths = !CollectionUtils.isEmpty(excludePaths) ? excludePaths : new ArrayList<>();
 
         Assert.isTrue(data != null, "Data is not set");
-        Assert.isTrue(!CollectionUtils.isEmpty(schemas), "Schema is not set");
+        Assert.isTrue(schema != null, "Schema is not set");
         Assert.isTrue(!CollectionUtils.isEmpty(this.includePaths), "Include paths are not set");
 
         updateIncludePaths();
@@ -37,16 +49,15 @@ public class MappingContext {
     }
 
     private List<String> defaultPaths() {
-        Assert.isTrue(!CollectionUtils.isEmpty(schemas), "Schema is not set");
         List<String> paths = new ArrayList<>();
-        this.schemas.forEach(schema -> schema.getAttributes().forEach(attribute -> paths.add(attribute.getName())));
+        schema.getAttributes().forEach(attribute -> paths.add(attribute.getName()));
         return paths;
     }
 
     private void updateIncludePaths() {
         List<String> pathsToRemove = new ArrayList<>();
         for (String eachPath : this.includePaths) {
-            Schema.Attribute attribute = findAttribute(eachPath);
+            Schema.Attribute attribute = this.schema.findAttributeByPath(eachPath);
 
             if (attribute == null) {
                 pathsToRemove.add(eachPath);
@@ -64,7 +75,7 @@ public class MappingContext {
     private void updateExcludePaths() {
         List<String> pathsToRemove = new ArrayList<>();
         for (String eachPath : this.excludePaths) {
-            Schema.Attribute attribute = findAttribute(eachPath);
+            Schema.Attribute attribute = schema.findAttributeByPath(eachPath);
 
             if (attribute == null) {
                 pathsToRemove.add(eachPath);
@@ -79,22 +90,12 @@ public class MappingContext {
         excludePaths.removeAll(pathsToRemove);
     }
 
-    private Schema.Attribute findAttribute(String path) {
-        Schema.Attribute attribute;
-        for (Schema schema : schemas) {
-            attribute = schema.findAttributeByPath(path);
-            if (attribute != null)
-                return attribute;
-        }
-        return null;
-    }
-
     public Object getData() {
         return data;
     }
 
-    public List<Schema> getSchemas() {
-        return schemas;
+    public Schema getSchema() {
+        return schema;
     }
 
     public List<String> getIncludePaths() {
