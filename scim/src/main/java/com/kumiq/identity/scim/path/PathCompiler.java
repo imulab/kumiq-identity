@@ -20,20 +20,32 @@ import static com.kumiq.identity.scim.utils.TypeUtils.*;
  */
 public class PathCompiler {
 
+    private final CompilationContext context;
+    private final Configuration configuration;
+
+    public static List<PathRef> compile(CompilationContext context, Configuration configuration) {
+        return new PathCompiler(context, configuration).doCompile();
+    }
+
     public static List<PathRef> compile(String path, Map<String, Object> data) {
-        return new PathCompiler().doCompile(path, data);
+        CompilationContext context = new CompilationContext(path, data);
+        Configuration configuration = Configuration.withMapObjectProvider();
+        return new PathCompiler(context, configuration).doCompile();
+    }
+
+    private PathCompiler(CompilationContext context, Configuration configuration) {
+        this.configuration = configuration;
+        this.context = context;
     }
 
     /**
      * Compile the SCIM path and return the head for the token list. The
      * list shall only contain {@link SimplePathToken} and {@link PathWithIndexToken}
      *
-     * @param path SCIM path
-     * @param data the object used for index evaluation
      * @return head of the path token tree
      */
-    private List<PathRef> doCompile(String path, Map<String, Object> data) {
-        Tokenizer pathTokenizer = new Tokenizer.PathTokenizer(path);
+    private List<PathRef> doCompile() {
+        Tokenizer pathTokenizer = new Tokenizer.PathTokenizer(this.context.getPath());
         List<PathToken> tokens = new ArrayList<>();
         tokens.add(PathTokenFactory.root());
 
@@ -53,7 +65,7 @@ public class PathCompiler {
 
         /* expand filter tokens and replace them with index tokens */
         PathToken pathRoot = tokens.get(0);
-        return traverseAndReplace(pathRoot, data);
+        return traverseAndReplace(pathRoot);
     }
 
     /**
@@ -63,7 +75,7 @@ public class PathCompiler {
      *
      * @param root
      */
-    private List<PathRef> traverseAndReplace(PathToken root, Map<String, Object> data) {
+    private List<PathRef> traverseAndReplace(PathToken root) {
         List<PathRef> filterFreeRoots = new ArrayList<>();
         Queue<PathToken> traverseBacklog = new LinkedList<>();
         traverseBacklog.add(root);
@@ -76,7 +88,7 @@ public class PathCompiler {
                 Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(head);
                 if (result.isPresent()) {
                     PathWithFilterToken tokenToReplace = result.get();
-                    List<PathWithIndexToken> replacementTokens = resolvePathWithFilterToken(tokenToReplace, data);
+                    List<PathWithIndexToken> replacementTokens = resolvePathWithFilterToken(tokenToReplace);
                     if (CollectionUtils.isEmpty(replacementTokens)) {
                         throw new FilterTokenResolvedToNothingException(tokenToReplace);
                     }
@@ -92,8 +104,6 @@ public class PathCompiler {
 
                     PathToken prev = tokenToReplace.getPrev();
                     prev.replaceTokens(tokenToReplace, replacementTokens);
-                    //prev.getNext().forEach(PathToken::replaceDownstreamWithClones);
-
                     traverseBacklog.add(head.getPathToken());
                     break;
                 } else {
@@ -115,19 +125,19 @@ public class PathCompiler {
         return Optional.empty();
     }
 
-    private List<PathWithIndexToken> resolvePathWithFilterToken(PathWithFilterToken token, Map<String, Object> data) {
+    private List<PathWithIndexToken> resolvePathWithFilterToken(PathWithFilterToken token) {
         PathRef pathHead = PathRef.createReferenceTo(token.getPrev());
 
         Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(pathHead);
         Assert.isTrue(!result.isPresent(), "Cloned path cannot contain another token with filter before the one supplied to evaluate.");
 
-        EvaluationContext context = new EvaluationContext(data);
-        context = pathHead.evaluate(context, Configuration.withMapObjectProvider());
-        Object value = context.getCursor();
+        EvaluationContext evalContext = new EvaluationContext(this.context.getData());
+        evalContext = pathHead.evaluate(evalContext, this.configuration);
+        Object value = evalContext.getCursor();
 
-        Assert.isTrue(isMap(value));
-        Assert.isTrue(isList(asMap(value).get(token.getPathComponent())));
-        List list = asList(asMap(value).get(token.getPathComponent()));
+        Object array = configuration.getObjectProvider().getPropertyValue(value, token.getPathComponent());
+        Assert.isTrue(isList(array));
+        List list = asList(array);
         if (list.size() == 0)
             return new ArrayList<>();
 
@@ -135,6 +145,7 @@ public class PathCompiler {
         Predicate predicate = FilterCompiler.compile(token.getFilterComponent());
         for (int i = 0; i < list.size(); i++) {
             if (isMap(list.get(i))) {
+                // TODO transform predicate evaluator to use object too
                 if (predicate.apply(asMap(list.get(i)))) {
                     qualifiedIndex.add(i);
                 }
