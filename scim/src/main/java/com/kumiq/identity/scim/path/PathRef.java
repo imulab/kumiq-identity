@@ -63,10 +63,12 @@ public class PathRef {
         return cursor;
     }
 
-    public String getPathAsString() {
+    public String getPathAsString(boolean stopAtMe) {
         PathRef cursor = this.getHead();
+        PathRef stopSignal = stopAtMe ? this.getNext() : null;
         List<PathRef> references = new ArrayList<>();
-        while (cursor != null) {
+
+        while (cursor != stopSignal) {
             if (!(cursor.pathToken instanceof PathRoot))
                 references.add(cursor);
             cursor = cursor.getNext();

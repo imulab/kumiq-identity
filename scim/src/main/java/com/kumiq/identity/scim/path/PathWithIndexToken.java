@@ -46,6 +46,11 @@ public class PathWithIndexToken extends SimplePathToken {
         return true;
     }
 
+    @Override
+    public boolean isSimplePath() {
+        return false;
+    }
+
     public Integer getIndexComponent() {
         return indexComponent;
     }

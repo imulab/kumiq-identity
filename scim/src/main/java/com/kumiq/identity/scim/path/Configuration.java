@@ -46,8 +46,16 @@ public class Configuration {
         /**
          * Suppress any exception during evaluation or modification.
          */
-        SUPPRESS_EXCEPTION
+        SUPPRESS_EXCEPTION,
 
-
+        /**
+         * Require compiler to operate with Schema hint for multiValue information.
+         * By default, it is not set, and compiler will not fail if attribute information
+         * is not found by path.
+         * When set, compiler would rely on schema and attribute to do work. And will attempt
+         * to throw exception if an attribute is not found by path. Whether or not an exception
+         * is thrown at the end still depends on {@code SUPPRESS_EXCEPTION}.
+         */
+        COMPILE_WITH_HINT,
     }
 }

@@ -47,6 +47,10 @@ public abstract class PathToken {
         return false;
     }
 
+    public boolean isPathWithFilter() {
+        return false;
+    }
+
     /**
      * Set {@code this} as the {@code prev} of the {@code pathToken} and {@pathToken} as one of the {@code next}
      * of {@code this}.

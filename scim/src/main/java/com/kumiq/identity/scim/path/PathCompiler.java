@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.path;
 
 import com.kumiq.identity.scim.filter.FilterCompiler;
 import com.kumiq.identity.scim.filter.Predicate;
+import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.utils.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.kumiq.identity.scim.utils.TypeUtils.*;
 
@@ -89,10 +91,16 @@ public class PathCompiler {
             List<PathRef> pathHeads = rootToTraverse.traverse();
 
             for (PathRef head : pathHeads) {
-                Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(head);
+                Optional<PathToken> result = findFirstExpandableToken(head);
                 if (result.isPresent()) {
-                    PathWithFilterToken tokenToReplace = result.get();
-                    List<PathWithIndexToken> replacementTokens = expandMultiValuedWithFilter(tokenToReplace);
+                    PathToken tokenToReplace = result.get();
+                    List<PathWithIndexToken> replacementTokens = new ArrayList<>();
+
+                    if (tokenToReplace.isSimplePath())
+                        replacementTokens = expandMultiValued((SimplePathToken) tokenToReplace);
+                    else if (tokenToReplace.isPathWithFilter())
+                        replacementTokens = expandMultiValuedWithFilter((PathWithFilterToken) tokenToReplace);
+
                     if (CollectionUtils.isEmpty(replacementTokens)) {
                         if (shouldSuppressException()) {
                             log.trace(tokenToReplace.pathFragment() + " evaluated to nothing. This path will be dropped.");
@@ -124,21 +132,71 @@ public class PathCompiler {
         return filterFreeRoots;
     }
 
-    private Optional<PathWithFilterToken> findFirstPathWithReferenceToken(PathRef root) {
+    private Optional<PathToken> findFirstExpandableToken(PathRef root) {
         PathRef cursor = root;
         while (cursor != null) {
-            if (cursor.getPathToken() instanceof PathWithFilterToken)
-                return Optional.of((PathWithFilterToken) cursor.getPathToken());
+            if (shouldRelyOnHint()) {
+                if (cursor.getPathToken() instanceof PathRoot) {
+                    cursor = cursor.getNext();
+                    continue;
+                }
+
+                Schema.Attribute attribute = cursor.getAttribute(this.context.getSchema());
+                if (attribute == null) {
+                    if (shouldSuppressException())
+                        continue;
+                    else
+                        throw ExceptionFactory.pathCompiledMissingAttribute(this.context.getPath(), cursor.getPathAsString(true));
+                }
+
+                if (attribute.isMultiValued() && !cursor.getPathToken().isPathWithIndex())
+                    return Optional.of(cursor.getPathToken());
+                else if (cursor.getPathToken().isPathWithFilter() && !shouldSuppressException())
+                    throw ExceptionFactory.pathCompiledNotExpandable(this.context.getPath(), cursor.getPathToken().pathFragment());
+            } else {
+                if (cursor.getPathToken() instanceof PathWithFilterToken)
+                    return Optional.of(cursor.getPathToken());
+            }
+
             cursor = cursor.getNext();
         }
         return Optional.empty();
     }
 
-    private List<PathWithIndexToken> expandMultiValuedWithFilter(PathWithFilterToken token) {
+    /**
+     * Expand a {@link SimplePathToken} to N {@link PathWithIndexToken}, N being the size of the list evaluated.
+     *
+     * @param token
+     * @return
+     */
+    private List<PathWithIndexToken> expandMultiValued(SimplePathToken token) {
         PathRef pathHead = PathRef.createReferenceTo(token.getPrev());
 
-        Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(pathHead);
-        Assert.isTrue(!result.isPresent(), "Cloned path cannot contain another token with filter before the one supplied to evaluate.");
+        EvaluationContext evalContext = new EvaluationContext(this.context.getData());
+        evalContext = pathHead.evaluate(evalContext, this.configuration);
+        Object value = evalContext.getCursor();
+
+        Object array = configuration.getObjectProvider().getPropertyValue(value, token.getPathFragment());
+        Assert.isTrue(isList(array));
+        List list = asList(array);
+        if (list.size() == 0)
+            return new ArrayList<>();
+
+        return IntStream
+                .range(0, list.size())
+                .mapToObj(integer -> new PathWithIndexToken(token.getPathFragment() + "[" + integer + "]"))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Expand a {@link PathWithFilterToken} to N {@link PathWithIndexToken}, N being the number of elements that
+     * qualified the predicate from the list being evaluated.
+     *
+     * @param token
+     * @return
+     */
+    private List<PathWithIndexToken> expandMultiValuedWithFilter(PathWithFilterToken token) {
+        PathRef pathHead = PathRef.createReferenceTo(token.getPrev());
 
         EvaluationContext evalContext = new EvaluationContext(this.context.getData());
         evalContext = pathHead.evaluate(evalContext, this.configuration);
@@ -170,5 +228,9 @@ public class PathCompiler {
 
     private boolean shouldSuppressException() {
         return this.configuration.getOptions().contains(Configuration.Option.SUPPRESS_EXCEPTION);
+    }
+
+    private boolean shouldRelyOnHint() {
+        return this.configuration.getOptions().contains(Configuration.Option.COMPILE_WITH_HINT);
     }
 }

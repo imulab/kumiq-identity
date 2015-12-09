@@ -33,6 +33,16 @@ public class PathWithFilterToken extends SimplePathToken {
     }
 
     @Override
+    public boolean isPathWithFilter() {
+        return true;
+    }
+
+    @Override
+    public boolean isSimplePath() {
+        return false;
+    }
+
+    @Override
     public String queryFreePath() {
         return this.getPathComponent();
     }

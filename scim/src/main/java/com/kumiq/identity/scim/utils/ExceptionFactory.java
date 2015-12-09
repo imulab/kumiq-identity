@@ -10,6 +10,14 @@ public class ExceptionFactory {
         return new PathCompiledToVoidException(compilePath, voidPath);
     }
 
+    public static PathCompilationException pathCompiledMissingAttribute(String compilePath, String rougePath) {
+        return new PathCompilationMissingAttributeException(compilePath, rougePath);
+    }
+
+    public static PathCompilationNonExpandableException pathCompiledNotExpandable(String compiledPath, String notExpandablePath) {
+        return new PathCompilationNonExpandableException(compiledPath, notExpandablePath);
+    }
+
     protected static class PathCompilationException extends RuntimeException {
 
         private final String compilePath;
@@ -37,5 +45,30 @@ public class ExceptionFactory {
         }
     }
 
+    public static class PathCompilationMissingAttributeException extends PathCompilationException {
 
+        private final String rougePath;
+
+        public PathCompilationMissingAttributeException(String compilePath, String rougePath) {
+            super(compilePath);
+            this.rougePath = rougePath;
+        }
+
+        public String getRougePath() {
+            return rougePath;
+        }
+    }
+
+    public static class PathCompilationNonExpandableException extends PathCompilationException {
+        private final String notExpandablePath;
+
+        public PathCompilationNonExpandableException(String compilePath, String notExpandablePath) {
+            super(compilePath);
+            this.notExpandablePath = notExpandablePath;
+        }
+
+        public String getNotExpandablePath() {
+            return notExpandablePath;
+        }
+    }
 }
