@@ -1,9 +1,11 @@
 package com.kumiq.identity.scim.path
 
+import com.kumiq.identity.scim.utils.ExceptionFactory.PathCompiledToVoidException
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
+import org.springframework.util.CollectionUtils
 
 /**
  *
@@ -51,5 +53,25 @@ class PathCompilerTests {
         Assert.assertEquals('emails', ((PathWithIndexToken) paths[1].next.next.pathToken).pathComponent)
         Assert.assertEquals(0, ((PathWithIndexToken) paths[1].next.next.pathToken).indexComponent)
         Assert.assertEquals('primary', ((SimplePathToken) paths[1].next.next.next.pathToken).pathFragment())
+    }
+
+    @Test
+    void testCompileFilterToNothing() {
+        Map data = [
+                'attributes': [
+                        'emails': [
+                                ['value': 'foo@bar.com', 'primary': true],
+                                ['value': 'foobar@bar.com', 'primary': true],
+                                ['value': 'foo@bar.com', 'primary': false]
+                        ]
+                ]
+        ]
+        try {
+            PathCompiler.compile('attributes.emails[value eq "nothing"].primary', data)
+            Assert.fail('Should have thrown exception')
+        } catch (PathCompiledToVoidException ex) {
+            Assert.assertEquals('attributes.emails[value eq "nothing"].primary', ex.compilePath)
+            Assert.assertEquals('emails[value eq "nothing"]', ex.voidPath)
+        }
     }
 }

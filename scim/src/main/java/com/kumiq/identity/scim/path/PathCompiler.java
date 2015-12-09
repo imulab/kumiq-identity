@@ -2,6 +2,9 @@ package com.kumiq.identity.scim.path;
 
 import com.kumiq.identity.scim.filter.FilterCompiler;
 import com.kumiq.identity.scim.filter.Predicate;
+import com.kumiq.identity.scim.utils.ExceptionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -19,6 +22,8 @@ import static com.kumiq.identity.scim.utils.TypeUtils.*;
  * @since 1.0.0
  */
 public class PathCompiler {
+
+    private static final Logger log = LoggerFactory.getLogger(PathCompiler.class);
 
     private final CompilationContext context;
     private final Configuration configuration;
@@ -65,7 +70,12 @@ public class PathCompiler {
 
         /* expand filter tokens and replace them with index tokens */
         PathToken pathRoot = tokens.get(0);
-        return traverseAndReplace(pathRoot);
+        List<PathRef> compiledPathHeads = traverseAndReplace(pathRoot);
+        if (CollectionUtils.isEmpty(compiledPathHeads) && !shouldSuppressException()) {
+            throw ExceptionFactory.pathCompiledToVoid(this.context.getPath(), this.context.getPath());
+        }
+
+        return compiledPathHeads;
     }
 
     /**
@@ -88,9 +98,14 @@ public class PathCompiler {
                 Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(head);
                 if (result.isPresent()) {
                     PathWithFilterToken tokenToReplace = result.get();
-                    List<PathWithIndexToken> replacementTokens = resolvePathWithFilterToken(tokenToReplace);
+                    List<PathWithIndexToken> replacementTokens = expandMultiValuedWithFilter(tokenToReplace);
                     if (CollectionUtils.isEmpty(replacementTokens)) {
-                        throw new FilterTokenResolvedToNothingException(tokenToReplace);
+                        if (shouldSuppressException()) {
+                            log.trace(tokenToReplace.pathFragment() + " evaluated to nothing. This path will be dropped.");
+                            continue;
+                        } else {
+                            throw ExceptionFactory.pathCompiledToVoid(this.context.getPath(), tokenToReplace.pathFragment());
+                        }
                     }
 
                     replacementTokens.sort((o1, o2) -> {
@@ -125,7 +140,7 @@ public class PathCompiler {
         return Optional.empty();
     }
 
-    private List<PathWithIndexToken> resolvePathWithFilterToken(PathWithFilterToken token) {
+    private List<PathWithIndexToken> expandMultiValuedWithFilter(PathWithFilterToken token) {
         PathRef pathHead = PathRef.createReferenceTo(token.getPrev());
 
         Optional<PathWithFilterToken> result = findFirstPathWithReferenceToken(pathHead);
@@ -144,10 +159,8 @@ public class PathCompiler {
         List<Integer> qualifiedIndex = new ArrayList<>();
         Predicate predicate = FilterCompiler.compile(token.getFilterComponent());
         for (int i = 0; i < list.size(); i++) {
-            if (isMap(list.get(i))) {
-                if (predicate.apply(list.get(i), this.configuration)) {
-                    qualifiedIndex.add(i);
-                }
+            if (predicate.apply(list.get(i), this.configuration)) {
+                qualifiedIndex.add(i);
             }
         }
 
@@ -161,20 +174,7 @@ public class PathCompiler {
         return token.contains("[") && token.endsWith("]");
     }
 
-    /**
-     * Exception thrown when a {@link PathWithFilterToken} didn't resolve to any {@link PathWithIndexToken}, indicating
-     * nothing can be supplied for downstream tokens. Callers may decide what to do with the exception.
-     */
-    public static class FilterTokenResolvedToNothingException extends RuntimeException {
-
-        private final PathWithFilterToken token;
-
-        FilterTokenResolvedToNothingException(PathWithFilterToken token) {
-            this.token = token;
-        }
-
-        public PathWithFilterToken getToken() {
-            return token;
-        }
+    private boolean shouldSuppressException() {
+        return this.configuration.getOptions().contains(Configuration.Option.SUPPRESS_EXCEPTION);
     }
 }

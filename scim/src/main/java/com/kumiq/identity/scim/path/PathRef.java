@@ -63,6 +63,20 @@ public class PathRef {
         return cursor;
     }
 
+    public String getPathAsString() {
+        PathRef cursor = this.getHead();
+        List<PathRef> references = new ArrayList<>();
+        while (cursor != null) {
+            if (!(cursor.pathToken instanceof PathRoot))
+                references.add(cursor);
+            cursor = cursor.getNext();
+        }
+        return references
+                .stream()
+                .map(pathRef -> pathRef.getPathToken().pathFragment())
+                .collect(Collectors.joining("."));
+    }
+
     public void append(PathRef that) {
         that.setPrev(this);
         this.setNext(that);
