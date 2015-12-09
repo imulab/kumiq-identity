@@ -30,7 +30,8 @@ class ModifierTests {
                 )
         ])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathRef pathRef = PathCompiler.compile(unit.getPath(), subject)[0]
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathRef pathRef = PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider())[0]
         pathRef.modify(context, Configuration.withMapObjectProvider())
 
         Assert.assertEquals('Qiu', subject.get('name').get('lastName'))
@@ -51,7 +52,8 @@ class ModifierTests {
                 )
         ])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathRef pathRef = PathCompiler.compile(unit.getPath(), subject)[0]
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathRef pathRef = PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider())[0]
         pathRef.modify(context, Configuration.withMapObjectProvider())
 
         Assert.assertEquals('Qiu', subject.get('name').get('lastName'))
@@ -71,7 +73,8 @@ class ModifierTests {
                 )
         ])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathRef pathRef = PathCompiler.compile(unit.getPath(), subject)[0]
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathRef pathRef = PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider())[0]
         pathRef.modify(context, Configuration.withMapObjectProvider())
 
         Assert.assertNull(subject.get('name').get('firstName'))
@@ -91,7 +94,8 @@ class ModifierTests {
                 )
         ])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathRef pathRef = PathCompiler.compile(unit.getPath(), subject)[0]
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathRef pathRef = PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider())[0]
         pathRef.modify(context, Configuration.withMapObjectProvider())
 
         Assert.assertEquals('Weinan', subject.get('name').get('firstName'))
@@ -110,7 +114,8 @@ class ModifierTests {
                 )
         ])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathRef pathRef = PathCompiler.compile(unit.getPath(), subject)[0]
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathRef pathRef = PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider())[0]
         pathRef.modify(context, Configuration.withMapObjectProvider())
 
         Assert.assertEquals(2, subject.get('emails').size())
@@ -138,7 +143,8 @@ class ModifierTests {
                 )
         ])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathCompiler.compile(unit.getPath(), subject).each {
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider()).each {
             it.modify(context, Configuration.withMapObjectProvider())
         }
 
@@ -168,7 +174,8 @@ class ModifierTests {
                 ModificationUnit.Operation.REPLACE,
                 'emails[primary eq false].status', 'B')
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathCompiler.compile(unit.getPath(), subject).each {
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider()).each {
             it.modify(context, Configuration.withMapObjectProvider())
         }
 
@@ -198,7 +205,8 @@ class ModifierTests {
                 ModificationUnit.Operation.REMOVE,
                 'emails[primary eq false].status', null)
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathCompiler.compile(unit.getPath(), subject).each {
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider()).each {
             it.modify(context, Configuration.withMapObjectProvider())
         }
 
@@ -225,7 +233,8 @@ class ModifierTests {
                 ModificationUnit.Operation.REPLACE,
                 'emails[value eq "foo@bar.com"]', ['value': 'david@foo.com'])
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathCompiler.compile(unit.getPath(), subject).each {
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider()).each {
             it.modify(context, Configuration.withMapObjectProvider())
         }
 
@@ -252,7 +261,8 @@ class ModifierTests {
                 ModificationUnit.Operation.REMOVE,
                 'emails[primary eq false]', null)
         ModificationContext context = new ModificationContext(unit, subjectSchema, subject)
-        PathCompiler.compile(unit.getPath(), subject).each {
+        CompilationContext compilationContext = CompilationContext.create(unit.getPath(), subject)
+        PathCompiler.compile(compilationContext, Configuration.withMapObjectProvider()).each {
             it.modify(context, Configuration.withMapObjectProvider())
         }
 

@@ -17,7 +17,9 @@ class PathEvaluationTests {
     @Test
     void testSimpleEvaluation() {
         Map data = ['name': ['firstName': 'David']]
-        List<PathRef> paths = PathCompiler.compile('name.firstName', data)
+        List<PathRef> paths = PathCompiler.compile(
+                CompilationContext.create('name.firstName', data),
+                Configuration.withMapObjectProvider())
 
         EvaluationContext context = new EvaluationContext(data)
         context = paths[0].evaluate(context, Configuration.withMapObjectProvider())
@@ -35,7 +37,9 @@ class PathEvaluationTests {
                         ]
                 ]
         ]
-        List<PathRef> paths = PathCompiler.compile('me.emails[active eq true].value', data)
+        List<PathRef> paths = PathCompiler.compile(
+                CompilationContext.create('me.emails[active eq true].value', data),
+                Configuration.withMapObjectProvider())
 
         Assert.assertEquals(2, paths.size())
         EvaluationContext context

@@ -35,7 +35,9 @@ class PathRefTests {
                 ]
         )
         Schema.Attribute attribute = null
-        PathRef root = PathCompiler.compile('first.second.third.forth', null).get(0)
+        PathRef root = PathCompiler.compile(
+                CompilationContext.create('first.second.third.forth', null),
+                Configuration.withMapObjectProvider()).get(0)
 
         attribute = root.next.getAttribute(userSchema)
         Assert.assertEquals('first', attribute.name)

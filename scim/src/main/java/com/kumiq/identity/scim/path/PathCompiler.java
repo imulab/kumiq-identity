@@ -32,12 +32,6 @@ public class PathCompiler {
         return new PathCompiler(context, configuration).doCompile();
     }
 
-    public static List<PathRef> compile(String path, Map<String, Object> data) {
-        CompilationContext context = new CompilationContext(path, data);
-        Configuration configuration = Configuration.withMapObjectProvider();
-        return new PathCompiler(context, configuration).doCompile();
-    }
-
     private PathCompiler(CompilationContext context, Configuration configuration) {
         this.configuration = configuration;
         this.context = context;

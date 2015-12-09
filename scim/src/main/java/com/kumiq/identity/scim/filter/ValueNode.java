@@ -427,7 +427,11 @@ public abstract class ValueNode implements FilterToken {
 
         public PathNode(String faceValue) {
             super(faceValue);
-            List<PathRef> compiledPaths = PathCompiler.compile(faceValue, null);
+            List<PathRef> compiledPaths = PathCompiler.compile(
+                    CompilationContext.create(faceValue, null),
+                    Configuration
+                            .withMapObjectProvider()
+                            .withOption(Configuration.Option.SUPPRESS_EXCEPTION));
             Assert.isTrue(compiledPaths.size() == 1, "Path node path should just be a simple path");
             this.pathHead = compiledPaths.get(0);
         }
