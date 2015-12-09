@@ -24,7 +24,7 @@ class MappingContextTests {
                 new Schema.Attribute(name: 'foo3', returned: ScimConstants.RETURNED_DEFAULT),
                 new Schema.Attribute(name: 'foo4', returned: ScimConstants.RETURNED_REQUEST)
         ])
-        MappingContext context = new MappingContext([:], [schema], [], [])
+        MappingContext context = new MappingContext([:], schema, [], [])
         Assert.assertTrue(context.getIncludePaths().contains('foo1'))
         Assert.assertFalse(context.getIncludePaths().contains('foo2'))
         Assert.assertTrue(context.getIncludePaths().contains('foo3'))
@@ -39,7 +39,7 @@ class MappingContextTests {
                 new Schema.Attribute(name: 'foo3', returned: ScimConstants.RETURNED_DEFAULT),
                 new Schema.Attribute(name: 'foo4', returned: ScimConstants.RETURNED_REQUEST)
         ])
-        MappingContext context = new MappingContext([:], [schema], ['foo5'], [])
+        MappingContext context = new MappingContext([:], schema, ['foo5'], [])
         Assert.assertFalse(context.getIncludePaths().contains('foo5'))
     }
 
@@ -51,7 +51,7 @@ class MappingContextTests {
                 new Schema.Attribute(name: 'foo3', returned: ScimConstants.RETURNED_DEFAULT),
                 new Schema.Attribute(name: 'foo4', returned: ScimConstants.RETURNED_REQUEST)
         ])
-        MappingContext context = new MappingContext([:], [schema], [], ['foo1'])
+        MappingContext context = new MappingContext([:], schema, [], ['foo1'])
         Assert.assertFalse(context.getExcludePaths().contains('foo1'))
     }
 }
