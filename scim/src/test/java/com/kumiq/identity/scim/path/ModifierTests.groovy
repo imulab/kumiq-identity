@@ -197,6 +197,8 @@ class ModifierTests {
                         name: 'emails',
                         multiValued: true,
                         subAttributes: [
+                                new Schema.Attribute(name: 'value', multiValued: false),
+                                new Schema.Attribute(name: 'primary', multiValued: false),
                                 new Schema.Attribute(name: 'status', multiValued: false)
                         ]
                 )

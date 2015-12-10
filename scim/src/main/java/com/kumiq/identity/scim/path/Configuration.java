@@ -41,6 +41,12 @@ public class Configuration {
         this.options = options;
     }
 
+    public Configuration clone() {
+        Configuration clone = new Configuration(this.objectProvider);
+        clone.setOptions(this.getOptions());
+        return clone;
+    }
+
     public enum Option {
 
         /**

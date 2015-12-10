@@ -51,6 +51,7 @@ final class Schema extends Resource {
         @JsonProperty('referenceTypes') List<String> referenceTypes = []
         @JsonProperty('subAttributes') List<Attribute> subAttributes = []
         @JsonProperty('class') Class clazz;
+        @JsonProperty('elementClass') Class elementClazz;
     }
 
     public Attribute findAttributeByPath(String path) {

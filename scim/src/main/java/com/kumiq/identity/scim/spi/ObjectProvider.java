@@ -32,6 +32,15 @@ public interface ObjectProvider {
     Collection<String> getPropertyKeys(Object obj);
 
     /**
+     * Create element object in array
+     *
+     * @param key
+     * @param hint
+     * @return
+     */
+    Object createArrayElement(String key, Schema.Attribute hint);
+
+    /**
      * Extract value from an array
      *
      * @param obj
@@ -64,6 +73,15 @@ public interface ObjectProvider {
      * @param idx
      */
     void removeFromArray(Object array, int idx);
+
+    /**
+     * Create a new object according to hint
+     *
+     * @param key
+     * @param hint
+     * @return
+     */
+    Object createObject(String key, Schema.Attribute hint);
 
     /**
      * Extract a value from an object

@@ -32,6 +32,12 @@ public class MapObjectProvider implements ObjectProvider {
     }
 
     @Override
+    public Object createArrayElement(String key, Schema.Attribute hint) {
+        Assert.isTrue(hint.isMultiValued(), "Cannot create array element on single valued property");
+        return new HashMap<>();
+    }
+
+    @Override
     public Object getArrayIndex(Object obj, int idx) {
         Assert.isTrue(isList(obj), "only list is supported");
         return asList(obj).get(idx);
@@ -49,7 +55,7 @@ public class MapObjectProvider implements ObjectProvider {
         int size = asList(array).size();
 
         if (idx - (size - 1) > 0) {
-            IntStream.range(0, (idx - (size - 1))).forEach(value -> asList(array).add(new Object()));
+            IntStream.range(0, (idx - (size - 1))).forEach(value -> asList(array).add(new HashMap<>()));
         }
 
         asList(array).set(idx, newValue);
@@ -80,17 +86,20 @@ public class MapObjectProvider implements ObjectProvider {
     }
 
     @Override
+    public Object createObject(String key, Schema.Attribute hint) {
+        if (hint.isMultiValued()) {
+            return new ArrayList<>();
+        } else {
+            return new HashMap<>();
+        }
+    }
+
+    @Override
     public void createMissingPropertyStructure(Object obj, String key, Schema.Attribute hint) {
         if (getPropertyValue(obj, key) != null)
             return;
 
         Assert.isTrue(key.equals(hint.getName()));
-        Object newValue;
-        if (hint.isMultiValued()) {
-            newValue = new ArrayList<>();
-        } else {
-            newValue = new HashMap<>();
-        }
-        setPropertyValue(obj, key, newValue);
+        setPropertyValue(obj, key, createObject(key, hint));
     }
 }

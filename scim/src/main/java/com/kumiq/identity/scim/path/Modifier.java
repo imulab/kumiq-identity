@@ -4,7 +4,10 @@ import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.utils.TypeUtils;
 import org.springframework.util.Assert;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Weinan Qiu
@@ -45,7 +48,7 @@ abstract public class Modifier {
         }
 
         if (!pathRef.isTail()) {
-            if (!this.configuration.getObjectProvider().containsKey(subject, pathRef.getPathToken().queryFreePath())) {
+            if (!containsPath(pathRef, subject)) {
                 if (returnOnMissingProperty())
                     return;
                 else if (throwExceptionOnMissingProperty())
@@ -75,6 +78,28 @@ abstract public class Modifier {
 
     abstract void handleModification(PathRef pathRef, Object subject, Object value);
 
+    boolean containsPath(PathRef pathRef, Object subject) {
+        if (pathRef.getPathToken() instanceof PathRoot)
+            return true;
+        else if (pathRef.getPathToken().isSimplePath())
+            return this.configuration.getObjectProvider().containsKey(subject, pathRef.getPathToken().pathFragment());
+        else if (pathRef.getPathToken().isPathWithFilter())
+            return false;
+        else if (pathRef.getPathToken().isPathWithIndex()) {
+            PathWithIndexToken indexToken = (PathWithIndexToken) pathRef.getPathToken();
+            Object array = this.configuration.getObjectProvider().getPropertyValue(subject, indexToken.getPathComponent());
+            if (array == null)
+                return false;
+            List list = TypeUtils.asList(array);
+            if (indexToken.getIndexComponent() >= list.size())
+                return false;
+        } else {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * A modifier that supports {@link com.kumiq.identity.scim.path.ModificationUnit.Operation#ADD}.
      * If an intermediate node does not exist, it will try to create it
@@ -89,11 +114,28 @@ abstract public class Modifier {
         void handleMissingProperty(PathRef pathRef, Object subject) {
             Schema.Attribute attribute = pathRef.getAttribute(this.context.getSchema());
 
-            if (pathRef.getPathToken() instanceof SimplePathToken) {
+            if (pathRef.getPathToken().isSimplePath()) {
+                SimplePathToken simplePathToken = (SimplePathToken) pathRef.getPathToken();
                 this.configuration.getObjectProvider().createMissingPropertyStructure(
                         subject,
-                        pathRef.getPathToken().queryFreePath(),
+                        simplePathToken.getPathFragment(),
                         attribute);
+            } else if (pathRef.getPathToken().isPathWithIndex()) {
+                PathWithIndexToken pathWithIndexToken = (PathWithIndexToken) pathRef.getPathToken();
+                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, pathWithIndexToken.getPathComponent());
+                if (array == null) {
+                    //this.configuration.getObjectProvider().setPropertyValue(subject, pathWithIndexToken.getPathComponent(), new ArrayList<>());
+                    this.configuration.getObjectProvider().createMissingPropertyStructure(
+                            subject,
+                            pathWithIndexToken.getPathComponent(),
+                            attribute);
+
+                    array = this.configuration.getObjectProvider().getPropertyValue(subject, pathWithIndexToken.getPathComponent());
+                }
+                this.configuration.getObjectProvider().setArrayIndex(
+                        array,
+                        pathWithIndexToken.getIndexComponent(),
+                        this.configuration.getObjectProvider().createArrayElement(pathWithIndexToken.getPathComponent(), attribute));
             } else {
                 throw new IllegalStateException("Impossible state: accessing missing property with index");
             }
@@ -104,7 +146,15 @@ abstract public class Modifier {
             Schema.Attribute attribute = pathRef.getAttribute(this.context.getSchema());
             if (attribute.isMultiValued()) {
                 if (pathRef.getPathToken().isPathWithIndex()) {
-                    throw new IllegalStateException("impossible state: path with index corresponds to multi-valued object");
+                    if (TypeUtils.isCollection(value))
+                        throw new IllegalStateException("impossible state: path with index corresponds to multi-valued object");
+                    else {
+                        PathWithIndexToken pathWithIndexToken = (PathWithIndexToken) pathRef.getPathToken();
+                        if (!this.configuration.getObjectProvider().containsKey(subject, pathWithIndexToken.getPathComponent()))
+                            this.configuration.getObjectProvider().setPropertyValue(subject, pathWithIndexToken.getPathComponent(), new ArrayList<>());
+                        Object array = this.configuration.getObjectProvider().getPropertyValue(subject, pathWithIndexToken.getPathComponent());
+                        this.configuration.getObjectProvider().setArrayIndex(array, pathWithIndexToken.getIndexComponent(), value);
+                    }
                 } else {
                     Object array = this.configuration.getObjectProvider().getPropertyValue(subject, pathRef.getPathToken().queryFreePath());
                     Assert.isTrue(TypeUtils.isList(array));
