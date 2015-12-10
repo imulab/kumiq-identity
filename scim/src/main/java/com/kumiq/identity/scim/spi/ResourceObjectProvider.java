@@ -90,7 +90,7 @@ public class ResourceObjectProvider implements ObjectProvider {
             throw new RuntimeException(ex);
         }
 
-        throw new RuntimeException("No such key [" + key + "] in object");
+        throw new RuntimeException("No such key [" + key + "] in object [" + obj.toString() + "]");
     }
 
     @Override

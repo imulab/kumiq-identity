@@ -4,6 +4,7 @@ import com.kumiq.identity.scim.filter.FilterCompiler;
 import com.kumiq.identity.scim.filter.Predicate;
 import com.kumiq.identity.scim.path.*;
 import com.kumiq.identity.scim.resource.core.Resource;
+import com.kumiq.identity.scim.resource.group.Group;
 import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.utils.ExceptionFactory;
 import org.springframework.util.Assert;
@@ -34,11 +35,6 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
     @Override
     public T save(T resource) {
         Assert.notNull(resource.getId());
-        if (dataStore.containsKey(resource.getId())) {
-            Map<String, Object> conflict = new HashMap<>();
-            conflict.put("id", resource.getId());
-            throw ExceptionFactory.userResourceAlreadyExists(conflict);
-        }
         return dataStore.put(resource.getId(), resource);
     }
 
@@ -59,6 +55,12 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
     public static class UserInMemoryDatabase<T extends User> extends InMemoryDatabase<T> implements UserDatabase<T> {
 
         private Map<String, T> userNameStore = new HashMap<>();
+
+        @Override
+        public void reset() {
+            super.reset();
+            this.userNameStore = new HashMap<>();
+        }
 
         @Override
         public T save(T resource) {
@@ -123,6 +125,41 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
             }
 
             return qualifiedResources;
+        }
+    }
+
+    /**
+     * Group in memory database
+     * @param <T>
+     */
+    public static class GroupInMemoryDatabase<T extends Group> extends InMemoryDatabase<T> implements GroupDatabase<T> {
+
+        @Override
+        public List<T> findGroupsWithMember(String memberId, boolean transitive) {
+            List<T> results = new ArrayList<>();
+            findGroupsWithMember(results, memberId, transitive);
+            return results;
+        }
+
+        private void findGroupsWithMember(List<T> groups, String memberId, boolean transitive) {
+            List<T> currentResults = findAll().stream().filter(t -> t.hasMember(memberId)).collect(Collectors.toList());
+
+            for (T group : currentResults) {
+                if (!groups.stream().filter(t -> t.hasMember(group.getId())).findAny().isPresent()) {
+                    groups.add(group);
+                    if (transitive)
+                        findGroupsWithMember(groups, group.getId(), true);
+                }
+            }
+        }
+
+        @Override
+        public void deleteMember(String memberId) {
+            List<T> groupsJoinedByMember = findGroupsWithMember(memberId, true);
+            groupsJoinedByMember.forEach(t -> {
+                t.getMembers().removeIf(member -> member.getValue().equals(memberId));
+                this.save(t);
+            });
         }
     }
 }

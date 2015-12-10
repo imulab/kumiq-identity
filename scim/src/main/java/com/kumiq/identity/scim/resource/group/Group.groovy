@@ -36,4 +36,8 @@ class Group extends Resource {
         @JsonProperty('type') String type
         @JsonProperty('$ref') String $ref
     }
+
+    boolean hasMember(String memberId) {
+        members.find { it.value == memberId } != null
+    }
 }
