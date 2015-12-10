@@ -184,6 +184,6 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
      * Service provider config database
      */
     public static class ServiceProviderConfigInMemoryDatabase extends InMemoryDatabase<ServiceProviderConfig> implements ServiceProviderConfigDatabase {
-        
+
     }
 }

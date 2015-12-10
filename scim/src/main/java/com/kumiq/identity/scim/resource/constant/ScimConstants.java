@@ -13,6 +13,7 @@ public class ScimConstants {
     public static final String RESOURCE_TYPE_SERVICE_PROVIDER_CONFIG = "ServiceProviderConfig";
     public static final String RESOURCE_TYPE_RESOURCE_TYPE = "ResourceType";
     public static final String RESOURCE_TYPE_SCHEMA = "Schema";
+    public static final String RESOURCE_TYPE_UNKNOWN = "Unknown";
 
     public static final String URN_USER = "urn:ietf:params:scim:schemas:core:2.0:User";
     public static final String URN_ENTERPRISE_USER_EXTENSION = "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User";

@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.utils;
 
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -98,6 +99,12 @@ public class ExceptionFactory {
 
     public static ResourceAlreadyExistsException groupResourceAlreadyExists(Map<String, Object> conflict) {
         return new ResourceAlreadyExistsException(ScimConstants.RESOURCE_TYPE_GROUP, conflict);
+    }
+
+    public static ResourceAlreadyExistsException resourceAlreadyExists(String resourceType, String conflictId) {
+        Map<String, Object> conflict = new HashMap<>();
+        conflict.put("id", conflictId);
+        return new ResourceAlreadyExistsException(resourceType, conflict);
     }
 
     protected static class ResourceAccessException extends RuntimeException {

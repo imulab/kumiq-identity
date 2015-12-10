@@ -1,0 +1,16 @@
+{
+  "resources": [
+    {
+      "id": "EC5A30B3-0245-4D61-9269-90D2220900DF",
+      "userName": "user1"
+    },
+    {
+      "id": "97CA210C-97FA-4861-915D-74836FCFB810",
+      "userName": "user2"
+    },
+    {
+      "id": "8DA397DA-ADB2-4E92-AD84-EF6C2885508C",
+      "userName": "user3"
+    }
+  ]
+}
