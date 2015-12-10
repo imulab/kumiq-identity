@@ -19,7 +19,7 @@ import static com.kumiq.identity.scim.resource.constant.ScimConstants.URN_SERVIC
 @EqualsAndHashCode
 final class ServiceProviderConfig extends Resource {
 
-    static final String SINGLETON_ID = 'ServiceProviderConfig'
+    public static final String SINGLETON_ID = 'ServiceProviderConfig'
 
     ServiceProviderConfig() {
         this.schemas = [URN_SERVICE_PROVIDER_CONFIG]
