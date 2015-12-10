@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.path;
 
 import com.kumiq.identity.scim.spi.MapObjectProvider;
 import com.kumiq.identity.scim.spi.ObjectProvider;
+import com.kumiq.identity.scim.spi.ResourceObjectProvider;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,10 @@ public class Configuration {
 
     public static Configuration withMapObjectProvider() {
         return new Configuration(new MapObjectProvider());
+    }
+
+    public static Configuration withResourceObjectProvider() {
+        return new Configuration(new ResourceObjectProvider());
     }
 
     public Configuration withOption(Option option) {
