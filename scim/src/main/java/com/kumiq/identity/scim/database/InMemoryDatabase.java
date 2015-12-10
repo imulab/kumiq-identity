@@ -5,6 +5,9 @@ import com.kumiq.identity.scim.filter.Predicate;
 import com.kumiq.identity.scim.path.*;
 import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.group.Group;
+import com.kumiq.identity.scim.resource.misc.ResourceType;
+import com.kumiq.identity.scim.resource.misc.Schema;
+import com.kumiq.identity.scim.resource.misc.ServiceProviderConfig;
 import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.utils.ExceptionFactory;
 import org.springframework.util.Assert;
@@ -161,5 +164,26 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
                 this.save(t);
             });
         }
+    }
+
+    /**
+     * Resource type database
+     */
+    public static class ResourceTypeInMemoryDatabase extends InMemoryDatabase<ResourceType> implements ResourceDatabase.ResourceTypeDatabase {
+
+    }
+
+    /**
+     * Schema database
+     */
+    public static class SchemaInMemoryDatabase extends InMemoryDatabase<Schema> implements ResourceDatabase.SchemaDatabase {
+
+    }
+
+    /**
+     * Service provider config database
+     */
+    public static class ServiceProviderConfigInMemoryDatabase extends InMemoryDatabase<ServiceProviderConfig> implements ServiceProviderConfigDatabase {
+        
     }
 }
