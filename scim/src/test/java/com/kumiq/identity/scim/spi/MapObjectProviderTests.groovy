@@ -1,4 +1,4 @@
-package com.kumiq.identity.scim.path
+package com.kumiq.identity.scim.spi
 
 import com.kumiq.identity.scim.spi.MapObjectProvider
 import com.kumiq.identity.scim.spi.ObjectProvider
