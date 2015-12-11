@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="setUserSchemaTask" class="com.kumiq.identity.scim.task.shared.SetSchemaTask">
+              <property name="database" ref="schemaDatabase" />
+              <property name="id" value="TODO" />
+       </bean>
+
+       <bean id="lookupUserByIdTask" class="com.kumiq.identity.scim.task.user.get.LookupUserByIdTask">
+              <property name="database" ref="userDatabase" />
+       </bean>
+
+       <bean id="assertUserExistsTask" class="com.kumiq.identity.scim.task.user.get.AssertUserExistsTask" />
+
+       <bean id="populateETagHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateETagHeaderTask" />
+
+       <bean id="populateLocationHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateLocationHeaderTask" />
+
+       <bean id="convertUserToMapTask" class="com.kumiq.identity.scim.task.user.get.ConvertUserToMapTask" />
+
+       <bean id="getUserTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="GetUserTaskChain"/>
+              <property name="tasks">
+                     <list>
+                            <ref bean="setUserSchemaTask" />
+                            <ref bean="lookupUserByIdTask" />
+                            <ref bean="assertUserExistsTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                            <ref bean="convertUserToMapTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>
