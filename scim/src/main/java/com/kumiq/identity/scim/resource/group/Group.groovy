@@ -33,6 +33,7 @@ class Group extends Resource {
     @EqualsAndHashCode
     static class Member {
         @JsonProperty('value') String value
+        @JsonProperty('display') String display
         @JsonProperty('type') String type
         @JsonProperty('$ref') String $ref
     }

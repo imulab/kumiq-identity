@@ -1,0 +1,2615 @@
+{
+  "resources": [
+    {
+      "id": "urn:ietf:params:scim:schemas:core:2.0:User",
+      "name" : "User",
+      "description" : "User Account",
+      "attributes": [
+        {
+          "name": "userName",
+          "type": "string",
+          "description": "Unique identifier for the User, typically used by the user to directly authenticate to the service provider. Each User MUST include a non-empty userName value. This identifier MUST be unique across the service provider's entire set of Users. REQUIRED.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "server"
+        },
+        {
+          "name": "name",
+          "type": "complex",
+          "description": "The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both.  If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "formatted",
+              "type": "string",
+              "description": "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g., 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "familyName",
+              "type": "string",
+              "description": "The family name of the User, or last name in most Western languages (e.g., 'Jensen' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "givenName",
+              "type": "string",
+              "description": "The given name of the User, or first name in most Western languages (e.g., 'Barbara' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "middleName",
+              "type": "string",
+              "description": "The middle name(s) of the User (e.g., 'Jane' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "honorificPrefix",
+              "type": "string",
+              "description": "The honorific prefix(es) of the User, or title in most Western languages (e.g., 'Ms.' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "honorificSuffix",
+              "type": "string",
+              "description": "The honorific suffix(es) of the User, or suffix in most Western languages (e.g., 'III' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            }
+          ]
+        },
+        {
+          "name": "displayName",
+          "type": "string",
+          "description": "The name of the User, suitable for display to end-users.  The name SHOULD be the full name of the User being described, if known.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "nickName",
+          "type": "string",
+          "description": "The casual way to address the user in real life, e.g., 'Bob' or 'Bobby' instead of 'Robert'.  This attribute SHOULD NOT be used to represent a User's username (e.g., 'bjensen' or 'mpepperidge').",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "profileUrl",
+          "type": "reference",
+          "description": "A fully qualified URL pointing to a page representing the User's online profile.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "referenceTypes": ["external"]
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "The user's title, such as \"Vice President.\"",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "userType",
+          "type": "string",
+          "description": "Used to identify the relationship between the organization and the user. Typical values used might be 'Contractor', 'Employee', 'Intern', 'Temp', 'External', and 'Unknown', but any value may be used.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["Contractor", "Employee", "Intern", "Temp", "External", "Internal", "Unknown"]
+        },
+        {
+          "name": "preferredLanguage",
+          "type": "string",
+          "description": "Indicates the User's preferred written or spoken language.  Generally used for selecting a localized user interface; e.g., 'en_US' specifies the language English and country US.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["zh_CN", "en_US", "en_CA"]
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "Used to indicate the User's default location for purposes of localizing items such as currency, date time format, or numerical representations.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["en-CA", "fr-CA", "en-US", "zh-CN"]
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "description": "The User's time zone in the 'Olson' time zone database format, e.g., 'America/Los_Angeles'.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["Asia/Shanghai", "America/New_York", "America/Toronto"]
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "description": "A Boolean value indicating the User's administrative status.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default"
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "description": "The User's cleartext password.  This attribute is intended to be used as a means to specify an initial password when creating a new User or to reset an existing User's password.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "writeOnly",
+          "returned": "never",
+          "uniqueness": "none"
+        },
+        {
+          "name": "emails",
+          "type": "complex",
+          "description": "Email addresses for the user.  The value SHOULD be canonicalized by the service provider, e.g., 'bjensen@example.com' instead of 'bjensen@EXAMPLE.COM'. Canonical type values of 'work', 'home', and 'other'.",
+          "multiValued": true,
+          "required": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Email addresses for the user.  The value SHOULD be canonicalized by the service provider, e.g., 'bjensen@example.com' instead of 'bjensen@EXAMPLE.COM'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display value for an email",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'work' or 'home'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["work", "home", "other"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred mailing address or primary email address.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "phoneNumbers",
+          "type": "complex",
+          "description": "Phone numbers for the User.  The value SHOULD be canonicalized by the service provider according to the format specified in RFC 3966, e.g., 'tel:+1-201-555-0123'. Canonical type values of 'work', 'home', 'mobile', 'fax', 'pager', and 'other'.",
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Phone number of the User.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display value for a phone number",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'work', 'home', 'mobile'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["work", "home", "mobile", "fax", "pager", "other"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred phone number or primary phone number.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "ims",
+          "type": "complex",
+          "description": "Instant messaging addresses for the User.",
+          "multiValued": true,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Instant messaging address for the User.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display value for a IMS",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'aim', 'gtalk', 'xmpp'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["aim", "gtalk", "icq", "xmpp", "msn", "skype", "qq", "yahoo", "wechat", "facebook", "weibo", "other"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred messenger or primary messenger.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "photos",
+          "type": "complex",
+          "description": "",
+          "multiValued": true,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "reference",
+              "description": "URL of a photo of the User.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["external"]
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, i.e., 'photo' or 'thumbnail'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["photo", "thumbnail"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred photo or thumbnail.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "addresses",
+          "type": "complex",
+          "description": "A physical mailing address for this User. Canonical type values of 'work', 'home', and 'other'.  This attribute is a complex type with the following sub-attributes.",
+          "multiValued": true,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "formatted",
+              "type": "string",
+              "description": "The full mailing address, formatted for display or use with a mailing label.  This attribute MAY contain newlines.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "streetAddress",
+              "type": "string",
+              "description": "The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information.  This attribute MAY contain newlines.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "locality",
+              "type": "string",
+              "description": "The city or locality component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "region",
+              "type": "string",
+              "description": "The state or region component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "postalCode",
+              "type": "string",
+              "description": "The zip code or postal code component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "country",
+              "type": "string",
+              "description": "The country name component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'work' or 'home'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["work", "home", "id", "driverlicense", "other"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "groups",
+          "type": "complex",
+          "description": "A list of groups to which the user belongs, either through direct membership, through nested groups, or dynamically calculated.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The identifier of the User's group.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "$ref",
+              "type": "reference",
+              "description": "The URI of the corresponding 'Group' resource to which the user belongs.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "A human-readable name, primarily used for display purposes.  READ-ONLY.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'direct' or 'indirect'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["direct", "indirect"]
+            }
+          ]
+        },
+        {
+          "name": "entitlements",
+          "type": "complex",
+          "description": "A list of entitlements for the User that represent a thing the User has.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The value of an entitlement.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "The display value of an entitlement.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["permission"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "roles",
+          "type": "complex",
+          "description": "A list of roles for the User that collectively represent who the User is, e.g., 'Student', 'Faculty'.",
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The value of a role.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "The display value of a role.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["permission"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "x509Certificates",
+          "type": "complex",
+          "description": "A list of certificates issued to the User.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The value of a certificate.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "The display value of a certificate.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["permission"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:User"
+      }
+    },
+    {
+      "id": "urn:ietf:params:scim:schemas:core:2.0:Group",
+      "name": "Group",
+      "description": "Group",
+      "attributes": [
+        {
+          "name": "displayName",
+          "type": "string",
+          "description": "A human-readable name for the Group. REQUIRED.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "members",
+          "type": "complex",
+          "description": "A list of members of the Group.",
+          "multiValued": true,
+          "required": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Identifier of the member of this Group.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "$ref",
+              "type": "reference",
+              "description": "The URI corresponding to a SCIM resource that is a member of this Group.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["User", "Group"]
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the type of resource, e.g., 'User' or 'Group'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["User", "Group"]
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display name for the member",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group"
+      }
+    },
+    {
+      "id": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
+      "name": "EnterpriseUser",
+      "description": "Enterprise User",
+      "attributes": [
+        {
+          "name": "employeeNumber",
+          "type": "string",
+          "description": "Numeric or alphanumeric identifier assigned to a person, typically based on order of hire or association with an organization.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "costCenter",
+          "type": "string",
+          "description": "Identifies the name of a cost center.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "organization",
+          "type": "string",
+          "description": "Identifies the name of an organization.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "division",
+          "type": "string",
+          "description": "Identifies the name of a division.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "department",
+          "type": "string",
+          "description": "Identifies the name of a department.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "manager",
+          "type": "complex",
+          "description": "The User's manager.  A complex type that optionally allows service providers to represent organizational hierarchy by referencing the 'id' attribute of another User.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The id of the SCIM resource representing the User's manager.  REQUIRED.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "$ref",
+              "type": "reference",
+              "description": "The URI of the SCIM resource representing the User's manager.  REQUIRED.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["User"]
+            },
+            {
+              "name": "displayName",
+              "type": "string",
+              "description": "The displayName of the User's manager. OPTIONAL and READ-ONLY.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:extension:enterprise:2.0:User"
+      }
+    },
+    {
+      "id": "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig",
+      "name": "Service Provider Configuration",
+      "description": "Schema for representing the service provider's configuration",
+      "attributes": [
+        {
+          "name": "documentationUri",
+          "type": "reference",
+          "description": "An HTTP-addressable URL pointing to the service provider's human-consumable help documentation.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none",
+          "referenceTypes": ["external"]
+        },
+        {
+          "name": "patch",
+          "type": "complex",
+          "description": "A complex type that specifies PATCH configuration options.",
+          "multiValued": false,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none",
+          "subAttributes": [
+            {
+              "name": "supported",
+              "type": "boolean",
+              "description": "A Boolean value specifying whether or not the operation is supported.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "bulk",
+          "type": "complex",
+          "description": "A complex type that specifies bulk configuration options.",
+          "multiValued": false,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "supported",
+              "type": "boolean",
+              "description": "A Boolean value specifying whether or not the operation is supported.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            },
+            {
+              "name": "maxOperations",
+              "type": "integer",
+              "description": "An integer value specifying the maximum number of operations.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "maxPayloadSize",
+              "type": "integer",
+              "description": "An integer value specifying the maximum payload size in bytes.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            }
+          ]
+        },
+        {
+          "name": "filter",
+          "type": "complex",
+          "description": "A complex type that specifies FILTER options.",
+          "multiValued": false,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "supported",
+              "type": "boolean",
+              "description": "A Boolean value specifying whether or not the operation is supported.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            },
+            {
+              "name": "maxResults",
+              "type": "integer",
+              "description": "An integer value specifying the maximum number of resources returned in a response.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            }
+          ]
+        },
+        {
+          "name": "changePassword",
+          "type": "complex",
+          "description": "A complex type that specifies configuration options related to changing a password.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "supported",
+              "type": "boolean",
+              "description": "A Boolean value specifying whether or not the operation is supported.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "sort",
+          "type": "complex",
+          "description": "A complex type that specifies sort result options.",
+          "multiValued": false,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "supported",
+              "type": "boolean",
+              "description": "A Boolean value specifying whether or not the operation is supported.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "etag",
+          "type": "complex",
+          "description": "A complex type that specifies etag options",
+          "multiValued": false,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "supported",
+              "type": "boolean",
+              "description": "A Boolean value specifying whether or not the operation is supported.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            }
+          ]
+        },
+        {
+          "name": "authenticationSchemes",
+          "type": "complex",
+          "description": "A complex type that specifies supported authentication scheme properties.",
+          "multiValued": true,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "name",
+              "type": "string",
+              "description": "The common authentication scheme name, e.g., HTTP Basic.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "description": "A description of the authentication scheme.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "specUri",
+              "type": "reference",
+              "description": "An HTTP-addressable URL pointing to the authentication scheme's specification.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["external"]
+            },
+            {
+              "name": "documentationUri",
+              "type": "reference",
+              "description": "An HTTP-addressable URL pointing to the authentication scheme's usage documentation.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["external"]
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "Specifies the type of the authentication scheme",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["oauth2", "httpbasic"]
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A boolean indicates whether this authentication schema is primary",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readOnly",
+              "returned": "default"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig"
+      }
+    },
+    {
+      "id": "urn:ietf:params:scim:schemas:core:2.0:ResourceType",
+      "name": "ResourceType",
+      "description": "Specifies the schema that describes a SCIM resource type",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "The resource type's server unique id. May be the same as the 'name' attribute.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The resource type name.  When applicable, service providers MUST specify the name, e.g., 'User'.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "The resource type's human-readable description. When applicable, service providers MUST specify the description.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "endpoint",
+          "type": "reference",
+          "description": "The resource type's HTTP-addressable endpoint relative to the Base URL, e.g., '/Users'.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none",
+          "referenceTypes": ["uri"]
+        },
+        {
+          "name": "schema",
+          "type": "reference",
+          "description": "The resource type's primary/base schema URI.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none",
+          "referenceTypes": ["uri"]
+        },
+        {
+          "name": "schemaExtensions",
+          "type": "complex",
+          "description": "A list of URIs of the resource type's schema extensions.",
+          "multiValued": true,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "schema",
+              "type": "reference",
+              "description": "The URI of a schema extension.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["uri"]
+            },
+            {
+              "name": "required",
+              "type": "boolean",
+              "description": "A Boolean value that specifies whether or not the schema extension is required for the resource type.  If true, a resource of this type MUST include this schema extension and also include any attributes declared as required in this schema extension. If false, a resource of this type MAY omit this schema extension.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:ResourceType"
+      }
+    },
+    {
+      "id": "urn:ietf:params:scim:schemas:core:2.0:Schema",
+      "name": "Schema",
+      "description": "Specifies the schema that describes a SCIM schema",
+      "attributes": [
+        {
+          "name": "id",
+          "type": "string",
+          "description": "The unique URI of the schema. When applicable, service providers MUST specify the URI.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "name",
+          "type": "string",
+          "description": "The schema's human-readable name.  When applicable, service providers MUST specify the name, e.g., 'User'.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "description": "The schema's human-readable name.  When applicable, service providers MUST specify the name, e.g., 'User'.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none"
+        },
+        {
+          "name": "attributes",
+          "type": "complex",
+          "description": "A complex attribute that includes the attributes of a schema.",
+          "multiValued": true,
+          "required": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "subAttributes": [
+            {
+              "name": "name",
+              "type": "string",
+              "description": "The attribute's name.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "The attribute's data type. Valid values include 'string', 'complex', 'boolean', 'decimal', 'integer', 'dateTime', 'reference'.",
+              "multiValued": false,
+              "required": true,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["string", "complex", "boolean", "decimal", "integer", "dateTime", "reference"]
+            },
+            {
+              "name": "multiValued",
+              "type": "boolean",
+              "description": "A Boolean value indicating an attribute's plurality.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "description": "A human-readable description of the attribute.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "required",
+              "type": "boolean",
+              "description": "A boolean value indicating whether or not the attribute is required.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readOnly",
+              "returned": "default"
+            },
+            {
+              "name": "canonicalValues",
+              "type": "string",
+              "description": "A collection of canonical values. When applicable, service providers MUST specify the canonical types, e.g., 'work', 'home'.",
+              "multiValued": true,
+              "required": false,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none"
+            },
+            {
+              "name": "caseExact",
+              "type": "boolean",
+              "description": "A Boolean value indicating whether or not a string attribute is case sensitive.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readOnly",
+              "returned": "default"
+            },
+            {
+              "name": "mutability",
+              "type": "boolean",
+              "description": "Indicates whether or not an attribute is modifiable.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["readOnly", "readWrite", "immutable", "writeOnly"]
+            },
+            {
+              "name": "returned",
+              "type": "string",
+              "description": "Indicates when an attribute is returned in a response (e.g., to a query).",
+              "multiValued": false,
+              "required": false,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["always", "never", "default", "request"]
+            },
+            {
+              "name": "uniqueness",
+              "type": "boolean",
+              "description": "Indicates how unique a value must be.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["none", "server", "global"]
+            },
+            {
+              "name": "referenceTypes",
+              "type": "string",
+              "description": "Used only with an attribute of type 'reference'.  Specifies a SCIM resourceType that a reference attribute MAY refer to, e.g., 'User'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": true,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["scim", "external", "uri", "User", "Group"]
+            },
+            {
+              "name": "subAttributes",
+              "type": "complex",
+              "description": "Used to define the sub-attributes of a complex attribute.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "subAttributes": [
+                {
+                  "name": "name",
+                  "type": "string",
+                  "description": "The attribute's name.",
+                  "multiValued": false,
+                  "required": true,
+                  "caseExact": true,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none"
+                },
+                {
+                  "name": "type",
+                  "type": "string",
+                  "description": "The attribute's data type. Valid values include 'string', 'complex', 'boolean', 'decimal', 'integer', 'dateTime', 'reference'.",
+                  "multiValued": false,
+                  "required": true,
+                  "caseExact": false,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none",
+                  "canonicalValues": ["string", "complex", "boolean", "decimal", "integer", "dateTime", "reference"]
+                },
+                {
+                  "name": "multiValued",
+                  "type": "boolean",
+                  "description": "A Boolean value indicating an attribute's plurality.",
+                  "multiValued": false,
+                  "required": true,
+                  "mutability": "readOnly",
+                  "returned": "default"
+                },
+                {
+                  "name": "description",
+                  "type": "string",
+                  "description": "A human-readable description of the attribute.",
+                  "multiValued": false,
+                  "required": false,
+                  "caseExact": false,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none"
+                },
+                {
+                  "name": "required",
+                  "type": "boolean",
+                  "description": "A boolean value indicating whether or not the attribute is required.",
+                  "multiValued": false,
+                  "required": true,
+                  "mutability": "readOnly",
+                  "returned": "default"
+                },
+                {
+                  "name": "canonicalValues",
+                  "type": "string",
+                  "description": "A collection of canonical values. When applicable, service providers MUST specify the canonical types, e.g., 'work', 'home'.",
+                  "multiValued": true,
+                  "required": false,
+                  "caseExact": true,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none"
+                },
+                {
+                  "name": "caseExact",
+                  "type": "boolean",
+                  "description": "A Boolean value indicating whether or not a string attribute is case sensitive.",
+                  "multiValued": false,
+                  "required": false,
+                  "mutability": "readOnly",
+                  "returned": "default"
+                },
+                {
+                  "name": "mutability",
+                  "type": "boolean",
+                  "description": "Indicates whether or not an attribute is modifiable.",
+                  "multiValued": false,
+                  "required": false,
+                  "caseExact": true,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none",
+                  "canonicalValues": ["readOnly", "readWrite", "immutable", "writeOnly"]
+                },
+                {
+                  "name": "returned",
+                  "type": "string",
+                  "description": "Indicates when an attribute is returned in a response (e.g., to a query).",
+                  "multiValued": false,
+                  "required": false,
+                  "caseExact": true,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none",
+                  "canonicalValues": ["always", "never", "default", "request"]
+                },
+                {
+                  "name": "uniqueness",
+                  "type": "boolean",
+                  "description": "Indicates how unique a value must be.",
+                  "multiValued": false,
+                  "required": false,
+                  "caseExact": true,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none",
+                  "canonicalValues": ["none", "server", "global"]
+                },
+                {
+                  "name": "referenceTypes",
+                  "type": "string",
+                  "description": "Used only with an attribute of type 'reference'.  Specifies a SCIM resourceType that a reference attribute MAY refer to, e.g., 'User'.",
+                  "multiValued": false,
+                  "required": false,
+                  "caseExact": true,
+                  "mutability": "readOnly",
+                  "returned": "default",
+                  "uniqueness": "none",
+                  "canonicalValues": ["scim", "external", "uri", "User", "Group"]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:Schema"
+      }
+    },
+    {
+      "id": "HintUser",
+      "name" : "HintUser",
+      "description" : "User Account Schema used internally for compilation and evaluation hint",
+      "attributes": [
+        {
+          "name": "schemas",
+          "type": "string",
+          "description": "Schemas of the resource it describes",
+          "multiValued": true,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "java.lang.String"
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "ID of the resource",
+          "multiValued": false,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "server",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "externalId",
+          "type": "string",
+          "description": "ID managed by the client",
+          "multiValued": false,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "global",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "meta",
+          "type": "complex",
+          "description": "Meta information about the resource",
+          "multiValued": false,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "com.kumiq.identity.scim.resource.core.Meta",
+          "subAttributes": [
+            {
+              "name": "resourceType",
+              "type": "string",
+              "description": "Type of this resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "created",
+              "type": "datetime",
+              "description": "Create timestamp of this resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.util.Date"
+            },
+            {
+              "name": "lastModified",
+              "type": "datetime",
+              "description": "Last modified timestamp of thie resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.util.Date"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "description": "URI location of this resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "version",
+              "type": "integer",
+              "description": "Number of modifications this version has gone through",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.Long"
+            }
+          ]
+        },
+        {
+          "name": "userName",
+          "type": "string",
+          "description": "Unique identifier for the User, typically used by the user to directly authenticate to the service provider. Each User MUST include a non-empty userName value. This identifier MUST be unique across the service provider's entire set of Users. REQUIRED.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "server",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "name",
+          "type": "complex",
+          "description": "The components of the user's real name. Providers MAY return just the full name as a single string in the formatted sub-attribute, or they MAY return just the individual component attributes using the other sub-attributes, or they MAY return both.  If both variants are returned, they SHOULD be describing the same name, with the formatted name indicating how the component attributes should be combined.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "com.kumiq.identity.scim.resource.user.User.Name",
+          "subAttributes": [
+            {
+              "name": "formatted",
+              "type": "string",
+              "description": "The full name, including all middle names, titles, and suffixes as appropriate, formatted for display (e.g., 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "familyName",
+              "type": "string",
+              "description": "The family name of the User, or last name in most Western languages (e.g., 'Jensen' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "givenName",
+              "type": "string",
+              "description": "The given name of the User, or first name in most Western languages (e.g., 'Barbara' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "middleName",
+              "type": "string",
+              "description": "The middle name(s) of the User (e.g., 'Jane' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "honorificPrefix",
+              "type": "string",
+              "description": "The honorific prefix(es) of the User, or title in most Western languages (e.g., 'Ms.' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "honorificSuffix",
+              "type": "string",
+              "description": "The honorific suffix(es) of the User, or suffix in most Western languages (e.g., 'III' given the full name 'Ms. Barbara J Jensen, III').",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            }
+          ]
+        },
+        {
+          "name": "displayName",
+          "type": "string",
+          "description": "The name of the User, suitable for display to end-users.  The name SHOULD be the full name of the User being described, if known.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "nickName",
+          "type": "string",
+          "description": "The casual way to address the user in real life, e.g., 'Bob' or 'Bobby' instead of 'Robert'.  This attribute SHOULD NOT be used to represent a User's username (e.g., 'bjensen' or 'mpepperidge').",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "profileUrl",
+          "type": "reference",
+          "description": "A fully qualified URL pointing to a page representing the User's online profile.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "referenceTypes": ["external"],
+          "class": "java.lang.String"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "description": "The user's title, such as \"Vice President.\"",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "userType",
+          "type": "string",
+          "description": "Used to identify the relationship between the organization and the user. Typical values used might be 'Contractor', 'Employee', 'Intern', 'Temp', 'External', and 'Unknown', but any value may be used.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["Contractor", "Employee", "Intern", "Temp", "External", "Internal", "Unknown"],
+          "class": "java.lang.String"
+        },
+        {
+          "name": "preferredLanguage",
+          "type": "string",
+          "description": "Indicates the User's preferred written or spoken language.  Generally used for selecting a localized user interface; e.g., 'en_US' specifies the language English and country US.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["zh_CN", "en_US", "en_CA"],
+          "class": "java.lang.String"
+        },
+        {
+          "name": "locale",
+          "type": "string",
+          "description": "Used to indicate the User's default location for purposes of localizing items such as currency, date time format, or numerical representations.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["en-CA", "fr-CA", "en-US", "zh-CN"],
+          "class": "java.lang.String"
+        },
+        {
+          "name": "timezone",
+          "type": "string",
+          "description": "The User's time zone in the 'Olson' time zone database format, e.g., 'America/Los_Angeles'.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "canonicalValues": ["Asia/Shanghai", "America/New_York", "America/Toronto"],
+          "class": "java.lang.String"
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "description": "A Boolean value indicating the User's administrative status.",
+          "multiValued": false,
+          "required": true,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "class": "java.lang.Boolean"
+        },
+        {
+          "name": "password",
+          "type": "string",
+          "description": "The User's cleartext password.  This attribute is intended to be used as a means to specify an initial password when creating a new User or to reset an existing User's password.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "writeOnly",
+          "returned": "never",
+          "uniqueness": "none",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "emails",
+          "type": "complex",
+          "description": "Email addresses for the user.  The value SHOULD be canonicalized by the service provider, e.g., 'bjensen@example.com' instead of 'bjensen@EXAMPLE.COM'. Canonical type values of 'work', 'home', and 'other'.",
+          "multiValued": true,
+          "required": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.Email",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Email addresses for the user.  The value SHOULD be canonicalized by the service provider, e.g., 'bjensen@example.com' instead of 'bjensen@EXAMPLE.COM'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display value for an email",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'work' or 'home'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["work", "home", "other"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred mailing address or primary email address.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "phoneNumbers",
+          "type": "complex",
+          "description": "Phone numbers for the User.  The value SHOULD be canonicalized by the service provider according to the format specified in RFC 3966, e.g., 'tel:+1-201-555-0123'. Canonical type values of 'work', 'home', 'mobile', 'fax', 'pager', and 'other'.",
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.PhoneNumber",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Phone number of the User.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display value for a phone number",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'work', 'home', 'mobile'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["work", "home", "mobile", "fax", "pager", "other"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred phone number or primary phone number.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "ims",
+          "type": "complex",
+          "description": "Instant messaging addresses for the User.",
+          "multiValued": true,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.IMS",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Instant messaging address for the User.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display value for a IMS",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'aim', 'gtalk', 'xmpp'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["aim", "gtalk", "icq", "xmpp", "msn", "skype", "qq", "yahoo", "wechat", "facebook", "weibo", "other"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred messenger or primary messenger.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": true,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "photos",
+          "type": "complex",
+          "description": "",
+          "multiValued": true,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.Photo",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "reference",
+              "description": "URL of a photo of the User.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["external"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, i.e., 'photo' or 'thumbnail'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["photo", "thumbnail"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute, e.g., the preferred photo or thumbnail.  The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "addresses",
+          "type": "complex",
+          "description": "A physical mailing address for this User. Canonical type values of 'work', 'home', and 'other'.  This attribute is a complex type with the following sub-attributes.",
+          "multiValued": true,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.Address",
+          "subAttributes": [
+            {
+              "name": "formatted",
+              "type": "string",
+              "description": "The full mailing address, formatted for display or use with a mailing label.  This attribute MAY contain newlines.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "streetAddress",
+              "type": "string",
+              "description": "The full street address component, which may include house number, street name, P.O. box, and multi-line extended street address information.  This attribute MAY contain newlines.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "locality",
+              "type": "string",
+              "description": "The city or locality component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "region",
+              "type": "string",
+              "description": "The state or region component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "postalCode",
+              "type": "string",
+              "description": "The zip code or postal code component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "country",
+              "type": "string",
+              "description": "The country name component.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'work' or 'home'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["work", "home", "id", "driverlicense", "other"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "groups",
+          "type": "complex",
+          "description": "A list of groups to which the user belongs, either through direct membership, through nested groups, or dynamically calculated.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.Group",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The identifier of the User's group.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "$ref",
+              "type": "reference",
+              "description": "The URI of the corresponding 'Group' resource to which the user belongs.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "A human-readable name, primarily used for display purposes.  READ-ONLY.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function, e.g., 'direct' or 'indirect'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["direct", "indirect"],
+              "class": "java.lang.String"
+            }
+          ]
+        },
+        {
+          "name": "entitlements",
+          "type": "complex",
+          "description": "A list of entitlements for the User that represent a thing the User has.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.Entitlement",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The value of an entitlement.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "The display value of an entitlement.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["permission"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "roles",
+          "type": "complex",
+          "description": "A list of roles for the User that collectively represent who the User is, e.g., 'Student', 'Faculty'.",
+          "multiValued": true,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.Role",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The value of a role.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "The display value of a role.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["permission"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        },
+        {
+          "name": "x509Certificates",
+          "type": "complex",
+          "description": "A list of certificates issued to the User.",
+          "multiValued": false,
+          "required": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User.X509Certificate",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "The value of a certificate.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "The display value of a certificate.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the attribute's function.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["permission"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "primary",
+              "type": "boolean",
+              "description": "A Boolean value indicating the 'primary' or preferred attribute value for this attribute. The primary attribute value 'true' MUST appear no more than once.",
+              "multiValued": false,
+              "required": false,
+              "mutability": "readWrite",
+              "returned": "default",
+              "class": "java.lang.Boolean"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:User"
+      }
+    },
+    {
+      "id": "HintGroup",
+      "name": "HintGroup",
+      "description": "User Group Schema used internally for compilation and evaluation hint",
+      "attributes": [
+        {
+          "name": "displayName",
+          "type": "string",
+          "description": "A human-readable name for the Group. REQUIRED.",
+          "multiValued": false,
+          "required": false,
+          "caseExact": false,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "members",
+          "type": "complex",
+          "description": "A list of members of the Group.",
+          "multiValued": true,
+          "required": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "class": "java.util.ArrayList",
+          "elementClass": "com.kumiq.identity.scim.resource.group.Group.Member",
+          "subAttributes": [
+            {
+              "name": "value",
+              "type": "string",
+              "description": "Identifier of the member of this Group.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "$ref",
+              "type": "reference",
+              "description": "The URI corresponding to a SCIM resource that is a member of this Group.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none",
+              "referenceTypes": ["User", "Group"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "description": "A label indicating the type of resource, e.g., 'User' or 'Group'.",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none",
+              "canonicalValues": ["User", "Group"],
+              "class": "java.lang.String"
+            },
+            {
+              "name": "display",
+              "type": "string",
+              "description": "Display name for the member",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "immutable",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            }
+          ]
+        }
+      ],
+      "meta": {
+        "resourceType": "Schema",
+        "location": "https://scim.kumiq.com/Schemas/urn:ietf:params:scim:schemas:core:2.0:Group"
+      }
+    }
+  ]
+}

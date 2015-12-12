@@ -1,0 +1,45 @@
+{
+  "resources": [
+    {
+      "documentationUri": "https://github.com/Kumiq/kumiq-scim/blob/master/README.md",
+      "patch": {
+        "supported": true
+      },
+      "bulk": {
+        "supported": true,
+        "maxOperations": 1000,
+        "maxPayloadSize": 1048576
+      },
+      "filter": {
+        "supported": true,
+        "maxResults": 200
+      },
+      "changePassword": {
+        "supported": true
+      },
+      "sort": {
+        "supported": true
+      },
+      "etag": {
+        "supported":true
+      },
+      "authenticationSchemes": [
+        {
+          "name": "OAuth Bearer Token",
+          "description": "Authentication scheme using the OAuth Bearer Token Standard",
+          "specUri": "http://www.rfc-editor.org/info/rfc6750",
+          "documentationUri": "https://github.com/Kumiq/kumiq-scim/blob/master/README.md",
+          "type": "oauthbearertoken",
+          "primary": true
+        }
+      ],
+      "meta": {
+        "location": "https://scim.kumiq.com/ServiceProviderConfig",
+        "resourceType": "ServiceProviderConfig",
+        "created": "2015-11-19T23:20:00Z",
+        "lastModified": "2015-11-19T23:20:00Z",
+        "version": "1"
+      }
+    }
+  ]
+}

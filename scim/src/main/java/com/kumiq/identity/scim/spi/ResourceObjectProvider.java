@@ -125,6 +125,13 @@ public class ResourceObjectProvider implements ObjectProvider {
     }
 
     private Object newObjectFromClass(Class clazz) {
+        if (clazz.equals(Boolean.class))
+            return Boolean.FALSE;
+        else if (clazz.equals(Long.class))
+            return 0l;
+        else if (clazz.equals(Integer.class))
+            return 0;
+
         try {
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException ex) {

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="userResourceInitialization" class="com.kumiq.identity.scim.init.GenericResourceInitialization">
+              <property name="filePath" value="stock/user.json" />
+              <property name="database" ref="userDatabase" />
+              <property name="wrapperClass" value="com.kumiq.identity.scim.init.ResourceInitWrapper.UserResourceInitWrapper" />
+       </bean>
+
+       <bean id="groupResourceInitialization" class="com.kumiq.identity.scim.init.GenericResourceInitialization">
+              <property name="filePath" value="stock/group.json" />
+              <property name="database" ref="groupDatabase" />
+              <property name="wrapperClass" value="com.kumiq.identity.scim.init.ResourceInitWrapper.GroupResourceInitWrapper" />
+       </bean>
+
+       <bean id="schemaResourceInitialization" class="com.kumiq.identity.scim.init.GenericResourceInitialization">
+              <property name="filePath" value="stock/schema.json" />
+              <property name="database" ref="schemaDatabase" />
+              <property name="wrapperClass" value="com.kumiq.identity.scim.init.ResourceInitWrapper.SchemaResourceInitWrapper" />
+       </bean>
+
+       <bean id="serviceProviderConfigResourceInitialization" class="com.kumiq.identity.scim.init.GenericResourceInitialization">
+              <property name="filePath" value="stock/sp_config.json" />
+              <property name="database" ref="serviceProviderConfigDatabase" />
+              <property name="wrapperClass" value="com.kumiq.identity.scim.init.ResourceInitWrapper.ServiceProviderConfigResourceInitWrapper" />
+       </bean>
+
+       <bean id="resourceTypeResourceInitialization" class="com.kumiq.identity.scim.init.GenericResourceInitialization">
+              <property name="filePath" value="stock/resource_type.json" />
+              <property name="database" ref="resourceTypeDatabase" />
+              <property name="wrapperClass" value="com.kumiq.identity.scim.init.ResourceInitWrapper.ResourceTypeResourceInitWrapper" />
+       </bean>
+</beans>

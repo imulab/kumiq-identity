@@ -21,6 +21,9 @@ import static com.kumiq.identity.scim.resource.constant.ScimConstants.URN_SCHEMA
 @EqualsAndHashCode
 final class Schema extends Resource {
 
+    public static final String HINT_USER_SCHEMA_ID = 'HintUser'
+    public static final String HINT_GROUP_SCHEMA_ID = 'HintGroup'
+
     Schema() {
         this.schemas = [URN_SCHEMA]
         this.meta = new Meta(resourceType: RESOURCE_TYPE_SCHEMA)

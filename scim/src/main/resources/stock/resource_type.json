@@ -1,0 +1,65 @@
+{
+  "resources": [
+    {
+      "id": "User",
+      "name": "User",
+      "endpoint": "/Users",
+      "description": "User Account",
+      "schema": "urn:ietf:params:scim:schemas:core:2.0:User",
+      "schemaExtensions": [
+        {
+          "schema": "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User",
+          "required": true
+        }
+      ],
+      "meta": {
+        "resourceType": "ResourceType",
+        "location": "https://scim.kumiq.com/ResourceTypes/User"
+      }
+    },
+    {
+      "id": "Group",
+      "name": "Group",
+      "endpoint": "/Groups",
+      "description": "Group",
+      "schema": "urn:ietf:params:scim:schemas:core:2.0:Group",
+      "meta": {
+        "resourceType": "ResourceType",
+        "location": "https://scim.kumiq.com/ResourceTypes/Group"
+      }
+    },
+    {
+      "id": "ServiceProviderConfig",
+      "name": "Service Provider Configuration",
+      "endpoint": "/ServiceProviderConfigs",
+      "description": "Service Provider Configuration",
+      "schema": "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig",
+      "meta": {
+        "resourceType": "ResourceType",
+        "location": "https://scim.kumiq.com/ResourceTypes/ServiceProviderConfig"
+      }
+    },
+    {
+      "id": "Schema",
+      "name": "Schema",
+      "endpoint": "/Schemas",
+      "description": "Schema",
+      "schema": "urn:ietf:params:scim:schemas:core:2.0:Schema",
+      "meta": {
+        "resourceType": "ResourceType",
+        "location": "https://scim.kumiq.com/ResourceTypes/Schema"
+      }
+    },
+    {
+      "id": "ResourceType",
+      "name": "ResourceType",
+      "endpoint": "/ResourceTypes",
+      "description": "Resource Type",
+      "schema": "urn:ietf:params:scim:schemas:core:2.0:ResourceType",
+      "meta": {
+        "resourceType": "ResourceType",
+        "location": "https://scim.kumiq.com/ResourceTypes/ResourceType"
+      }
+    }
+  ]
+}
