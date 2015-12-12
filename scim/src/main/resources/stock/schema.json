@@ -1733,7 +1733,7 @@
           "mutability": "readWrite",
           "returned": "default",
           "uniqueness": "none",
-          "class": "com.kumiq.identity.scim.resource.user.User.Name",
+          "class": "com.kumiq.identity.scim.resource.user.User$Name",
           "subAttributes": [
             {
               "name": "formatted",
@@ -1943,7 +1943,7 @@
           "returned": "default",
           "uniqueness": "none",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.Email",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$Email",
           "subAttributes": [
             {
               "name": "value",
@@ -2004,7 +2004,7 @@
           "mutability": "readWrite",
           "returned": "default",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.PhoneNumber",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$PhoneNumber",
           "subAttributes": [
             {
               "name": "value",
@@ -2064,7 +2064,7 @@
           "mutability": "readWrite",
           "returned": "default",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.IMS",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$IMS",
           "subAttributes": [
             {
               "name": "value",
@@ -2124,7 +2124,7 @@
           "mutability": "readWrite",
           "returned": "default",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.Photo",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$Photo",
           "subAttributes": [
             {
               "name": "value",
@@ -2174,7 +2174,7 @@
           "returned": "default",
           "uniqueness": "none",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.Address",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$Address",
           "subAttributes": [
             {
               "name": "formatted",
@@ -2277,12 +2277,12 @@
           "name": "groups",
           "type": "complex",
           "description": "A list of groups to which the user belongs, either through direct membership, through nested groups, or dynamically calculated.",
-          "multiValued": false,
+          "multiValued": true,
           "required": false,
           "mutability": "readWrite",
           "returned": "default",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.Group",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$Group",
           "subAttributes": [
             {
               "name": "value",
@@ -2339,13 +2339,13 @@
           "name": "entitlements",
           "type": "complex",
           "description": "A list of entitlements for the User that represent a thing the User has.",
-          "multiValued": false,
+          "multiValued": true,
           "required": false,
           "mutability": "readWrite",
           "returned": "default",
           "uniqueness": "none",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.Entitlement",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$Entitlement",
           "subAttributes": [
             {
               "name": "value",
@@ -2407,7 +2407,7 @@
           "returned": "default",
           "uniqueness": "none",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.Role",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$Role",
           "subAttributes": [
             {
               "name": "value",
@@ -2462,13 +2462,13 @@
           "name": "x509Certificates",
           "type": "complex",
           "description": "A list of certificates issued to the User.",
-          "multiValued": false,
+          "multiValued": true,
           "required": false,
           "mutability": "readWrite",
           "returned": "default",
           "uniqueness": "none",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.user.User.X509Certificate",
+          "elementClass": "com.kumiq.identity.scim.resource.user.User$X509Certificate",
           "subAttributes": [
             {
               "name": "value",
@@ -2551,7 +2551,7 @@
           "mutability": "readWrite",
           "returned": "default",
           "class": "java.util.ArrayList",
-          "elementClass": "com.kumiq.identity.scim.resource.group.Group.Member",
+          "elementClass": "com.kumiq.identity.scim.resource.group.Group$Member",
           "subAttributes": [
             {
               "name": "value",

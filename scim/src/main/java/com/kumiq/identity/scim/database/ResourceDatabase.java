@@ -27,6 +27,12 @@ public interface ResourceDatabase<T extends Resource> {
 
     void delete(T resource);
 
+    default void delete(String id) {
+        Optional<T> result = findById(id);
+        if (result.isPresent())
+            delete(result.get());
+    }
+
     default int count() {
         List<T> all = findAll();
         return CollectionUtils.isEmpty(all) ? 0 : all.size();

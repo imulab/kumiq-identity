@@ -5,7 +5,7 @@
 
        <bean id="setUserSchemaTask" class="com.kumiq.identity.scim.task.shared.SetSchemaTask">
               <property name="database" ref="schemaDatabase" />
-              <property name="id" value="TODO" />
+              <property name="id" value="HintUser" />
        </bean>
 
        <bean id="lookupUserByIdTask" class="com.kumiq.identity.scim.task.user.get.LookupUserByIdTask">

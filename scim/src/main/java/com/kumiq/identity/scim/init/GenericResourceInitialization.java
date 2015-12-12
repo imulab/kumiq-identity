@@ -23,7 +23,7 @@ import java.util.List;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public class GenericResourceInitialization<T extends Resource> implements ResourceInitialization<T> {
+abstract public class GenericResourceInitialization<T extends Resource> implements ResourceInitialization<T> {
 
     private String filePath;
     private ObjectMapper objectMapper;
@@ -36,8 +36,12 @@ public class GenericResourceInitialization<T extends Resource> implements Resour
         try {
             return objectMapper.readValue(new ClassPathResource(filePath).getInputStream(), wrapperClass).getResources();
         } catch (IOException ex) {
-            return new ArrayList<>();
+            throw new RuntimeException(ex);
         }
+    }
+
+    public List<T> postProcess(List<T> resources) {
+        return resources;
     }
 
     @Override
@@ -58,7 +62,7 @@ public class GenericResourceInitialization<T extends Resource> implements Resour
         if (objectMapper == null)
             objectMapper = new ObjectMapper();
 
-        install(bootstrap());
+        install(postProcess(bootstrap()));
     }
 
     private String resourceTypeLookup(T resource) {
@@ -106,5 +110,23 @@ public class GenericResourceInitialization<T extends Resource> implements Resour
 
     public void setWrapperClass(Class<? extends ResourceInitWrapper> wrapperClass) {
         this.wrapperClass = wrapperClass;
+    }
+
+    public static class UserInit<T extends User> extends GenericResourceInitialization<T> {}
+
+    public static class GroupInit<T extends Group> extends GenericResourceInitialization<T> {}
+
+    public static class SchemaInit extends GenericResourceInitialization<Schema> {}
+
+    public static class ResourceTypeInit extends GenericResourceInitialization<ResourceType> {}
+
+    public static class ServiceProviderConfigInit extends GenericResourceInitialization<ServiceProviderConfig> {
+
+        @Override
+        public List<ServiceProviderConfig> postProcess(List<ServiceProviderConfig> resources) {
+            Assert.isTrue(resources.size() <= 1, "Cannot bootstrap more than 1 service provider config");
+            resources.get(0).setId(ServiceProviderConfig.SINGLETON_ID);
+            return resources;
+        }
     }
 }

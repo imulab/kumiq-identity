@@ -30,7 +30,8 @@ public class ConvertUserToMapTask<T extends User> implements Task<UserGetContext
                 new ArrayList<>());
         Configuration configuration = Configuration
                 .withResourceObjectProvider()
-                .withOption(Configuration.Option.COMPILE_WITH_HINT);
+                .withOption(Configuration.Option.COMPILE_WITH_HINT)
+                .withOption(Configuration.Option.SUPPRESS_EXCEPTION);
 
         context.setData(ResourceMapper.convertToMap(mappingContext, configuration));
     }

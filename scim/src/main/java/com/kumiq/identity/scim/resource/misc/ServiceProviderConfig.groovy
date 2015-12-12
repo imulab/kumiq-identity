@@ -38,6 +38,9 @@ final class ServiceProviderConfig extends Resource {
     @JsonProperty('filter')
     Filter filter
 
+    @JsonProperty('etag')
+    ETag etag
+
     @JsonProperty('changePassword')
     ChangePassword changePassword
 
