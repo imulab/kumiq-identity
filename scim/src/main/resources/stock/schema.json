@@ -2531,6 +2531,117 @@
       "description": "User Group Schema used internally for compilation and evaluation hint",
       "attributes": [
         {
+          "name": "schemas",
+          "type": "string",
+          "description": "Schemas of the resource it describes",
+          "multiValued": true,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "java.util.ArrayList",
+          "elementClass": "java.lang.String"
+        },
+        {
+          "name": "id",
+          "type": "string",
+          "description": "ID of the resource",
+          "multiValued": false,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "server",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "externalId",
+          "type": "string",
+          "description": "ID managed by the client",
+          "multiValued": false,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readWrite",
+          "returned": "default",
+          "uniqueness": "global",
+          "class": "java.lang.String"
+        },
+        {
+          "name": "meta",
+          "type": "complex",
+          "description": "Meta information about the resource",
+          "multiValued": false,
+          "required": false,
+          "caseExact": true,
+          "mutability": "readOnly",
+          "returned": "default",
+          "uniqueness": "none",
+          "class": "com.kumiq.identity.scim.resource.core.Meta",
+          "subAttributes": [
+            {
+              "name": "resourceType",
+              "type": "string",
+              "description": "Type of this resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "created",
+              "type": "datetime",
+              "description": "Create timestamp of this resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.util.Date"
+            },
+            {
+              "name": "lastModified",
+              "type": "datetime",
+              "description": "Last modified timestamp of thie resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.util.Date"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "description": "URI location of this resource",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.String"
+            },
+            {
+              "name": "version",
+              "type": "integer",
+              "description": "Number of modifications this version has gone through",
+              "multiValued": false,
+              "required": false,
+              "caseExact": false,
+              "mutability": "readOnly",
+              "returned": "default",
+              "uniqueness": "none",
+              "class": "java.lang.Long"
+            }
+          ]
+        },
+        {
           "name": "displayName",
           "type": "string",
           "description": "A human-readable name for the Group. REQUIRED.",

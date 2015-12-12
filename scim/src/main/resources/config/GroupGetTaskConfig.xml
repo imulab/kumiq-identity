@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="setGroupSchemaTask" class="com.kumiq.identity.scim.task.shared.SetSchemaTask">
+              <property name="database" ref="schemaDatabase" />
+              <property name="id" value="HintGroup" />
+       </bean>
+
+       <bean id="lookupGroupByIdTask" class="com.kumiq.identity.scim.task.group.get.LookupGroupByIdTask">
+              <property name="database" ref="groupDatabase" />
+       </bean>
+
+       <bean id="assertGroupExistsTask" class="com.kumiq.identity.scim.task.group.get.AssertGroupExistsTask" />
+
+       <bean id="populateETagHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateETagHeaderTask" />
+
+       <bean id="populateLocationHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateLocationHeaderTask" />
+
+       <bean id="convertGroupToMapTask" class="com.kumiq.identity.scim.task.group.get.ConvertGroupToMapTask" />
+
+       <bean id="getGroupTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="GetGroupTaskChain"/>
+              <property name="tasks">
+                     <list>
+                            <ref bean="setGroupSchemaTask" />
+                            <ref bean="lookupGroupByIdTask" />
+                            <ref bean="assertGroupExistsTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                            <ref bean="convertGroupToMapTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>
