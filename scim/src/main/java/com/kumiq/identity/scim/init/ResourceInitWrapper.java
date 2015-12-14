@@ -3,9 +3,11 @@ package com.kumiq.identity.scim.init;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.group.Group;
+import com.kumiq.identity.scim.resource.group.ScimGroup;
 import com.kumiq.identity.scim.resource.misc.ResourceType;
 import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.resource.misc.ServiceProviderConfig;
+import com.kumiq.identity.scim.resource.user.ScimUser;
 import com.kumiq.identity.scim.resource.user.User;
 
 import java.util.List;
@@ -27,11 +29,11 @@ abstract public class ResourceInitWrapper<T extends Resource> {
         this.resources = resources;
     }
 
-    final public static class UserResourceInitWrapper extends ResourceInitWrapper<User> {
+    final public static class UserResourceInitWrapper extends ResourceInitWrapper<ScimUser> {
 
     }
 
-    final public static class GroupResourceInitWrapper extends ResourceInitWrapper<Group> {
+    final public static class GroupResourceInitWrapper extends ResourceInitWrapper<ScimGroup> {
 
     }
 

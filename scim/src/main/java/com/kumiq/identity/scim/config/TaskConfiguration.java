@@ -10,7 +10,9 @@ import org.springframework.context.annotation.ImportResource;
 @Configuration
 @ImportResource({
         "config/UserGetTaskConfig.xml",
-        "config/GroupGetTaskConfig.xml"
+        "config/GroupGetTaskConfig.xml",
+        "config/UserDeleteTaskConfig.xml",
+        "config/GroupDeleteTaskConfig.xml"
 })
 public class TaskConfiguration {
 }

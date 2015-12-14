@@ -107,6 +107,14 @@ public class ExceptionFactory {
         return new ResourceAlreadyExistsException(resourceType, conflict);
     }
 
+    public static ResourceVersionMismatchException userResourceVersionMismatch(String userResourceId, String accessETag, String actualETag) {
+        return new ResourceVersionMismatchException(ScimConstants.RESOURCE_TYPE_USER, userResourceId, accessETag, actualETag);
+    }
+
+    public static ResourceVersionMismatchException groupResourceVersionMismatch(String userResourceId, String accessETag, String actualETag) {
+        return new ResourceVersionMismatchException(ScimConstants.RESOURCE_TYPE_GROUP, userResourceId, accessETag, actualETag);
+    }
+
     protected static class ResourceAccessException extends RuntimeException {
 
         private final String resourceType;
@@ -148,6 +156,26 @@ public class ExceptionFactory {
 
         public Map<String, Object> getConflict() {
             return conflict;
+        }
+    }
+
+    public static class ResourceVersionMismatchException extends ResourceAccessException {
+
+        private final String accessETag;
+        private final String actualETag;
+
+        public ResourceVersionMismatchException(String resourceType, String resourceId, String accessETag, String actualETag) {
+            super(resourceType, resourceId);
+            this.accessETag = accessETag;
+            this.actualETag = actualETag;
+        }
+
+        public String getAccessETag() {
+            return accessETag;
+        }
+
+        public String getActualETag() {
+            return actualETag;
         }
     }
 

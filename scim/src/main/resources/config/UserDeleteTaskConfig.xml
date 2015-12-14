@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="checkUserVersionForDeleteTask" class="com.kumiq.identity.scim.task.user.delete.CheckVersionTask">
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="deleteUserByIdTask" class="com.kumiq.identity.scim.task.user.delete.DeleteUserByIdTask">
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="deleteUserTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="DeleteUserTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="checkUserVersionForDeleteTask"/>
+                            <ref bean="deleteUserByIdTask"/>
+                     </list>
+              </property>
+       </bean>
+</beans>
