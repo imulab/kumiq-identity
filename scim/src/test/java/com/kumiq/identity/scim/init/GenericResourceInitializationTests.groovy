@@ -39,7 +39,7 @@ class GenericResourceInitializationTests {
 
         @Bean(name = 'userInit')
         GenericResourceInitialization userInit() {
-            new GenericResourceInitialization(
+            new GenericResourceInitialization.UserInit(
                     filePath: 'GenericResourceInitializationTests/testBootstrapSuccess.json',
                     database: userDatabase(),
                     wrapperClass: ResourceInitWrapper.UserResourceInitWrapper

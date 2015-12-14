@@ -25,6 +25,14 @@ public class PathRef {
         return list.get(0).getHead();
     }
 
+    public String apiAttributeName() {
+        return this.pathToken.apiAttributeName();
+    }
+
+    public String modelAttributeName() {
+        return this.pathToken.modelAttributeName();
+    }
+
     /**
      * Wrap a path token list in path reference list. Assume {@link PathToken#firstNext()} when
      * traversing the path list. The reference list will stop at {@code lastToken}
@@ -105,6 +113,9 @@ public class PathRef {
     }
 
     public Schema.Attribute getAttribute(Schema schema) {
+        if (this.pathToken.getAttribute() != null)
+            return this.pathToken.getAttribute();
+
         PathRef cursor = this.getHead();
         List<PathRef> tokens = new ArrayList<>();
         while (true) {

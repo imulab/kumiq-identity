@@ -1,5 +1,7 @@
 package com.kumiq.identity.scim.path;
 
+import com.kumiq.identity.scim.resource.misc.Schema;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -10,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class PathToken {
 
     private String id;
-
+    private Schema.Attribute attribute;
     private PathToken prev;
     private List<PathToken> next;
 
@@ -31,6 +33,24 @@ public abstract class PathToken {
         while (!cursor.isRoot())
             cursor = cursor.getPrev();
         return cursor;
+    }
+
+    public String apiAttributeName() {
+        return (this.attribute != null) ? this.attribute.getName() : this.queryFreePath();
+    }
+
+    public String modelAttributeName() {
+        return (this.attribute != null) ?
+                (this.attribute.getProperty() != null ?
+                        this.attribute.getProperty() :
+                        apiAttributeName()) :
+                apiAttributeName();
+    }
+
+    public String attributeName(Configuration configuration) {
+        return configuration.getOptions().contains(Configuration.Option.API_ATTR_NAME_PREF) ?
+                apiAttributeName() :
+                modelAttributeName();
     }
 
     public abstract String pathFragment();
@@ -144,6 +164,14 @@ public abstract class PathToken {
 
     public void setPrev(PathToken prev) {
         this.prev = prev;
+    }
+
+    public Schema.Attribute getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Schema.Attribute attribute) {
+        this.attribute = attribute;
     }
 
     @Override

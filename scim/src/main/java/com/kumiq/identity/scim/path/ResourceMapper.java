@@ -36,12 +36,16 @@ public class ResourceMapper {
             Configuration compilationConfig = configuration.clone().withOption(Configuration.Option.COMPILE_WITH_HINT);
             PathCompiler.compile(compilationContext, compilationConfig).stream().forEach(pathRef -> {
                 EvaluationContext evaluationContext = new EvaluationContext(context.getData());
-                evaluationContext = pathRef.evaluate(evaluationContext, configuration);
+                Configuration evalConfig = new Configuration(this.configuration.getObjectProvider()).withOption(Configuration.Option.COMPILE_WITH_HINT);
+                evaluationContext = pathRef.evaluate(evaluationContext, evalConfig);
                 Object evaluationResult = evaluationContext.getCursor();
 
                 ModificationUnit modificationUnit = new ModificationUnit(ModificationUnit.Operation.ADD, pathToInclude, evaluationResult);
                 ModificationContext modificationContext = new ModificationContext(modificationUnit, context.getSchema(), resultMap);
-                Modifier.create(pathRef, modificationContext, Configuration.withMapObjectProvider()).modify();
+                Configuration modificationConfiguration = Configuration.withMapObjectProvider();
+                if (this.configuration.getOptions().contains(Configuration.Option.API_ATTR_NAME_PREF))
+                    modificationConfiguration.withOption(Configuration.Option.API_ATTR_NAME_PREF);
+                Modifier.create(pathRef, modificationContext, modificationConfiguration).modify();
             });
         }
 
@@ -53,7 +57,10 @@ public class ResourceMapper {
             PathCompiler.compile(compilationContext, compilationConfig).stream().forEach(pathRef -> {
                 ModificationUnit modificationUnit = new ModificationUnit(ModificationUnit.Operation.REMOVE, pathToExclude, null);
                 ModificationContext modificationContext = new ModificationContext(modificationUnit, context.getSchema(), resultMap);
-                Modifier.create(pathRef, modificationContext, Configuration.withMapObjectProvider()).modify();
+                Configuration modificationConfiguration = Configuration.withMapObjectProvider();
+                if (this.configuration.getOptions().contains(Configuration.Option.API_ATTR_NAME_PREF))
+                    modificationConfiguration.withOption(Configuration.Option.API_ATTR_NAME_PREF);
+                Modifier.create(pathRef, modificationContext, modificationConfiguration).modify();
             });
         }
 

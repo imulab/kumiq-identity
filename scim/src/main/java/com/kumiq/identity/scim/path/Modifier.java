@@ -4,7 +4,6 @@ import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.utils.TypeUtils;
 import org.springframework.util.Assert;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +51,7 @@ abstract public class Modifier {
                 if (returnOnMissingProperty())
                     return;
                 else if (throwExceptionOnMissingProperty())
-                    throw new RuntimeException("Missing property [" + pathRef.getPathToken().queryFreePath() + "] on subject");
+                    throw new RuntimeException("Missing property [" + attrName(pathRef) + "] on subject");
                 else
                     handleMissingProperty(pathRef, subject);
             }
@@ -82,12 +81,12 @@ abstract public class Modifier {
         if (pathRef.getPathToken() instanceof PathRoot)
             return true;
         else if (pathRef.getPathToken().isSimplePath())
-            return this.configuration.getObjectProvider().containsKey(subject, pathRef.getPathToken().pathFragment());
+            return this.configuration.getObjectProvider().containsKey(subject, attrName(pathRef));
         else if (pathRef.getPathToken().isPathWithFilter())
             return false;
         else if (pathRef.getPathToken().isPathWithIndex()) {
             PathWithIndexToken indexToken = (PathWithIndexToken) pathRef.getPathToken();
-            Object array = this.configuration.getObjectProvider().getPropertyValue(subject, indexToken.getPathComponent());
+            Object array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(indexToken));
             if (array == null)
                 return false;
             List list = TypeUtils.asList(array);
@@ -98,6 +97,16 @@ abstract public class Modifier {
         }
 
         return true;
+    }
+
+    String attrName(PathToken token) {
+        if (this.configuration.getOptions().contains(Configuration.Option.API_ATTR_NAME_PREF))
+            return token.apiAttributeName();
+        return token.modelAttributeName();
+    }
+
+    String attrName(PathRef ref) {
+        return attrName(ref.getPathToken());
     }
 
     /**
@@ -118,24 +127,23 @@ abstract public class Modifier {
                 SimplePathToken simplePathToken = (SimplePathToken) pathRef.getPathToken();
                 this.configuration.getObjectProvider().createMissingPropertyStructure(
                         subject,
-                        simplePathToken.getPathFragment(),
+                        attrName(simplePathToken),
                         attribute);
             } else if (pathRef.getPathToken().isPathWithIndex()) {
                 PathWithIndexToken pathWithIndexToken = (PathWithIndexToken) pathRef.getPathToken();
-                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, pathWithIndexToken.getPathComponent());
+                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(pathWithIndexToken));
                 if (array == null) {
-                    //this.configuration.getObjectProvider().setPropertyValue(subject, pathWithIndexToken.getPathComponent(), new ArrayList<>());
                     this.configuration.getObjectProvider().createMissingPropertyStructure(
                             subject,
-                            pathWithIndexToken.getPathComponent(),
+                            attrName(pathWithIndexToken),
                             attribute);
 
-                    array = this.configuration.getObjectProvider().getPropertyValue(subject, pathWithIndexToken.getPathComponent());
+                    array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(pathWithIndexToken));
                 }
                 this.configuration.getObjectProvider().setArrayIndex(
                         array,
                         pathWithIndexToken.getIndexComponent(),
-                        this.configuration.getObjectProvider().createArrayElement(pathWithIndexToken.getPathComponent(), attribute));
+                        this.configuration.getObjectProvider().createArrayElement(attrName(pathWithIndexToken), attribute));
             } else {
                 throw new IllegalStateException("Impossible state: accessing missing property with index");
             }
@@ -150,13 +158,13 @@ abstract public class Modifier {
                         throw new IllegalStateException("impossible state: path with index corresponds to multi-valued object");
                     else {
                         PathWithIndexToken pathWithIndexToken = (PathWithIndexToken) pathRef.getPathToken();
-                        if (!this.configuration.getObjectProvider().containsKey(subject, pathWithIndexToken.getPathComponent()))
-                            this.configuration.getObjectProvider().setPropertyValue(subject, pathWithIndexToken.getPathComponent(), new ArrayList<>());
-                        Object array = this.configuration.getObjectProvider().getPropertyValue(subject, pathWithIndexToken.getPathComponent());
+                        if (!this.configuration.getObjectProvider().containsKey(subject, attrName(pathWithIndexToken)))
+                            this.configuration.getObjectProvider().setPropertyValue(subject, attrName(pathWithIndexToken), new ArrayList<>());
+                        Object array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(pathWithIndexToken));
                         this.configuration.getObjectProvider().setArrayIndex(array, pathWithIndexToken.getIndexComponent(), value);
                     }
                 } else {
-                    Object array = this.configuration.getObjectProvider().getPropertyValue(subject, pathRef.getPathToken().queryFreePath());
+                    Object array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(pathRef));
                     Assert.isTrue(TypeUtils.isList(array));
                     if (TypeUtils.isCollection(value)) {
                         this.configuration.getObjectProvider().addToArray(array, TypeUtils.asCollection(value));
@@ -168,7 +176,7 @@ abstract public class Modifier {
                 if (TypeUtils.isCollection(value)) {
                     throw new RuntimeException("cannot set collection value unto single valued attribute");
                 } else {
-                    this.configuration.getObjectProvider().setPropertyValue(subject, pathRef.getPathToken().pathFragment(), value);
+                    this.configuration.getObjectProvider().setPropertyValue(subject, attrName(pathRef), value);
                 }
             }
         }
@@ -194,10 +202,10 @@ abstract public class Modifier {
         void handleModification(PathRef pathRef, Object subject, Object value) {
             if (pathRef.getPathToken().isPathWithIndex()) {
                 PathWithIndexToken token = (PathWithIndexToken) pathRef.getPathToken();
-                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, token.getPathComponent());
+                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(token));
                 this.configuration.getObjectProvider().setArrayIndex(array, token.getIndexComponent(), value);
             } else if (pathRef.getPathToken() instanceof SimplePathToken) {
-                this.configuration.getObjectProvider().setPropertyValue(subject, pathRef.getPathToken().pathFragment(), value);
+                this.configuration.getObjectProvider().setPropertyValue(subject, attrName(pathRef), value);
             }
         }
     }
@@ -221,10 +229,10 @@ abstract public class Modifier {
         void handleModification(PathRef pathRef, Object subject, Object value) {
             if (pathRef.getPathToken().isPathWithIndex()) {
                 PathWithIndexToken token = (PathWithIndexToken) pathRef.getPathToken();
-                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, token.getPathComponent());
+                Object array = this.configuration.getObjectProvider().getPropertyValue(subject, attrName(token));
                 this.configuration.getObjectProvider().removeFromArray(array, token.getIndexComponent());
             } else if (pathRef.getPathToken() instanceof SimplePathToken) {
-                this.configuration.getObjectProvider().removePropertyValue(subject, pathRef.getPathToken().pathFragment());
+                this.configuration.getObjectProvider().removePropertyValue(subject, attrName(pathRef));
             }
         }
     }

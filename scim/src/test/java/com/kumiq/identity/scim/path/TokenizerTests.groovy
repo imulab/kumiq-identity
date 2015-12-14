@@ -31,6 +31,13 @@ class TokenizerTests {
     }
 
     @Test
+    void testPathTokenizerWithKeyword() {
+        Tokenizer tokenizer = new Tokenizer.PathTokenizer('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User.employeeNumber')
+        Assert.assertEquals('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User', tokenizer.nextSequence())
+        Assert.assertEquals('employeeNumber', tokenizer.nextSequence())
+    }
+
+    @Test
     void testFilterTokenizer() {
         Tokenizer tokenizer = new Tokenizer.FilterTokenizer('[(value eq 100) and (name sw "A")]');
 

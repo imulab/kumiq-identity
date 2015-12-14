@@ -30,7 +30,7 @@ public class Configuration {
         return this;
     }
 
-    private Configuration(final ObjectProvider objectProvider) {
+    public Configuration(final ObjectProvider objectProvider) {
         this.objectProvider = objectProvider;
     }
 
@@ -68,5 +68,13 @@ public class Configuration {
          * is thrown at the end still depends on {@code SUPPRESS_EXCEPTION}.
          */
         COMPILE_WITH_HINT,
+
+        /**
+         * Use API attribute name over the model attribute name in actions like modifying. Useful
+         * when the {@link Modifier} is used in conjunction with {@link ResourceMapper} when the API
+         * attribute name is preferred to be used as keys in rendering. When this options is not set,
+         * model attribute name will still be used.
+         */
+        API_ATTR_NAME_PREF,
     }
 }

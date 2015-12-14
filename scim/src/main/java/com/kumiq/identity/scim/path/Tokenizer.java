@@ -1,5 +1,7 @@
 package com.kumiq.identity.scim.path;
 
+import com.kumiq.identity.scim.resource.constant.ScimConstants;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +59,7 @@ public abstract class Tokenizer {
 
                 if (!ignored()) {
                     for (CharSequence delimiter : delimiters) {
-                        if (currentMatches(delimiter)) {
+                        if (futureMatches(delimiter)) {
                             lastMatchWasDelimiter = true;
                             incrementPosition(delimiter.length());
                             syncStartPosition();
@@ -70,8 +72,22 @@ public abstract class Tokenizer {
                     }
 
                     for (CharSequence keywordToken : keywordTokens) {
-                        if ((currentMatches(keywordToken) && lastMatchWasDelimiter) ||
-                                keywordToken.equals(current)) {
+                        if (futureMatches(keywordToken) && lastMatchWasDelimiter) {
+                            if (current.length() > 0) {
+                                syncStartPosition();
+                                return current;
+                            } else {
+                                lastMatchWasDelimiter = false;
+                                while (!currentSubSequence().equals(keywordToken))
+                                    incrementPosition(1);
+                                current = currentSubSequence();
+                                syncStartPosition();
+                                if (current.length() > 0)
+                                    return current;
+                                else
+                                    continue;
+                            }
+                        } else if (keywordToken.equals(current)) {
                             lastMatchWasDelimiter = false;
                             syncStartPosition();
 
@@ -110,7 +126,7 @@ public abstract class Tokenizer {
         return this.charSequence.subSequence(this.cursorStartPos, this.cursorEndPos);
     }
 
-    public boolean currentMatches(CharSequence symbol) {
+    public boolean futureMatches(CharSequence symbol) {
         if (!inBounds(this.cursorEndPos + symbol.length())) {
             return false;
         }
@@ -182,6 +198,9 @@ public abstract class Tokenizer {
             super.setDelimiters(Arrays.asList(PERIOD));
             super.setIgnoreStart(LEFT_SQUARE_BRACKET.charAt(0));
             super.setIgnoreEnd(RIGHT_SQUARE_BRACKET.charAt(0));
+            super.setKeywordTokens(Arrays.asList(
+                    ScimConstants.URN_ENTERPRISE_USER_EXTENSION
+            ));
         }
     }
 

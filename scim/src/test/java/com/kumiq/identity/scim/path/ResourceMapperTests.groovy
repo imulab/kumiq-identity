@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
 
+import static com.kumiq.identity.scim.resource.constant.ScimConstants.REF_TYPE_SCIM
 import static com.kumiq.identity.scim.resource.constant.ScimConstants.RETURNED_NEVER;
 import static com.kumiq.identity.scim.resource.constant.ScimConstants.RETURNED_DEFAULT;
 
@@ -33,7 +34,8 @@ class ResourceMapperTests {
                         ['value': 'foo@bar.com', 'primary': true],
                         ['value': 'bar@bar.com', 'primary': false]
                 ],
-                'password': 's3cret'
+                'password': 's3cret',
+                'enterpriseExtension': ['employeeNumber' : '1001']
         ]
         schema = new Schema(
                 attributes: [
@@ -47,8 +49,22 @@ class ResourceMapperTests {
                                 new Schema.Attribute(name: 'primary', returned: RETURNED_DEFAULT, multiValued: false)
                         ]),
                         new Schema.Attribute(name: 'password', returned: RETURNED_NEVER, multiValued: false),
+                        new Schema.Attribute(name: ScimConstants.URN_ENTERPRISE_USER_EXTENSION, property: 'enterpriseExtension', returned: RETURNED_DEFAULT, multiValued: false, subAttributes: [
+                                new Schema.Attribute(name: 'employeeNumber', returned: RETURNED_DEFAULT, multiValued: false)
+                        ])
                 ]
         )
+    }
+
+    @Test
+    void testMapResourceToApiName() {
+        MappingContext context = new MappingContext(data, schema, ['urn:ietf:params:scim:schemas:extension:enterprise:2.0:User.employeeNumber'], [])
+        Configuration configuration = Configuration.withMapObjectProvider().withOption(Configuration.Option.API_ATTR_NAME_PREF)
+        Map result = ResourceMapper.convertToMap(context, configuration)
+
+        Assert.assertTrue(result.containsKey('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User'))
+        Assert.assertTrue((result.get('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User') as Map).containsKey('employeeNumber'))
+        Assert.assertEquals("1001", (result.get('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User') as Map).get('employeeNumber'))
     }
 
     @Test

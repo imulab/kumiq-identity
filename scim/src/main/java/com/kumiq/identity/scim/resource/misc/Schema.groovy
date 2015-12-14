@@ -1,6 +1,8 @@
 package com.kumiq.identity.scim.resource.misc
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.kumiq.identity.scim.path.Tokenizer
+import com.kumiq.identity.scim.path.Tokenizer.NoMoreSequenceException
 import com.kumiq.identity.scim.resource.core.Meta
 import com.kumiq.identity.scim.resource.core.Resource
 import groovy.transform.EqualsAndHashCode
@@ -53,12 +55,21 @@ final class Schema extends Resource {
         @JsonProperty('canonicalValues') List<String> canonicalValues = []
         @JsonProperty('referenceTypes') List<String> referenceTypes = []
         @JsonProperty('subAttributes') List<Attribute> subAttributes = []
-        @JsonProperty('class') Class clazz;
-        @JsonProperty('elementClass') Class elementClazz;
+        @JsonProperty('class') Class clazz
+        @JsonProperty('elementClass') Class elementClazz
+        @JsonProperty('property') String property
     }
 
     public Attribute findAttributeByPath(String path) {
-        List<String> paths = Arrays.asList(path.split("\\."))
+        Tokenizer tokenizer = new Tokenizer.PathTokenizer(path)
+        List<String> paths = []
+        while (true) {
+            try {
+                paths.add(tokenizer.nextSequence().toString())
+            } catch (NoMoreSequenceException ex) {
+                break;
+            }
+        }
         Attribute attribute = this.attributes.find { it.name == paths[0] }
         if (!attribute)
             return null

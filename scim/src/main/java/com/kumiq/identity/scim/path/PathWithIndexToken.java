@@ -28,7 +28,7 @@ public class PathWithIndexToken extends SimplePathToken {
 
     @Override
     public Object evaluate(Object cursor, Configuration configuration) {
-        Object list = configuration.getObjectProvider().getPropertyValue(cursor, this.pathComponent);
+        Object list = configuration.getObjectProvider().getPropertyValue(cursor, attributeName(configuration));
         return configuration.getObjectProvider().getArrayIndex(list, this.indexComponent);
     }
 

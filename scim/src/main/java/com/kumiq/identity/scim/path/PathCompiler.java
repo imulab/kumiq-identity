@@ -63,9 +63,32 @@ public class PathCompiler {
             }
         }
         PathToken.linkTokenList(tokens);
+        PathToken pathRoot = tokens.get(0);
+
+        /* assign attribute */
+        if (shouldRelyOnHint()) {
+            for (PathToken cursor = pathRoot; cursor != null; cursor = cursor.firstNext()) {
+                if (cursor.isRoot())
+                    continue;
+
+                if (cursor.getPrev().isRoot()) {
+                    cursor.setAttribute(this.context.getSchema().findAttributeByPath(cursor.queryFreePath()));
+                } else {
+                    final String pathName = cursor.queryFreePath();
+                    Optional<Schema.Attribute> cursorAttr = cursor.getPrev().getAttribute().getSubAttributes()
+                            .stream()
+                            .filter(attribute -> attribute.getName().equals(pathName))
+                            .findAny();
+                    if (cursorAttr.isPresent())
+                        cursor.setAttribute(cursorAttr.get());
+                }
+
+                if (cursor.getAttribute() == null && !shouldSuppressException())
+                    throw ExceptionFactory.pathCompiledMissingAttribute(this.context.getPath(), cursor.queryFreePath());
+            }
+        }
 
         /* expand filter tokens and replace them with index tokens */
-        PathToken pathRoot = tokens.get(0);
         List<PathRef> compiledPathHeads = traverseAndReplace(pathRoot);
         if (CollectionUtils.isEmpty(compiledPathHeads) && !shouldSuppressException()) {
             throw ExceptionFactory.pathCompiledToVoid(this.context.getPath(), this.context.getPath());
@@ -141,14 +164,7 @@ public class PathCompiler {
                     continue;
                 }
 
-                Schema.Attribute attribute = cursor.getAttribute(this.context.getSchema());
-                if (attribute == null) {
-                    if (shouldSuppressException())
-                        continue;
-                    else
-                        throw ExceptionFactory.pathCompiledMissingAttribute(this.context.getPath(), cursor.getPathAsString(true));
-                }
-
+                Schema.Attribute attribute = cursor.getPathToken().getAttribute();
                 if (attribute.isMultiValued() && !cursor.getPathToken().isPathWithIndex())
                     return Optional.of(cursor.getPathToken());
                 else if (cursor.getPathToken().isPathWithFilter() && !shouldSuppressException())
@@ -176,7 +192,7 @@ public class PathCompiler {
         evalContext = pathHead.evaluate(evalContext, this.configuration);
         Object value = evalContext.getCursor();
 
-        Object array = configuration.getObjectProvider().getPropertyValue(value, token.getPathFragment());
+        Object array = configuration.getObjectProvider().getPropertyValue(value, token.modelAttributeName());
         Assert.isTrue(isList(array));
         List list = asList(array);
         if (list.size() == 0)
@@ -184,7 +200,11 @@ public class PathCompiler {
 
         return IntStream
                 .range(0, list.size())
-                .mapToObj(integer -> new PathWithIndexToken(token.getPathFragment() + "[" + integer + "]"))
+                .mapToObj(integer -> {
+                    PathWithIndexToken t = new PathWithIndexToken(token.getPathFragment() + "[" + integer + "]");
+                    t.setAttribute(token.getAttribute());
+                    return t;
+                })
                 .collect(Collectors.toList());
     }
 
@@ -202,7 +222,7 @@ public class PathCompiler {
         evalContext = pathHead.evaluate(evalContext, this.configuration);
         Object value = evalContext.getCursor();
 
-        Object array = configuration.getObjectProvider().getPropertyValue(value, token.getPathComponent());
+        Object array = configuration.getObjectProvider().getPropertyValue(value, token.modelAttributeName());
         Assert.isTrue(isList(array));
         List list = asList(array);
         if (list.size() == 0)
@@ -218,7 +238,11 @@ public class PathCompiler {
 
         return qualifiedIndex
                 .stream()
-                .map(integer -> new PathWithIndexToken(token.getPathComponent() + "[" + integer + "]"))
+                .map(integer -> {
+                    PathWithIndexToken t = new PathWithIndexToken(token.getPathComponent() + "[" + integer + "]");
+                    t.setAttribute(token.getAttribute());
+                    return t;
+                })
                 .collect(Collectors.toList());
     }
 
