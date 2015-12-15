@@ -61,13 +61,26 @@ abstract class GetContext<T extends Resource> extends ResourceOpContext<T> {
  */
 abstract class QueryContext<T extends Resource> extends ResourceOpContext<T> {
 
+    public static final String TOTAL_RESULTS = 'totalResults'
+    public static final String RESOURCES = 'Resources'
+    public static final String START_INDEX = 'startIndex'
+    public static final String PAGE_COUNT = 'itemsPerPage'
+
+    List<String> attributes
+
     String filter
 
     String sort
 
     boolean ascending
 
+    int startIndex
+
+    int count
+
     List<T> resources
+
+    Map<String, Object> results = [:]
 }
 
 /**

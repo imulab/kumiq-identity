@@ -115,6 +115,14 @@ public class ExceptionFactory {
         return new ResourceVersionMismatchException(ScimConstants.RESOURCE_TYPE_GROUP, userResourceId, accessETag, actualETag);
     }
 
+    public static ResourceTooManyException tooManyUsers(int capacity, int count) {
+        return new ResourceTooManyException(ScimConstants.RESOURCE_TYPE_USER, null, capacity, count);
+    }
+
+    public static ResourceTooManyException tooManyGroups(int capacity, int count) {
+        return new ResourceTooManyException(ScimConstants.RESOURCE_TYPE_GROUP, null, capacity, count);
+    }
+
     protected static class ResourceAccessException extends RuntimeException {
 
         private final String resourceType;
@@ -176,6 +184,26 @@ public class ExceptionFactory {
 
         public String getActualETag() {
             return actualETag;
+        }
+    }
+
+    public static class ResourceTooManyException extends ResourceAccessException {
+
+        private final int capacity;
+        private final int actualCount;
+
+        public ResourceTooManyException(String resourceType, String resourceId, int capacity, int actualCount) {
+            super(resourceType, resourceId);
+            this.capacity = capacity;
+            this.actualCount = actualCount;
+        }
+
+        public int getCapacity() {
+            return capacity;
+        }
+
+        public int getActualCount() {
+            return actualCount;
         }
     }
 

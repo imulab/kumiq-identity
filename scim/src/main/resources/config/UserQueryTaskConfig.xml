@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="assignQueryContextTask" class="com.kumiq.identity.scim.task.user.query.AssignQueryContextTask" />
+
+       <bean id="queryUserTask" class="com.kumiq.identity.scim.task.user.query.QueryUserTask">
+              <property name="userDatabase" ref="userDatabase" />
+              <property name="serviceProviderConfigDatabase" ref="serviceProviderConfigDatabase" />
+       </bean>
+
+       <bean id="paginateUserTask" class="com.kumiq.identity.scim.task.user.query.PaginateUserTask" />
+
+       <bean id="mapUserAttributeTask" class="com.kumiq.identity.scim.task.user.query.MapUserAttributeTask" />
+
+       <bean id="userQueryTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="UserQueryTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="setUserSchemaTask" />
+                            <ref bean="assignQueryContextTask" />
+                            <ref bean="queryUserTask" />
+                            <ref bean="paginateUserTask" />
+                            <ref bean="mapUserAttributeTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>

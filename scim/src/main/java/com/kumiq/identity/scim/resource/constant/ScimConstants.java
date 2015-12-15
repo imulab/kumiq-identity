@@ -21,6 +21,7 @@ public class ScimConstants {
     public static final String URN_SERVICE_PROVIDER_CONFIG = "urn:ietf:params:scim:schemas:core:2.0:ServiceProviderConfig";
     public static final String URN_RESOURCE_TYPE = "urn:ietf:params:scim:schemas:core:2.0:ResourceType";
     public static final String URN_SCHEMA = "urn:ietf:params:scim:schemas:core:2.0:Schema";
+    public static final String URN_LIST_RESPONSE = "urn:ietf:params:scim:api:messages:2.0:ListResponse";
 
     public static final String ATTR_TYPES_STRING = "string";
     public static final String ATTR_TYPES_BOOLEAN = "boolean";
