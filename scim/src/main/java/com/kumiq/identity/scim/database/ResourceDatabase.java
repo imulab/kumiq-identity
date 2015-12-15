@@ -59,6 +59,8 @@ public interface ResourceDatabase<T extends Resource> {
      */
     interface GroupDatabase<T extends Group> extends ResourceDatabase<T> {
 
+        List<T> query(String filter, String sort, boolean ascending);
+
         List<T> findGroupsWithMember(String memberId, boolean transitive);
 
         void deleteMember(String memberId);

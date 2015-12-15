@@ -51,6 +51,57 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
         this.dataStore = new HashMap<>();
     }
 
+    @SuppressWarnings("unchecked")
+    protected List<T> queryResource(String filter, String sort, boolean ascending) {
+        List<T> allResources = findAll();
+        if (CollectionUtils.isEmpty(allResources))
+            return new ArrayList<>();
+
+        Predicate predicate = FilterCompiler.compile(filter);
+        List<T> qualifiedResources = allResources.stream().filter(t -> {
+            Configuration configuration = Configuration
+                    .withResourceObjectProvider()
+                    .withOption(Configuration.Option.COMPILE_WITH_HINT)
+                    .withOption(Configuration.Option.SUPPRESS_EXCEPTION);
+            return predicate.apply(t, configuration);
+        }).collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(qualifiedResources))
+            return new ArrayList<>();
+
+        if (sort != null) {
+            Configuration configuration = Configuration.withResourceObjectProvider();   // TODO use schema?
+            List<PathRef> compiledPaths;
+            try {
+                compiledPaths = PathCompiler.compile(CompilationContext.create(sort, null), configuration);
+            } catch (Exception ex) {
+                throw ExceptionFactory.fail(ex.getMessage());
+            }
+            if (compiledPaths.size() != 1)
+                throw ExceptionFactory.fail("Invalid sort (compiled to multiple paths)");
+
+            qualifiedResources.sort((o1, o2) -> {
+                EvaluationContext evaluationContext1 = new EvaluationContext(o1);
+                EvaluationContext evaluationContext2 = new EvaluationContext(o2);
+
+                Object result1 = compiledPaths.get(0)
+                        .evaluate(evaluationContext1, configuration)
+                        .getCursor();
+                Object result2 = compiledPaths.get(0)
+                        .evaluate(evaluationContext2, configuration)
+                        .getCursor();
+
+                if (!(result1 instanceof Comparable) || !(result2 instanceof Comparable))
+                    return 0;
+
+                int comparison = ((Comparable) result1).compareTo(result2);
+                return ascending ? comparison : 0 - comparison;
+            });
+        }
+
+        return qualifiedResources;
+    }
+
     /**
      * User in memory database
      * @param <T>
@@ -79,55 +130,9 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
         }
 
         @Override
-        @SuppressWarnings("unchecked")
+
         public List<T> query(String filter, String sort, boolean ascending) {
-            List<T> allResources = findAll();
-            if (CollectionUtils.isEmpty(allResources))
-                return new ArrayList<>();
-
-            Predicate predicate = FilterCompiler.compile(filter);
-            List<T> qualifiedResources = allResources.stream().filter(t -> {
-                Configuration configuration = Configuration
-                        .withResourceObjectProvider()
-                        .withOption(Configuration.Option.COMPILE_WITH_HINT)
-                        .withOption(Configuration.Option.SUPPRESS_EXCEPTION);
-                return predicate.apply(t, configuration);
-            }).collect(Collectors.toList());
-
-            if (CollectionUtils.isEmpty(qualifiedResources))
-                return new ArrayList<>();
-
-            if (sort != null) {
-                Configuration configuration = Configuration.withResourceObjectProvider();   // TODO use schema?
-                List<PathRef> compiledPaths;
-                try {
-                    compiledPaths = PathCompiler.compile(CompilationContext.create(sort, null), configuration);
-                } catch (Exception ex) {
-                    throw ExceptionFactory.fail(ex.getMessage());
-                }
-                if (compiledPaths.size() != 1)
-                    throw ExceptionFactory.fail("Invalid sort (compiled to multiple paths)");
-
-                qualifiedResources.sort((o1, o2) -> {
-                    EvaluationContext evaluationContext1 = new EvaluationContext(o1);
-                    EvaluationContext evaluationContext2 = new EvaluationContext(o2);
-
-                    Object result1 = compiledPaths.get(0)
-                            .evaluate(evaluationContext1, configuration)
-                            .getCursor();
-                    Object result2 = compiledPaths.get(0)
-                            .evaluate(evaluationContext2, configuration)
-                            .getCursor();
-
-                    if (!(result1 instanceof Comparable) || !(result2 instanceof Comparable))
-                        return 0;
-
-                    int comparison = ((Comparable) result1).compareTo(result2);
-                    return ascending ? comparison : 0 - comparison;
-                });
-            }
-
-            return qualifiedResources;
+            return super.queryResource(filter, sort, ascending);
         }
     }
 
@@ -136,6 +141,11 @@ abstract public class InMemoryDatabase<T extends Resource> implements ResourceDa
      * @param <T>
      */
     public static class GroupInMemoryDatabase<T extends Group> extends InMemoryDatabase<T> implements GroupDatabase<T> {
+
+        @Override
+        public List<T> query(String filter, String sort, boolean ascending) {
+            return super.queryResource(filter, sort, ascending);
+        }
 
         @Override
         public List<T> findGroupsWithMember(String memberId, boolean transitive) {

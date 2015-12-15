@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="assignQueryContextTask" class="com.kumiq.identity.scim.task.user.query.AssignQueryContextTask" />
+       <bean id="assignUserQueryContextTask" class="com.kumiq.identity.scim.task.user.query.AssignQueryContextTask" />
 
        <bean id="queryUserTask" class="com.kumiq.identity.scim.task.user.query.QueryUserTask">
               <property name="userDatabase" ref="userDatabase" />
@@ -19,7 +19,7 @@
               <property name="tasks">
                      <list>
                             <ref bean="setUserSchemaTask" />
-                            <ref bean="assignQueryContextTask" />
+                            <ref bean="assignUserQueryContextTask" />
                             <ref bean="queryUserTask" />
                             <ref bean="paginateUserTask" />
                             <ref bean="mapUserAttributeTask" />

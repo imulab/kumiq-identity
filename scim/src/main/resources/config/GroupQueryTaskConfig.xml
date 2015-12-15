@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="assignGroupQueryContextTask" class="com.kumiq.identity.scim.task.group.query.AssignQueryContextTask" />
+
+       <bean id="queryGroupTask" class="com.kumiq.identity.scim.task.group.query.QueryGroupTask">
+              <property name="groupDatabase" ref="groupDatabase" />
+              <property name="serviceProviderConfigDatabase" ref="serviceProviderConfigDatabase" />
+       </bean>
+
+       <bean id="paginateGroupTask" class="com.kumiq.identity.scim.task.group.query.PaginateGroupTask" />
+
+       <bean id="mapGroupAttributeTask" class="com.kumiq.identity.scim.task.group.query.MapGroupAttributeTask" />
+
+       <bean id="groupQueryTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="GroupQueryTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="setGroupSchemaTask" />
+                            <ref bean="assignGroupQueryContextTask" />
+                            <ref bean="queryGroupTask" />
+                            <ref bean="paginateGroupTask" />
+                            <ref bean="mapGroupAttributeTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>
