@@ -14,10 +14,6 @@
 
        <bean id="assertGroupExistsTask" class="com.kumiq.identity.scim.task.group.get.AssertGroupExistsTask" />
 
-       <bean id="populateETagHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateETagHeaderTask" />
-
-       <bean id="populateLocationHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateLocationHeaderTask" />
-
        <bean id="convertGroupToMapTask" class="com.kumiq.identity.scim.task.group.get.ConvertGroupToMapTask" />
 
        <bean id="getGroupTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">

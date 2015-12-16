@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="assignNewUserIdTask" class="com.kumiq.identity.scim.task.user.create.AssignIdTask" />
+
+       <bean id="createUserMetaTask" class="com.kumiq.identity.scim.task.user.create.CreateMetaTask" />
+
+       <bean id="checkUserUniquenessTask" class="com.kumiq.identity.scim.task.user.create.CheckUniquenessTask">
+              <property name="allowSelf" value="false" />
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="checkUserRequiredTask" class="com.kumiq.identity.scim.task.user.create.CheckRequiredTask">
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="checkNewUserReferenceTask" class="com.kumiq.identity.scim.task.user.create.CheckReferenceTask">
+              <property name="userDatabase" ref="userDatabase" />
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
+       <bean id="saveUserTask" class="com.kumiq.identity.scim.task.user.create.SaveUserTask">
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="updateGroupMembershipForNewUserTask" class="com.kumiq.identity.scim.task.user.create.UpdateGroupMembershipTask">
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
+       <bean id="createUserTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="CreateUserTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="setUserSchemaTask" />
+                            <ref bean="assignNewUserIdTask" />
+                            <ref bean="createUserMetaTask" />
+                            <ref bean="checkUserRequiredTask" />
+                            <ref bean="checkUserUniquenessTask" />
+                            <ref bean="checkNewUserReferenceTask" />
+                            <ref bean="saveUserTask" />
+                            <ref bean="updateGroupMembershipForNewUserTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>

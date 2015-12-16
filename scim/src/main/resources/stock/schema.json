@@ -2294,6 +2294,7 @@
               "mutability": "readWrite",
               "returned": "default",
               "uniqueness": "none",
+              "referenceTypes": ["Group"],
               "class": "java.lang.String"
             },
             {

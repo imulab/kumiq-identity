@@ -14,7 +14,8 @@ import org.springframework.context.annotation.ImportResource;
         "config/UserDeleteTaskConfig.xml",
         "config/GroupDeleteTaskConfig.xml",
         "config/UserQueryTaskConfig.xml",
-        "config/GroupQueryTaskConfig.xml"
+        "config/GroupQueryTaskConfig.xml",
+        "config/UserCreateTaskConfig.xml"
 })
 public class TaskConfiguration {
 }

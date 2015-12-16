@@ -123,6 +123,30 @@ public class ExceptionFactory {
         return new ResourceTooManyException(ScimConstants.RESOURCE_TYPE_GROUP, null, capacity, count);
     }
 
+    public static ResourceUniquenessViolatedException userPathNotUnique(String path, String resourceId) {
+        return new ResourceUniquenessViolatedException(ScimConstants.RESOURCE_TYPE_USER, resourceId, path);
+    }
+
+    public static ResourceUniquenessViolatedException groupPathNotUnique(String path, String resourceId) {
+        return new ResourceUniquenessViolatedException(ScimConstants.RESOURCE_TYPE_GROUP, resourceId, path);
+    }
+
+    public static ResourceAttributeAbsentException userAttributeAbsent(String path, String resourceId) {
+        return new ResourceAttributeAbsentException(ScimConstants.RESOURCE_TYPE_USER, resourceId, path);
+    }
+
+    public static ResourceAttributeAbsentException groupAttributeAbsent(String path, String resourceId) {
+        return new ResourceAttributeAbsentException(ScimConstants.RESOURCE_TYPE_GROUP, resourceId, path);
+    }
+
+    public static ResourceReferenceViolatedException userReferenceViolated(String path, String resourceId) {
+        return new ResourceReferenceViolatedException(ScimConstants.RESOURCE_TYPE_USER, resourceId, path);
+    }
+
+    public static ResourceReferenceViolatedException groupReferenceViolated(String path, String resourceId) {
+        return new ResourceReferenceViolatedException(ScimConstants.RESOURCE_TYPE_GROUP, resourceId, path);
+    }
+
     protected static class ResourceAccessException extends RuntimeException {
 
         private final String resourceType;
@@ -204,6 +228,48 @@ public class ExceptionFactory {
 
         public int getActualCount() {
             return actualCount;
+        }
+    }
+
+    public static class ResourceUniquenessViolatedException extends ResourceAccessException {
+
+        private final String path;
+
+        public ResourceUniquenessViolatedException(String resourceType, String resourceId, String path) {
+            super(resourceType, resourceId);
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+    }
+
+    public static class ResourceAttributeAbsentException extends ResourceAccessException {
+
+        private final String requiredPath;
+
+        public ResourceAttributeAbsentException(String resourceType, String resourceId, String requiredPath) {
+            super(resourceType, resourceId);
+            this.requiredPath = requiredPath;
+        }
+
+        public String getRequiredPath() {
+            return requiredPath;
+        }
+    }
+
+    public static class ResourceReferenceViolatedException extends ResourceAccessException {
+
+        private final String path;
+
+        public ResourceReferenceViolatedException(String resourceType, String resourceId, String path) {
+            super(resourceType, resourceId);
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
         }
     }
 

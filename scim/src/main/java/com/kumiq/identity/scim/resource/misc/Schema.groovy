@@ -7,6 +7,8 @@ import com.kumiq.identity.scim.resource.core.Meta
 import com.kumiq.identity.scim.resource.core.Resource
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import org.springframework.util.CollectionUtils
+import org.springframework.util.StringUtils
 
 import java.util.jar.Attributes
 
@@ -80,5 +82,25 @@ final class Schema extends Resource {
             }
         }
         return attribute
+    }
+
+    public List<String> findAllPaths() {
+        List<String> results = []
+        findAllPathsInternal(results, '', this.attributes)
+        return results
+    }
+
+    private void findAllPathsInternal(List<String> results, String currentBase, List<Attribute> attributesToScan) {
+        for (Attribute eachAttribute : attributesToScan) {
+            String pathToAdd = appendToCurrentBase(currentBase, eachAttribute.name)
+            results.add(pathToAdd)
+            if (eachAttribute.subAttributes?.size() > 0) {
+                findAllPathsInternal(results, pathToAdd, eachAttribute.subAttributes)
+            }
+        }
+    }
+
+    private static String appendToCurrentBase(String currentBase, String path) {
+        StringUtils.hasLength(currentBase) ? currentBase + '.' + path : path
     }
 }
