@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="assignNewGroupIdTask" class="com.kumiq.identity.scim.task.shared.AssignIdTask">
+              <property name="idPrefix" value="group-" />
+       </bean>
+
+       <bean id="createGroupMetaTask" class="com.kumiq.identity.scim.task.shared.CreateMetaTask">
+              <property name="resourceType" value="Group" />
+              <property name="resourceUriSegment" value="/Groups/" />
+       </bean>
+
+       <bean id="checkGroupUniquenessTask" class="com.kumiq.identity.scim.task.group.create.CheckGroupUniquenessTask">
+              <property name="allowSelf" value="false" />
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
+       <bean id="checkGroupRequiredTask" class="com.kumiq.identity.scim.task.group.create.CheckGroupRequiredTask" />
+
+       <bean id="checkNewGroupReferenceTask" class="com.kumiq.identity.scim.task.group.create.CheckGroupReferenceTask">
+              <property name="userDatabase" ref="userDatabase" />
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
+       <bean id="saveGroupTask" class="com.kumiq.identity.scim.task.group.create.SaveGroupTask">
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
+       <bean id="updateUserGroupTask" class="com.kumiq.identity.scim.task.shared.UpdateUserGroupTask">
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="createGroupTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="CreateGroupTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="setGroupSchemaTask" />
+                            <ref bean="assignNewGroupIdTask" />
+                            <ref bean="createGroupMetaTask" />
+                            <ref bean="checkGroupRequiredTask" />
+                            <ref bean="checkGroupUniquenessTask" />
+                            <ref bean="checkNewGroupReferenceTask" />
+                            <ref bean="saveGroupTask" />
+                            <ref bean="updateUserGroupTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>

@@ -181,4 +181,8 @@ class User extends Resource {
         @JsonProperty('type') String type
         @JsonProperty('primary') boolean primary
     }
+
+    boolean hasGroup(String groupId) {
+        this.groups.find { it.value == groupId } != null
+    }
 }

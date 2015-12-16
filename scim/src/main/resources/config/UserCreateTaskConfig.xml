@@ -28,7 +28,7 @@
               <property name="userDatabase" ref="userDatabase" />
        </bean>
 
-       <bean id="updateGroupMembershipForNewUserTask" class="com.kumiq.identity.scim.task.user.create.UpdateGroupMembershipTask">
+       <bean id="updateGroupMembershipForNewUserTask" class="com.kumiq.identity.scim.task.shared.UpdateGroupMembershipTask">
               <property name="groupDatabase" ref="groupDatabase" />
        </bean>
 

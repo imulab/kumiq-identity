@@ -1,11 +1,10 @@
-package com.kumiq.identity.scim.task.user.create;
+package com.kumiq.identity.scim.task.shared;
 
 import com.kumiq.identity.scim.database.ResourceDatabase;
-import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.resource.group.Group;
 import com.kumiq.identity.scim.resource.user.User;
+import com.kumiq.identity.scim.task.ResourceOpContext;
 import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.task.UserCreateContext;
 import org.springframework.util.Assert;
 
 import java.util.Optional;
@@ -14,13 +13,13 @@ import java.util.Optional;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public class UpdateGroupMembershipTask<T extends User> implements Task<UserCreateContext<T>> {
+public class UpdateGroupMembershipTask<T extends User> implements Task<ResourceOpContext<T>> {
 
     private ResourceDatabase.GroupDatabase groupDatabase;
 
     @Override
     @SuppressWarnings("unchecked")
-    public void perform(UserCreateContext<T> context) {
+    public void perform(ResourceOpContext<T> context) {
         context.getResource().getGroups().forEach(g -> {
             Optional result = groupDatabase.findById(g.getValue());
             if (result.isPresent()) {

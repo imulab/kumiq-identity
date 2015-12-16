@@ -2675,6 +2675,7 @@
               "mutability": "immutable",
               "returned": "default",
               "uniqueness": "none",
+              "referenceTypes": ["User", "Group"],
               "class": "java.lang.String"
             },
             {
@@ -2687,7 +2688,7 @@
               "mutability": "immutable",
               "returned": "default",
               "uniqueness": "none",
-              "referenceTypes": ["User", "Group"],
+              "referenceTypes": ["uri"],
               "class": "java.lang.String"
             },
             {

@@ -48,14 +48,14 @@ public abstract class CheckReferenceTask<T extends Resource> implements Task<Res
                 Object id = pathRef.evaluate(evaluationContext, evaluationConfiguration).getCursor();
 
                 if (!skipUserCheck) {
-                    if (!userDatabase.findById(id.toString()).isPresent()) {
+                    if (!userDatabase.findById(id == null ? "" : id.toString()).isPresent()) {
                         userMatch = false;
                         skipUserCheck = true;
                     }
                 }
 
                 if (!skipGroupCheck) {
-                    if (!groupDatabase.findById(id.toString()).isPresent()) {
+                    if (!groupDatabase.findById(id == null ? "" : id.toString()).isPresent()) {
                         groupMatch = false;
                         skipGroupCheck = true;
                     }

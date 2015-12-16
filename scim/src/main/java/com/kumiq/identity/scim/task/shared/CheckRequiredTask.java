@@ -48,8 +48,8 @@ public abstract class CheckRequiredTask<T extends Resource> implements Task<Reso
 
                 if (result == null)
                     throw violationException(path, context.getResource().getId());
-                else if (attribute.isMultiValued()) {
-                    Assert.isTrue(TypeUtils.isCollection(result));
+
+                if (attribute.isMultiValued() && TypeUtils.isCollection(result)) {
                     if (CollectionUtils.isEmpty(TypeUtils.asCollection(result)))
                         throw violationException(path, context.getResource().getId());
                 }

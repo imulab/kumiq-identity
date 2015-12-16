@@ -74,7 +74,7 @@ class GroupQueryTaskChainTests {
     @Configuration
     @EnableAutoConfiguration
     @Import([DefaultDatabaseConfiguration])
-    @ImportResource(['config/DataInitializationConfig.xml', 'config/GroupQueryTaskConfig.xml', 'config/GroupGetTaskConfig.xml'])
+    @ImportResource(['config/DataInitializationConfig.xml', 'config/GroupQueryTaskConfig.xml', 'config/UserGetTaskConfig.xml', 'config/GroupGetTaskConfig.xml'])
     static class TestConfiguration {
 
     }
