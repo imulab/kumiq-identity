@@ -1,11 +1,10 @@
-package com.kumiq.identity.scim.task.user.create;
+package com.kumiq.identity.scim.task.shared;
 
-import com.kumiq.identity.scim.database.ResourceDatabase;
 import com.kumiq.identity.scim.path.*;
+import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.misc.Schema;
-import com.kumiq.identity.scim.resource.user.User;
+import com.kumiq.identity.scim.task.ResourceOpContext;
 import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.task.UserCreateContext;
 import com.kumiq.identity.scim.utils.ExceptionFactory;
 import com.kumiq.identity.scim.utils.TypeUtils;
 import org.springframework.util.Assert;
@@ -18,17 +17,17 @@ import java.util.List;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public class CheckRequiredTask<T extends User> implements Task<UserCreateContext<T>> {
-
-    private ResourceDatabase.UserDatabase<T> userDatabase;
+public abstract class CheckRequiredTask<T extends Resource> implements Task<ResourceOpContext<T>> {
 
     /**
      * Paths which if have violated the "required" constraint, will be ignored
      */
     private List<String> amnestyPaths = new ArrayList<>();
 
+    protected abstract ExceptionFactory.ResourceAttributeAbsentException violationException(String path, String resourceId);
+
     @Override
-    public void perform(UserCreateContext<T> context) {
+    public void perform(ResourceOpContext<T> context) {
         Assert.notNull(context.getSchema());
 
         List<String> allPaths = context.getSchema().findAllPaths();
@@ -48,11 +47,11 @@ public class CheckRequiredTask<T extends User> implements Task<UserCreateContext
                 Object result = pathRef.evaluate(evaluationContext, evaluationConfiguration).getCursor();
 
                 if (result == null)
-                    throw ExceptionFactory.userAttributeAbsent(path, context.getResource().getId());
+                    throw violationException(path, context.getResource().getId());
                 else if (attribute.isMultiValued()) {
                     Assert.isTrue(TypeUtils.isCollection(result));
                     if (CollectionUtils.isEmpty(TypeUtils.asCollection(result)))
-                        throw ExceptionFactory.userAttributeAbsent(path, context.getResource().getId());
+                        throw violationException(path, context.getResource().getId());
                 }
             });
         }
@@ -71,15 +70,7 @@ public class CheckRequiredTask<T extends User> implements Task<UserCreateContext
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Assert.notNull(userDatabase);
-    }
 
-    public ResourceDatabase.UserDatabase<T> getUserDatabase() {
-        return userDatabase;
-    }
-
-    public void setUserDatabase(ResourceDatabase.UserDatabase<T> userDatabase) {
-        this.userDatabase = userDatabase;
     }
 
     public List<String> getAmnestyPaths() {

@@ -5,7 +5,7 @@ import com.kumiq.identity.scim.database.ResourceDatabase
 import com.kumiq.identity.scim.resource.constant.ScimConstants
 import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.resource.user.User
-import com.kumiq.identity.scim.task.user.create.CheckUniquenessTask
+import com.kumiq.identity.scim.task.user.create.CheckUserUniquenessTask
 import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceUniquenessViolatedException
 import org.junit.After
 import org.junit.Assert
@@ -23,13 +23,13 @@ import org.junit.runners.JUnit4
 @RunWith(JUnit4)
 class CheckUniquenessTaskTests {
 
-    CheckUniquenessTask task
+    CheckUserUniquenessTask task
     ResourceDatabase.UserDatabase database = new InMemoryDatabase.UserInMemoryDatabase()
     Schema testSchema
 
     @Before
     void setup() {
-        task = new CheckUniquenessTask()
+        task = new CheckUserUniquenessTask()
         database = new InMemoryDatabase.UserInMemoryDatabase()
         task.setUserDatabase(database)
 

@@ -1,12 +1,12 @@
-package com.kumiq.identity.scim.task.user.create;
+package com.kumiq.identity.scim.task.shared;
 
 import com.kumiq.identity.scim.database.ResourceDatabase;
 import com.kumiq.identity.scim.path.*;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
+import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.misc.Schema;
-import com.kumiq.identity.scim.resource.user.User;
+import com.kumiq.identity.scim.task.ResourceOpContext;
 import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.task.UserCreateContext;
 import com.kumiq.identity.scim.utils.ExceptionFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
@@ -17,13 +17,15 @@ import java.util.List;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public class CheckReferenceTask<T extends User> implements Task<UserCreateContext<T>> {
+public abstract class CheckReferenceTask<T extends Resource> implements Task<ResourceOpContext<T>> {
 
     private ResourceDatabase.GroupDatabase groupDatabase;
     private ResourceDatabase.UserDatabase userDatabase;
 
+    protected abstract ExceptionFactory.ResourceReferenceViolatedException violationException(String path, String resourceId);
+
     @Override
-    public void perform(UserCreateContext<T> context) {
+    public void perform(ResourceOpContext<T> context) {
         Assert.notNull(context.getSchema());
 
         List<String> allPaths = context.getSchema().findAllPaths();
@@ -64,7 +66,7 @@ public class CheckReferenceTask<T extends User> implements Task<UserCreateContex
             }
 
             if (!userMatch || !groupMatch)
-                throw ExceptionFactory.userReferenceViolated(path, context.getResource().getId());
+                throw violationException(path, context.getResource().getId());
         }
     }
 

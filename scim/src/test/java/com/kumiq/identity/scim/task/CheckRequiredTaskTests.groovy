@@ -4,7 +4,8 @@ import com.kumiq.identity.scim.database.InMemoryDatabase
 import com.kumiq.identity.scim.database.ResourceDatabase
 import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.resource.user.User
-import com.kumiq.identity.scim.task.user.create.CheckRequiredTask
+import com.kumiq.identity.scim.task.shared.CheckRequiredTask
+import com.kumiq.identity.scim.task.user.create.CheckUserRequiredTask
 import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceAttributeAbsentException
 import org.junit.After
 import org.junit.Assert
@@ -23,14 +24,11 @@ import org.junit.runners.JUnit4
 class CheckRequiredTaskTests {
 
     CheckRequiredTask task
-    ResourceDatabase.UserDatabase userDatabase
     Schema testSchema
 
     @Before
     void setup() {
-        task = new CheckRequiredTask()
-        userDatabase = new InMemoryDatabase.UserInMemoryDatabase()
-        task.setUserDatabase(userDatabase)
+        task = new CheckUserRequiredTask()
 
         testSchema = new Schema(attributes: [
                 new Schema.Attribute(name: 'id', required: true),
@@ -40,16 +38,6 @@ class CheckRequiredTaskTests {
                         new Schema.Attribute(name: 'familyName', required: false)
                 ])
         ])
-
-        User user1 = new User(id: 'testUser1', userName: 'testUser1', name: new User.Name(givenName: 'user1', familyName: 'test'))
-        User user2 = new User(id: 'testUser2', userName: 'testUser2', name: new User.Name(givenName: 'user2', familyName: 'test'))
-        userDatabase.save(user1)
-        userDatabase.save(user2)
-    }
-
-    @After
-    void cleanUp() {
-        (userDatabase as InMemoryDatabase.UserInMemoryDatabase).reset()
     }
 
     @Test

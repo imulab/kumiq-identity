@@ -1,12 +1,11 @@
-package com.kumiq.identity.scim.task.user.create;
+package com.kumiq.identity.scim.task.shared;
 
-import com.kumiq.identity.scim.database.ResourceDatabase;
 import com.kumiq.identity.scim.path.*;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
+import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.misc.Schema;
-import com.kumiq.identity.scim.resource.user.User;
+import com.kumiq.identity.scim.task.ResourceOpContext;
 import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.task.UserCreateContext;
 import com.kumiq.identity.scim.utils.ExceptionFactory;
 import com.kumiq.identity.scim.utils.TypeUtils;
 import com.kumiq.identity.scim.utils.ValueUtils;
@@ -18,9 +17,7 @@ import java.util.List;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public class CheckUniquenessTask<T extends User> implements Task<UserCreateContext<T>> {
-
-    private ResourceDatabase.UserDatabase<T> userDatabase;
+abstract public class CheckUniquenessTask<T extends Resource> implements Task<ResourceOpContext<T>> {
 
     /**
      * Useful in update context, where the only duplicate value exists in database should be the
@@ -28,8 +25,12 @@ public class CheckUniquenessTask<T extends User> implements Task<UserCreateConte
      */
     private boolean allowSelf = false;
 
+    protected abstract List<T> performQuery(String query, String sort, boolean ascending);
+
+    protected abstract ExceptionFactory.ResourceUniquenessViolatedException violationException(String path, String resourceId);
+
     @Override
-    public void perform(UserCreateContext<T> context) {
+    public void perform(ResourceOpContext<T> context) {
         Assert.notNull(context.getSchema());
 
         List<String> allPaths = context.getSchema().findAllPaths();
@@ -38,15 +39,15 @@ public class CheckUniquenessTask<T extends User> implements Task<UserCreateConte
             if (ScimConstants.UNIQUENESS_SERVER.equals(attribute.getUniqueness())) {
                 Object evalResult = evaluatePath(path, context.getResource(), context.getSchema());
                 String query = constructQuery(path, evalResult);
-                List<T> queryResults = userDatabase.query(query, "meta.created", true);
+                List<T> queryResults = performQuery(query, "meta.created", true);
 
                 if (allowSelf) {
                     if ((queryResults.size() > 1) ||
                             (queryResults.size() == 1 && !queryResults.get(0).getId().equals(context.getResource().getId())))
-                        throw ExceptionFactory.userPathNotUnique(path, context.getResource().getId());
+                        throw violationException(path, context.getResource().getId());
                 } else {
                     if (queryResults.size() > 0)
-                        throw ExceptionFactory.userPathNotUnique(path, context.getResource().getId());
+                        throw violationException(path, context.getResource().getId());
                 }
             }
         }
@@ -81,24 +82,11 @@ public class CheckUniquenessTask<T extends User> implements Task<UserCreateConte
         return pathRefs.get(0).evaluate(evaluationContext, evaluationConfiguration).getCursor();
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(userDatabase);
-    }
-
     public boolean isAllowSelf() {
         return allowSelf;
     }
 
     public void setAllowSelf(boolean allowSelf) {
         this.allowSelf = allowSelf;
-    }
-
-    public ResourceDatabase.UserDatabase<T> getUserDatabase() {
-        return userDatabase;
-    }
-
-    public void setUserDatabase(ResourceDatabase.UserDatabase<T> userDatabase) {
-        this.userDatabase = userDatabase;
     }
 }

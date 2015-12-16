@@ -3,20 +3,23 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="assignNewUserIdTask" class="com.kumiq.identity.scim.task.user.create.AssignIdTask" />
+       <bean id="assignNewUserIdTask" class="com.kumiq.identity.scim.task.shared.AssignIdTask">
+              <property name="idPrefix" value="user-" />
+       </bean>
 
-       <bean id="createUserMetaTask" class="com.kumiq.identity.scim.task.user.create.CreateMetaTask" />
+       <bean id="createUserMetaTask" class="com.kumiq.identity.scim.task.shared.CreateMetaTask">
+              <property name="resourceType" value="User" />
+              <property name="resourceUriSegment" value="/Users/" />
+       </bean>
 
-       <bean id="checkUserUniquenessTask" class="com.kumiq.identity.scim.task.user.create.CheckUniquenessTask">
+       <bean id="checkUserUniquenessTask" class="com.kumiq.identity.scim.task.user.create.CheckUserUniquenessTask">
               <property name="allowSelf" value="false" />
               <property name="userDatabase" ref="userDatabase" />
        </bean>
 
-       <bean id="checkUserRequiredTask" class="com.kumiq.identity.scim.task.user.create.CheckRequiredTask">
-              <property name="userDatabase" ref="userDatabase" />
-       </bean>
+       <bean id="checkUserRequiredTask" class="com.kumiq.identity.scim.task.user.create.CheckUserRequiredTask" />
 
-       <bean id="checkNewUserReferenceTask" class="com.kumiq.identity.scim.task.user.create.CheckReferenceTask">
+       <bean id="checkNewUserReferenceTask" class="com.kumiq.identity.scim.task.user.create.CheckUserReferenceTask">
               <property name="userDatabase" ref="userDatabase" />
               <property name="groupDatabase" ref="groupDatabase" />
        </bean>

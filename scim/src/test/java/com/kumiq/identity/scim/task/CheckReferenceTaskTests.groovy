@@ -6,7 +6,8 @@ import com.kumiq.identity.scim.resource.constant.ScimConstants
 import com.kumiq.identity.scim.resource.group.Group
 import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.resource.user.User
-import com.kumiq.identity.scim.task.user.create.CheckReferenceTask
+import com.kumiq.identity.scim.task.shared.CheckReferenceTask
+import com.kumiq.identity.scim.task.user.create.CheckUserReferenceTask
 import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceReferenceViolatedException
 import org.junit.After
 import org.junit.Assert
@@ -31,7 +32,7 @@ class CheckReferenceTaskTests {
 
     @Before
     void setup() {
-        task = new CheckReferenceTask()
+        task = new CheckUserReferenceTask()
         userDatabase = new InMemoryDatabase.UserInMemoryDatabase()
         groupDatabase = new InMemoryDatabase.GroupInMemoryDatabase()
         task.userDatabase = userDatabase
