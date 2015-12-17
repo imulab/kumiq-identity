@@ -76,5 +76,10 @@ public class Configuration {
          * model attribute name will still be used.
          */
         API_ATTR_NAME_PREF,
+
+        /**
+         * Inform the evaluation context that evaluated to null because of premature null hit.
+         */
+        INFORM_PREMATURE_EXIT,
     }
 }

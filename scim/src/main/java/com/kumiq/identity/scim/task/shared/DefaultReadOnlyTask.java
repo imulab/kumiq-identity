@@ -4,7 +4,7 @@ import com.kumiq.identity.scim.path.*;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.misc.Schema;
-import com.kumiq.identity.scim.task.CreateContext;
+import com.kumiq.identity.scim.task.ReplaceContext;
 import com.kumiq.identity.scim.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +16,14 @@ import java.util.List;
  * @author Weinan Qiu
  * @since 1.0.0
  */
-public class IgnoreReadOnlyTask<T extends Resource> implements Task<CreateContext<T>> {
+public class DefaultReadOnlyTask<T extends Resource> implements Task<ReplaceContext<T>> {
 
-    private static final Logger log = LoggerFactory.getLogger(IgnoreReadOnlyTask.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultReadOnlyTask.class);
 
     @Override
-    public void perform(CreateContext<T> context) {
+    public void perform(ReplaceContext<T> context) {
         Assert.notNull(context.getResource());
+        Assert.notNull(context.getOriginalCopy());
         Assert.notNull(context.getSchema());
 
         List<String> allPaths = context.getSchema().findAllPaths();
@@ -36,18 +37,24 @@ public class IgnoreReadOnlyTask<T extends Resource> implements Task<CreateContex
             if (compiledPath == null)
                 continue;
 
-            EvaluationContext evaluationContext = new EvaluationContext(context.getResource());
+            EvaluationContext evaluationContextForResource = new EvaluationContext(context.getResource());
             Configuration evaluationConfiguration = Configuration.withResourceObjectProvider()
-                    .withOption(Configuration.Option.COMPILE_WITH_HINT);
-            Object result = compiledPath.evaluate(evaluationContext, evaluationConfiguration).getCursor();
+                    .withOption(Configuration.Option.COMPILE_WITH_HINT)
+                    .withOption(Configuration.Option.INFORM_PREMATURE_EXIT);
+            Object resourceValue = compiledPath.evaluate(evaluationContextForResource, evaluationConfiguration).getCursor();
 
-            if (result != null) {
-                ModificationUnit modificationUnit = new ModificationUnit(ModificationUnit.Operation.REMOVE, path, null);
-                ModificationContext modificationContext = new ModificationContext(modificationUnit, context.getSchema(), context.getResource());
-                Configuration modificationConfiguration = Configuration.withResourceObjectProvider()
-                        .withOption(Configuration.Option.COMPILE_WITH_HINT);
-                Modifier.create(compiledPath, modificationContext, modificationConfiguration).modify();
-            }
+            // null because of a parent context evaluated to null, don't default
+            if (resourceValue == null && evaluationContextForResource.isNullBecauseOfPrematureExit())
+                continue;
+
+            EvaluationContext evaluationContextForOriginal = new EvaluationContext(context.getOriginalCopy());
+            Object originalValue = compiledPath.evaluate(evaluationContextForOriginal, evaluationConfiguration).getCursor();
+
+            ModificationUnit modificationUnit = new ModificationUnit(ModificationUnit.Operation.ADD, path, originalValue);
+            ModificationContext modificationContext = new ModificationContext(modificationUnit, context.getSchema(), context.getResource());
+            Configuration modificationConfiguration = Configuration.withResourceObjectProvider()
+                    .withOption(Configuration.Option.COMPILE_WITH_HINT);
+            Modifier.create(compiledPath, modificationContext, modificationConfiguration).modify();
         }
     }
 

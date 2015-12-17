@@ -100,6 +100,10 @@ public class PathRef {
         context.setCursor(this.pathToken.evaluate(context.getCursor(), configuration));
         if (this.isTail())
             return context;
+        else {
+            if (context.getCursor() == null && configuration.getOptions().contains(Configuration.Option.INFORM_PREMATURE_EXIT))
+                context.setNullBecauseOfPrematureExit(true);
+        }
 
         return this.next.evaluate(context, configuration);
     }
