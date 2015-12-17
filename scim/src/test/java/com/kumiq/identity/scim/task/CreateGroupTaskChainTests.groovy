@@ -71,6 +71,7 @@ class CreateGroupTaskChainTests {
     @ImportResource([
             'config/DataInitializationConfig.xml',
             'config/UserGetTaskConfig.xml',
+            'config/UserCreateTaskConfig.xml',
             'config/GroupGetTaskConfig.xml',
             'config/GroupCreateTaskConfig.xml'])
     static class TestConfiguration {

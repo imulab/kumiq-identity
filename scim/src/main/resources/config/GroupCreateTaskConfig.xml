@@ -37,6 +37,7 @@
               <property name="tasks">
                      <list>
                             <ref bean="setGroupSchemaTask" />
+                            <ref bean="ignoreReadOnlyTask" />
                             <ref bean="assignNewGroupIdTask" />
                             <ref bean="createGroupMetaTask" />
                             <ref bean="checkGroupRequiredTask" />

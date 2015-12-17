@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+       <bean id="ignoreReadOnlyTask" class="com.kumiq.identity.scim.task.shared.IgnoreReadOnlyTask" />
+
        <bean id="assignNewUserIdTask" class="com.kumiq.identity.scim.task.shared.AssignIdTask">
               <property name="idPrefix" value="user-" />
        </bean>
@@ -37,6 +39,7 @@
               <property name="tasks">
                      <list>
                             <ref bean="setUserSchemaTask" />
+                            <ref bean="ignoreReadOnlyTask" />
                             <ref bean="assignNewUserIdTask" />
                             <ref bean="createUserMetaTask" />
                             <ref bean="checkUserRequiredTask" />
