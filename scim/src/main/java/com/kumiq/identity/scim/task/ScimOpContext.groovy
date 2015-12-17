@@ -32,6 +32,11 @@ abstract class ResourceOpContext<T extends Resource> {
     Schema schema
 
     /**
+     * Id for the requested resource
+     */
+    String id
+
+    /**
      * The resource itself, could be used as output or input, based on the context type
      */
     T resource
@@ -48,8 +53,6 @@ abstract class ResourceOpContext<T extends Resource> {
  * @param < T >
  */
 abstract class GetContext<T extends Resource> extends ResourceOpContext<T> {
-
-    String id
 
     Map<String, Object> data
 }
@@ -99,8 +102,6 @@ abstract class CreateContext<T extends Resource> extends ResourceOpContext<T> {
  */
 abstract class ReplaceContext<T extends Resource> extends ResourceOpContext<T> {
 
-    String id
-
     T originalCopy
 }
 
@@ -121,7 +122,6 @@ abstract class PatchContext<T extends Resource> extends ReplaceContext<T> {
  */
 abstract class DeleteContext<T extends Resource> extends ResourceOpContext<T> {
 
-    String id
 }
 
 // ~ User ==============================================================================================================
