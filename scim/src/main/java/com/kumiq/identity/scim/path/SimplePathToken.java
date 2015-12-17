@@ -17,6 +17,9 @@ public class SimplePathToken extends PathToken {
 
     @Override
     public Object evaluate(Object cursor, Configuration configuration) {
+        if (cursor == null)
+            return null;
+
         return configuration.getObjectProvider().getPropertyValue(cursor, attributeName(configuration));
     }
 

@@ -147,6 +147,14 @@ public class ExceptionFactory {
         return new ResourceReferenceViolatedException(ScimConstants.RESOURCE_TYPE_GROUP, resourceId, path);
     }
 
+    public static ResourceImmutabilityViolatedException userImmutabilityViolated(String path, String resourceId) {
+        return new ResourceImmutabilityViolatedException(ScimConstants.RESOURCE_TYPE_USER, resourceId, path);
+    }
+
+    public static ResourceImmutabilityViolatedException groupImmutabilityViolated(String path, String resourceId) {
+        return new ResourceImmutabilityViolatedException(ScimConstants.RESOURCE_TYPE_GROUP, resourceId, path);
+    }
+
     protected static class ResourceAccessException extends RuntimeException {
 
         private final String resourceType;
@@ -270,6 +278,24 @@ public class ExceptionFactory {
 
         public String getPath() {
             return path;
+        }
+    }
+
+    public static class ResourceImmutabilityViolatedException extends ResourceAccessException {
+
+        private String violatedPath;
+
+        public ResourceImmutabilityViolatedException(String resourceType, String resourceId, String violatedPath) {
+            super(resourceType, resourceId);
+            this.violatedPath = violatedPath;
+        }
+
+        public String getViolatedPath() {
+            return violatedPath;
+        }
+
+        public void setViolatedPath(String violatedPath) {
+            this.violatedPath = violatedPath;
         }
     }
 

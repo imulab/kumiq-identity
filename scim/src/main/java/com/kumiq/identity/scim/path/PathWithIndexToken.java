@@ -1,5 +1,7 @@
 package com.kumiq.identity.scim.path;
 
+import com.kumiq.identity.scim.utils.TypeUtils;
+
 import java.util.regex.Pattern;
 
 /**
@@ -29,6 +31,12 @@ public class PathWithIndexToken extends SimplePathToken {
     @Override
     public Object evaluate(Object cursor, Configuration configuration) {
         Object list = configuration.getObjectProvider().getPropertyValue(cursor, attributeName(configuration));
+
+        if (list == null)
+            return null;
+        if (TypeUtils.asCollection(list).size() <= this.indexComponent)
+            return null;
+
         return configuration.getObjectProvider().getArrayIndex(list, this.indexComponent);
     }
 
