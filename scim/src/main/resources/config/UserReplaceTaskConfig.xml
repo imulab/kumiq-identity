@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="loadOriginalUserTask" class="com.kumiq.identity.scim.task.user.replace.LoadOriginalUserTask">
+              <property name="database" ref="userDatabase" />
+       </bean>
+
+       <bean id="defaultReadOnlyTask" class="com.kumiq.identity.scim.task.shared.DefaultReadOnlyTask" />
+
+       <bean id="checkUserMutabilityTask" class="com.kumiq.identity.scim.task.user.replace.CheckUserMutabilityTask" />
+
+       <bean id="checkUserUniquenessTaskAllowSelf" class="com.kumiq.identity.scim.task.user.create.CheckUserUniquenessTask">
+              <property name="allowSelf" value="true" />
+              <property name="userDatabase" ref="userDatabase" />
+       </bean>
+
+       <bean id="updateMetaTask" class="com.kumiq.identity.scim.task.shared.UpdateMetaTask" />
+
+       <bean id="userReplaceTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="UserReplaceTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="checkUserVersionForDeleteTask" />
+                            <ref bean="setUserSchemaTask" />
+                            <ref bean="loadOriginalUserTask" />
+                            <ref bean="defaultReadOnlyTask" />
+                            <ref bean="checkUserMutabilityTask" />
+                            <ref bean="checkUserRequiredTask" />
+                            <ref bean="checkUserUniquenessTaskAllowSelf" />
+                            <ref bean="checkNewUserReferenceTask" />
+                            <ref bean="updateMetaTask" />
+                            <ref bean="saveUserTask" />
+                            <ref bean="updateGroupMembershipForNewUserTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>
