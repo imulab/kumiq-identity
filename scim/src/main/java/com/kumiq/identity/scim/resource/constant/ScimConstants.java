@@ -8,6 +8,15 @@ public class ScimConstants {
 
     public static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
+    public static final String SCIM_CONTENT_TYPE = "application/scim+json";
+    public static final String ORDER_ASC = "ascending";
+    public static final String DEFAULT_FILTER = "id pr";
+    public static final String DEFAULT_SORT_BY = "meta.created";
+    public static final String DEFAULT_ATTR = "";
+    public static final String DEFAULT_START_IDX = "1";
+    public static final String DEFAULT_COUNT = "20";
+    public static final String SCHEMAS = "schemas";
+
     public static final String RESOURCE_TYPE_USER = "User";
     public static final String RESOURCE_TYPE_GROUP = "Group";
     public static final String RESOURCE_TYPE_SERVICE_PROVIDER_CONFIG = "ServiceProviderConfig";
