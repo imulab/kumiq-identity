@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="loadOriginalGroupTask" class="com.kumiq.identity.scim.task.group.replace.LoadOriginalGroupTask">
+              <property name="database" ref="groupDatabase" />
+       </bean>
+
+       <bean id="checkGroupMutabilityTask" class="com.kumiq.identity.scim.task.group.replace.CheckGroupMutabilityTask" />
+
+       <bean id="checkGroupUniquenessTaskAllowSelf" class="com.kumiq.identity.scim.task.group.create.CheckGroupUniquenessTask">
+              <property name="allowSelf" value="true" />
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
+       <bean id="groupReplaceTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="GroupReplaceTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="checkGroupVersionTask" />
+                            <ref bean="setGroupSchemaTask" />
+                            <ref bean="loadOriginalGroupTask" />
+                            <ref bean="defaultReadOnlyTask" />
+                            <ref bean="checkGroupMutabilityTask" />
+                            <ref bean="checkGroupRequiredTask" />
+                            <ref bean="checkGroupUniquenessTaskAllowSelf" />
+                            <ref bean="checkNewGroupReferenceTask" />
+                            <ref bean="updateMetaTask" />
+                            <ref bean="saveGroupTask" />
+                            <ref bean="updateUserGroupTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>

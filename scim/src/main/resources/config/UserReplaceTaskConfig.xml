@@ -22,7 +22,7 @@
               <property name="taskName" value="UserReplaceTaskChain" />
               <property name="tasks">
                      <list>
-                            <ref bean="checkUserVersionForDeleteTask" />
+                            <ref bean="checkUserVersionTask" />
                             <ref bean="setUserSchemaTask" />
                             <ref bean="loadOriginalUserTask" />
                             <ref bean="defaultReadOnlyTask" />

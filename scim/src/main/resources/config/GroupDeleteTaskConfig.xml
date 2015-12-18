@@ -3,7 +3,7 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="checkGroupVersionForDeleteTask" class="com.kumiq.identity.scim.task.group.delete.CheckGroupVersionTask">
+       <bean id="checkGroupVersionTask" class="com.kumiq.identity.scim.task.group.delete.CheckGroupVersionTask">
               <property name="resourceDatabase" ref="groupDatabase" />
        </bean>
 
@@ -15,7 +15,7 @@
               <property name="taskName" value="DeleteGroupTaskChain" />
               <property name="tasks">
                      <list>
-                            <ref bean="checkGroupVersionForDeleteTask"/>
+                            <ref bean="checkGroupVersionTask"/>
                             <ref bean="deleteGroupByIdTask"/>
                      </list>
               </property>
