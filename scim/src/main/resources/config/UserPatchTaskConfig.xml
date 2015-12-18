@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+       <bean id="copyOriginalToResourceTask" class="com.kumiq.identity.scim.task.shared.CopyOriginalToResourceTask" />
+
+       <bean id="applyModificationUnitsTask" class="com.kumiq.identity.scim.task.shared.ApplyModificationUnitsTask" />
+
+       <bean id="userPatchTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="UserPatchTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <ref bean="checkUserVersionTask" />
+                            <ref bean="setUserSchemaTask" />
+                            <ref bean="loadOriginalUserTask" />
+                            <ref bean="copyOriginalToResourceTask" />
+                            <ref bean="applyModificationUnitsTask" />
+                            <ref bean="defaultReadOnlyTask" />
+                            <ref bean="checkUserMutabilityTask" />
+                            <ref bean="checkUserRequiredTask" />
+                            <ref bean="checkUserUniquenessTaskAllowSelf" />
+                            <ref bean="checkNewUserReferenceTask" />
+                            <ref bean="updateMetaTask" />
+                            <ref bean="saveUserTask" />
+                            <ref bean="updateGroupMembershipForNewUserTask" />
+                            <ref bean="populateETagHeaderTask" />
+                            <ref bean="populateLocationHeaderTask" />
+                     </list>
+              </property>
+       </bean>
+</beans>
