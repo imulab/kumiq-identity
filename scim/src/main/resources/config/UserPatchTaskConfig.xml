@@ -3,6 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+       <bean id="formalizeModificationValueTask" class="com.kumiq.identity.scim.task.shared.FormalizeModificationValueTask" />
+
        <bean id="copyOriginalToResourceTask" class="com.kumiq.identity.scim.task.shared.CopyOriginalToResourceTask" />
 
        <bean id="applyModificationUnitsTask" class="com.kumiq.identity.scim.task.shared.ApplyModificationUnitsTask" />
@@ -13,6 +15,7 @@
                      <list>
                             <ref bean="checkUserVersionTask" />
                             <ref bean="setUserSchemaTask" />
+                            <ref bean="formalizeModificationValueTask" />
                             <ref bean="loadOriginalUserTask" />
                             <ref bean="copyOriginalToResourceTask" />
                             <ref bean="applyModificationUnitsTask" />

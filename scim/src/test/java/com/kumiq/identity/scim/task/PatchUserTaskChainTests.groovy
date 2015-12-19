@@ -72,6 +72,7 @@ class PatchUserTaskChainTests {
                 id: '02B52AB8-ACFF-4041-BC60-F5249D12F905',
                 modifications: [
                         new ModificationUnit(ModificationUnit.Operation.ADD, 'name.familyName', 'Qiu'),
+                        new ModificationUnit(ModificationUnit.Operation.ADD, 'emails', new User.Email(value: 'davidiamyou@gmail.com', primary: true)),
                         new ModificationUnit(ModificationUnit.Operation.REPLACE, 'active', Boolean.FALSE),
                         new ModificationUnit(ModificationUnit.Operation.REMOVE, 'nickName', null)
                 ])

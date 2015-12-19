@@ -1,8 +1,8 @@
 package com.kumiq.identity.scim.endpoint;
 
+import com.kumiq.identity.scim.endpoint.support.PatchOpBody;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.resource.user.ScimUser;
-import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.service.OperationCentral;
 import com.kumiq.identity.scim.task.UserCreateContext;
 import com.kumiq.identity.scim.task.UserGetContext;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -76,5 +75,24 @@ public class UserResourceEndpoints {
                                 HttpServletResponse httpServletResponse) {
         UserReplaceContext context = operationCentral.replaceUser(userId, resource, httpServletRequest, httpServletResponse);
         return (ScimUser) context.getResource();
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequestMapping(value = "/{userId}", method = RequestMethod.PATCH, consumes = SCIM_CONTENT_TYPE, produces = SCIM_CONTENT_TYPE)
+    public void patchUser(@PathVariable String userId,
+                          @RequestHeader(value = "If-Match") String version,
+                          @RequestBody PatchOpBody requestBody,
+                          HttpServletRequest httpServletRequest,
+                          HttpServletResponse httpServletResponse) {
+        operationCentral.patchUser(userId, requestBody.getOperations(), httpServletRequest, httpServletResponse);
+    }
+
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
+    public void deleteUser(@PathVariable String userId,
+                           @RequestHeader(value = "If-Match") String version,
+                           HttpServletRequest httpServletRequest,
+                           HttpServletResponse httpServletResponse) {
+        operationCentral.deleteUser(userId, httpServletRequest, httpServletResponse);
     }
 }

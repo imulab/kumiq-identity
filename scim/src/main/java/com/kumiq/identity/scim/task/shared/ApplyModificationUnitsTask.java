@@ -29,7 +29,8 @@ public class ApplyModificationUnitsTask<T extends Resource> implements Task<Patc
                     .withSchema(context.getSchema());
             Configuration compileConfig = Configuration.withResourceObjectProvider()
                     .withOption(Configuration.Option.COMPILE_WITH_HINT)
-                    .withOption(Configuration.Option.SUPPRESS_EXCEPTION);
+                    .withOption(Configuration.Option.SUPPRESS_EXCEPTION)
+                    .withOption(Configuration.Option.TREAT_EMPTY_MULTIVALUE_AS_SIMPLE);
 
             PathCompiler
                     .compile(compileContext, compileConfig)

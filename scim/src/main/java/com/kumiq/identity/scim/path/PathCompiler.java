@@ -165,9 +165,22 @@ public class PathCompiler {
                 }
 
                 Schema.Attribute attribute = cursor.getPathToken().getAttribute();
-                if (attribute.isMultiValued() && !cursor.getPathToken().isPathWithIndex())
-                    return Optional.of(cursor.getPathToken());
-                else if (cursor.getPathToken().isPathWithFilter() && !shouldSuppressException())
+                if (attribute.isMultiValued() && !cursor.getPathToken().isPathWithIndex()) {
+                    if (shouldTreatEmptyMultiValuedNodeAsSimple()) {
+                        PathRef pathHead = PathRef.createReferenceTo(cursor.getPathToken().getPrev());
+                        EvaluationContext evalContext = new EvaluationContext(this.context.getData());
+                        evalContext = pathHead.evaluate(evalContext, this.configuration);
+                        Object value = evalContext.getCursor();
+                        Object array = configuration.getObjectProvider().getPropertyValue(value, cursor.getPathToken().modelAttributeName());
+                        Assert.isTrue(isList(array));
+
+                        if (asList(array).size() > 0)
+                            return Optional.of(cursor.getPathToken());
+                    } else {
+                        return Optional.of(cursor.getPathToken());
+                    }
+
+                } else if (cursor.getPathToken().isPathWithFilter() && !shouldSuppressException())
                     throw ExceptionFactory.pathCompiledNotExpandable(this.context.getPath(), cursor.getPathToken().pathFragment());
             } else {
                 if (cursor.getPathToken() instanceof PathWithFilterToken)
@@ -256,5 +269,9 @@ public class PathCompiler {
 
     private boolean shouldRelyOnHint() {
         return this.configuration.getOptions().contains(Configuration.Option.COMPILE_WITH_HINT);
+    }
+
+    private boolean shouldTreatEmptyMultiValuedNodeAsSimple() {
+        return this.configuration.getOptions().contains(Configuration.Option.TREAT_EMPTY_MULTIVALUE_AS_SIMPLE);
     }
 }

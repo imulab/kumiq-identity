@@ -81,5 +81,10 @@ public class Configuration {
          * Inform the evaluation context that evaluated to null because of premature null hit.
          */
         INFORM_PREMATURE_EXIT,
+
+        /**
+         * Treat multi-value nodes that has 0 size as simple node, thus preventing it to be "expanded".
+         */
+        TREAT_EMPTY_MULTIVALUE_AS_SIMPLE,
     }
 }
