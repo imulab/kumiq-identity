@@ -22,6 +22,7 @@
                             <ref bean="setGroupSchemaTask" />
                             <ref bean="loadOriginalGroupTask" />
                             <ref bean="defaultReadOnlyTask" />
+                            <ref bean="arrayProtectionTask" />
                             <ref bean="checkGroupMutabilityTask" />
                             <ref bean="checkGroupRequiredTask" />
                             <ref bean="checkGroupUniquenessTaskAllowSelf" />

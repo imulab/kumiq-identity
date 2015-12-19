@@ -14,6 +14,7 @@
                             <ref bean="copyOriginalToResourceTask" />
                             <ref bean="applyModificationUnitsTask" />
                             <ref bean="defaultReadOnlyTask" />
+                            <ref bean="arrayProtectionTask" />
                             <ref bean="checkGroupMutabilityTask" />
                             <ref bean="checkGroupRequiredTask" />
                             <ref bean="checkGroupUniquenessTaskAllowSelf" />

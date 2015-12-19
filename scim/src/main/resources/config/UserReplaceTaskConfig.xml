@@ -18,6 +18,8 @@
 
        <bean id="updateMetaTask" class="com.kumiq.identity.scim.task.shared.UpdateMetaTask" />
 
+       <bean id="arrayProtectionTask" class="com.kumiq.identity.scim.task.shared.PostModificationNullArrayProtectionTask" />
+
        <bean id="userReplaceTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
               <property name="taskName" value="UserReplaceTaskChain" />
               <property name="tasks">
@@ -26,6 +28,7 @@
                             <ref bean="setUserSchemaTask" />
                             <ref bean="loadOriginalUserTask" />
                             <ref bean="defaultReadOnlyTask" />
+                            <ref bean="arrayProtectionTask" />
                             <ref bean="checkUserMutabilityTask" />
                             <ref bean="checkUserRequiredTask" />
                             <ref bean="checkUserUniquenessTaskAllowSelf" />

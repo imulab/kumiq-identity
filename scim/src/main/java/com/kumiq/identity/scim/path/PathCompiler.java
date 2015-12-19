@@ -172,10 +172,11 @@ public class PathCompiler {
                         evalContext = pathHead.evaluate(evalContext, this.configuration);
                         Object value = evalContext.getCursor();
                         Object array = configuration.getObjectProvider().getPropertyValue(value, cursor.getPathToken().modelAttributeName());
-                        Assert.isTrue(isList(array));
-
-                        if (asList(array).size() > 0)
-                            return Optional.of(cursor.getPathToken());
+                        if (array != null) {
+                            Assert.isTrue(isList(array));
+                            if (asList(array).size() > 0)
+                                return Optional.of(cursor.getPathToken());
+                        }
                     } else {
                         return Optional.of(cursor.getPathToken());
                     }

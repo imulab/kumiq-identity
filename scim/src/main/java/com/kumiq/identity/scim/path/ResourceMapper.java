@@ -33,7 +33,8 @@ public class ResourceMapper {
             CompilationContext compilationContext = CompilationContext
                     .create(pathToInclude, context.getData())
                     .withSchema(context.getSchema());
-            Configuration compilationConfig = configuration.clone().withOption(Configuration.Option.COMPILE_WITH_HINT);
+            Configuration compilationConfig = configuration.clone()
+                    .withOption(Configuration.Option.COMPILE_WITH_HINT);
             PathCompiler.compile(compilationContext, compilationConfig).stream().forEach(pathRef -> {
                 EvaluationContext evaluationContext = new EvaluationContext(context.getData());
                 Configuration evalConfig = new Configuration(this.configuration.getObjectProvider()).withOption(Configuration.Option.COMPILE_WITH_HINT);

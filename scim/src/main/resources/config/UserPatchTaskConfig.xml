@@ -20,6 +20,7 @@
                             <ref bean="copyOriginalToResourceTask" />
                             <ref bean="applyModificationUnitsTask" />
                             <ref bean="defaultReadOnlyTask" />
+                            <ref bean="arrayProtectionTask" />
                             <ref bean="checkUserMutabilityTask" />
                             <ref bean="checkUserRequiredTask" />
                             <ref bean="checkUserUniquenessTaskAllowSelf" />
