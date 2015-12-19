@@ -16,6 +16,8 @@ public class ScimConstants {
     public static final String DEFAULT_START_IDX = "1";
     public static final String DEFAULT_COUNT = "20";
     public static final String SCHEMAS = "schemas";
+    public static final String HINT_USER = "HintUser";
+    public static final String HINT_GROUP = "HintGroup";
 
     public static final String RESOURCE_TYPE_USER = "User";
     public static final String RESOURCE_TYPE_GROUP = "Group";
