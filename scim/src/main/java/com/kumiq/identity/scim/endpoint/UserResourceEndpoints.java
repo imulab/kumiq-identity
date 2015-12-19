@@ -7,6 +7,7 @@ import com.kumiq.identity.scim.service.OperationCentral;
 import com.kumiq.identity.scim.task.UserCreateContext;
 import com.kumiq.identity.scim.task.UserGetContext;
 import com.kumiq.identity.scim.task.UserQueryContext;
+import com.kumiq.identity.scim.task.UserReplaceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.kumiq.identity.scim.resource.constant.ScimConstants.SCIM_CONTENT_TYPE;
 
 /**
  * @author Weinan Qiu
@@ -30,7 +33,7 @@ public class UserResourceEndpoints {
     @Autowired
     OperationCentral operationCentral;
 
-    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = ScimConstants.SCIM_CONTENT_TYPE)
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET, produces = SCIM_CONTENT_TYPE)
     public Map retrieveUserById(@PathVariable String userId,
                                 HttpServletRequest httpServletRequest,
                                 HttpServletResponse httpServletResponse) {
@@ -38,7 +41,7 @@ public class UserResourceEndpoints {
         return context.getData();
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = ScimConstants.SCIM_CONTENT_TYPE)
+    @RequestMapping(method = RequestMethod.GET, produces = SCIM_CONTENT_TYPE)
     public Map queryUser(@RequestParam(value = "attributes", defaultValue = ScimConstants.DEFAULT_ATTR, required = false) String commaSeperatedAttributes,
                          @RequestParam(value = "startIndex", defaultValue = ScimConstants.DEFAULT_START_IDX, required = false) int startIndex,
                          @RequestParam(value = "count", defaultValue = ScimConstants.DEFAULT_COUNT, required = false) int count,
@@ -57,11 +60,21 @@ public class UserResourceEndpoints {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(method = RequestMethod.POST, consumes = ScimConstants.SCIM_CONTENT_TYPE, produces = ScimConstants.SCIM_CONTENT_TYPE)
+    @RequestMapping(method = RequestMethod.POST, consumes = SCIM_CONTENT_TYPE, produces = SCIM_CONTENT_TYPE)
     public ScimUser createUser(@RequestBody ScimUser resource,
                           HttpServletRequest httpServletRequest,
                           HttpServletResponse httpServletResponse) {
         UserCreateContext context = operationCentral.createUser(resource, httpServletRequest, httpServletResponse);
+        return (ScimUser) context.getResource();
+    }
+
+    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT, consumes = SCIM_CONTENT_TYPE, produces = SCIM_CONTENT_TYPE)
+    public ScimUser replaceUser(@PathVariable String userId,
+                                @RequestHeader(value = "If-Match") String version,
+                                @RequestBody ScimUser resource,
+                                HttpServletRequest httpServletRequest,
+                                HttpServletResponse httpServletResponse) {
+        UserReplaceContext context = operationCentral.replaceUser(userId, resource, httpServletRequest, httpServletResponse);
         return (ScimUser) context.getResource();
     }
 }

@@ -2,10 +2,7 @@ package com.kumiq.identity.scim.service;
 
 import com.kumiq.identity.scim.resource.user.ScimUser;
 import com.kumiq.identity.scim.resource.user.User;
-import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.task.UserCreateContext;
-import com.kumiq.identity.scim.task.UserGetContext;
-import com.kumiq.identity.scim.task.UserQueryContext;
+import com.kumiq.identity.scim.task.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +21,7 @@ public class OperationCentral {
     @Resource(name = "getUserTaskChain") Task retrieveUserTasks;
     @Resource(name = "userQueryTaskChain") Task queryUserTasks;
     @Resource(name = "createUserTaskChain") Task createUserTasks;
+    @Resource(name = "userReplaceTaskChain") Task replaceUserTasks;
 
     public UserGetContext retrieveUserById(String userId,
                                            HttpServletRequest request,
@@ -65,6 +63,19 @@ public class OperationCentral {
         context.setHttpRequest(request);
         context.setHttpResponse(response);
         createUserTasks.perform(context);
+        return context;
+    }
+
+    public UserReplaceContext replaceUser(String userId,
+                                          ScimUser resource,
+                                          HttpServletRequest request,
+                                          HttpServletResponse response) {
+        UserReplaceContext<ScimUser> context = new UserReplaceContext<>();
+        context.setId(userId);
+        context.setResource(resource);
+        context.setHttpRequest(request);
+        context.setHttpResponse(response);
+        replaceUserTasks.perform(context);
         return context;
     }
 }
