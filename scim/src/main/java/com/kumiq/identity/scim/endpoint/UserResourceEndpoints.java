@@ -4,9 +4,11 @@ import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.resource.user.ScimUser;
 import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.service.OperationCentral;
+import com.kumiq.identity.scim.task.UserCreateContext;
 import com.kumiq.identity.scim.task.UserGetContext;
 import com.kumiq.identity.scim.task.UserQueryContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,5 +54,14 @@ public class UserResourceEndpoints {
                 httpServletRequest, httpServletResponse);
         context.getResults().put(ScimConstants.SCHEMAS, Arrays.asList(ScimConstants.URN_LIST_RESPONSE));
         return context.getResults();
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(method = RequestMethod.POST, consumes = ScimConstants.SCIM_CONTENT_TYPE, produces = ScimConstants.SCIM_CONTENT_TYPE)
+    public ScimUser createUser(@RequestBody ScimUser resource,
+                          HttpServletRequest httpServletRequest,
+                          HttpServletResponse httpServletResponse) {
+        UserCreateContext context = operationCentral.createUser(resource, httpServletRequest, httpServletResponse);
+        return (ScimUser) context.getResource();
     }
 }

@@ -40,12 +40,14 @@ public class ResourceMapper {
                 evaluationContext = pathRef.evaluate(evaluationContext, evalConfig);
                 Object evaluationResult = evaluationContext.getCursor();
 
-                ModificationUnit modificationUnit = new ModificationUnit(ModificationUnit.Operation.ADD, pathToInclude, evaluationResult);
-                ModificationContext modificationContext = new ModificationContext(modificationUnit, context.getSchema(), resultMap);
-                Configuration modificationConfiguration = Configuration.withMapObjectProvider();
-                if (this.configuration.getOptions().contains(Configuration.Option.API_ATTR_NAME_PREF))
-                    modificationConfiguration.withOption(Configuration.Option.API_ATTR_NAME_PREF);
-                Modifier.create(pathRef, modificationContext, modificationConfiguration).modify();
+                if (evaluationResult != null) {
+                    ModificationUnit modificationUnit = new ModificationUnit(ModificationUnit.Operation.ADD, pathToInclude, evaluationResult);
+                    ModificationContext modificationContext = new ModificationContext(modificationUnit, context.getSchema(), resultMap);
+                    Configuration modificationConfiguration = Configuration.withMapObjectProvider();
+                    if (this.configuration.getOptions().contains(Configuration.Option.API_ATTR_NAME_PREF))
+                        modificationConfiguration.withOption(Configuration.Option.API_ATTR_NAME_PREF);
+                    Modifier.create(pathRef, modificationContext, modificationConfiguration).modify();
+                }
             });
         }
 
