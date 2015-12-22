@@ -6,6 +6,9 @@ import com.kumiq.identity.scim.exception.ApiException;
 import com.kumiq.identity.scim.utils.JsonDateToUnixTimestampSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author Weinan Qiu
@@ -21,13 +25,10 @@ import java.util.Date;
 @ControllerAdvice
 public class ExceptionResolver {
 
-    private static final Logger log = LoggerFactory.getLogger(ExceptionResolver.class);
+    @Autowired
+    private MessageSource messageSource;
 
-//    @ExceptionHandler(ExceptionFactory.ResourceNotFoundException.class)
-//    @ResponseStatus(HttpStatus.NOT_FOUND)
-//    public void handleResourceNotFoundException(ExceptionFactory.ResourceNotFoundException ex) {
-//        log.error(String.format("Resource [%s(%s)] was not found.", ex.getResourceType(), ex.getResourceId()));
-//    }
+    private static final Logger log = LoggerFactory.getLogger(ExceptionResolver.class);
 
     @ResponseBody
     @ExceptionHandler(Exception.class)
@@ -40,7 +41,9 @@ public class ExceptionResolver {
     public ErrorResponse handleApiException(ApiException ex, HttpServletResponse response) {
         log.error(ex.defaultMessage());
         response.setStatus(ex.httpStatus().value());
-        return ErrorResponse.fromApiException(ex);
+        ErrorResponse errorResponse = ErrorResponse.fromApiException(ex);
+        errorResponse.setMessage(messageSource.getMessage(ex.messageCode(), ex.messageArgs(), LocaleContextHolder.getLocale()));
+        return errorResponse;
     }
 
     public ErrorResponse handleGenericException(Exception ex, HttpServletResponse response) {
@@ -68,7 +71,6 @@ public class ExceptionResolver {
             ErrorResponse response = new ErrorResponse();
             response.errorName = ex.getClass().getSimpleName();
             response.errorTime = new Date();
-            response.message = ex.defaultMessage();
             response.statusCode = ex.httpStatus().value();
             return response;
         }
@@ -113,5 +115,13 @@ public class ExceptionResolver {
         public void setStatusCode(int statusCode) {
             this.statusCode = statusCode;
         }
+    }
+
+    public MessageSource getMessageSource() {
+        return messageSource;
+    }
+
+    public void setMessageSource(MessageSource messageSource) {
+        this.messageSource = messageSource;
     }
 }

@@ -294,7 +294,7 @@ public class ExceptionFactory {
 
         @Override
         public Object[] messageArgs() {
-            return new Object[]{ getResourceType(), getResourceId(), conflictToString() };
+            return new Object[]{ getResourceType(), conflictToString() };
         }
 
         @Override
@@ -364,7 +364,7 @@ public class ExceptionFactory {
 
         @Override
         public Object[] messageArgs() {
-            return new Object[]{ getResourceType(), getResourceId(), capacity, actualCount };
+            return new Object[]{ getResourceType(), capacity, actualCount };
         }
 
         @Override
@@ -393,7 +393,7 @@ public class ExceptionFactory {
 
         @Override
         public Object[] messageArgs() {
-            return new Object[]{ getResourceType(), getResourceId(), path };
+            return new Object[]{ getResourceType(), path };
         }
 
         @Override
@@ -422,7 +422,7 @@ public class ExceptionFactory {
 
         @Override
         public Object[] messageArgs() {
-            return new Object[]{ getResourceType(), getResourceId(), requiredPath };
+            return new Object[]{ getResourceType(), requiredPath };
         }
 
         @Override
@@ -511,12 +511,12 @@ public class ExceptionFactory {
 
         @Override
         public String messageCode() {
-            return "error." + this.getClass().getSimpleName();
+            return "error.Generic";
         }
 
         @Override
         public Object[] messageArgs() {
-            return new Object[0];
+            return new Object[]{ this.getLocalizedMessage() };
         }
 
         @Override
