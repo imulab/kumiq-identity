@@ -2,7 +2,7 @@ package com.kumiq.identity.scim.task.user.create;
 
 import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.task.shared.CheckReferenceTask;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 
 /**
  * @author Weinan Qiu

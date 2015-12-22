@@ -3,7 +3,7 @@ package com.kumiq.identity.scim.task.group.get;
 import com.kumiq.identity.scim.resource.group.Group;
 import com.kumiq.identity.scim.task.GroupGetContext;
 import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 
 /**
  * Ensure the group found in previous tasks actually exists (Separated for modularity)

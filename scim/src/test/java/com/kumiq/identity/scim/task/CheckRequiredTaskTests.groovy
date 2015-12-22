@@ -1,13 +1,10 @@
 package com.kumiq.identity.scim.task
 
-import com.kumiq.identity.scim.database.InMemoryDatabase
-import com.kumiq.identity.scim.database.ResourceDatabase
 import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.resource.user.User
 import com.kumiq.identity.scim.task.shared.CheckRequiredTask
 import com.kumiq.identity.scim.task.user.create.CheckUserRequiredTask
-import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceAttributeAbsentException
-import org.junit.After
+import com.kumiq.identity.scim.exception.ExceptionFactory.ResourceAttributeAbsentException
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

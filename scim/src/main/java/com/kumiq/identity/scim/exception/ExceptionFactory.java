@@ -1,9 +1,11 @@
-package com.kumiq.identity.scim.utils;
+package com.kumiq.identity.scim.exception;
 
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
+import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Weinan Qiu
@@ -25,7 +27,7 @@ public class ExceptionFactory {
         return new PathCompilationNonExpandableException(compiledPath, notExpandablePath);
     }
 
-    protected static class PathCompilationException extends RuntimeException {
+    protected static class PathCompilationException extends RuntimeException implements ApiException {
 
         private final String compilePath;
 
@@ -35,6 +37,26 @@ public class ExceptionFactory {
 
         public String getCompilePath() {
             return compilePath;
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        @Override
+        public String messageCode() {
+            return "error" + this.getClass().getSimpleName();
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ compilePath };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Attempt to compile path [%s] failed.", compilePath);
         }
     }
 
@@ -50,6 +72,16 @@ public class ExceptionFactory {
         public String getVoidPath() {
             return voidPath;
         }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getCompilePath(), voidPath };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("%s Detail: path [%s] did not resolve to anything.", super.defaultMessage(), voidPath);
+        }
     }
 
     public static class PathCompilationMissingAttributeException extends PathCompilationException {
@@ -64,6 +96,16 @@ public class ExceptionFactory {
         public String getRougePath() {
             return rougePath;
         }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getCompilePath(), rougePath };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("%s Detail: path [%s] does not have corresponding attribute.", super.defaultMessage(), rougePath);
+        }
     }
 
     public static class PathCompilationNonExpandableException extends PathCompilationException {
@@ -76,6 +118,16 @@ public class ExceptionFactory {
 
         public String getNotExpandablePath() {
             return notExpandablePath;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getCompilePath(), notExpandablePath };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("%s Detail: path [%s] could not be resolved to concrete index paths", super.defaultMessage(), notExpandablePath);
         }
     }
 
@@ -155,7 +207,7 @@ public class ExceptionFactory {
         return new ResourceImmutabilityViolatedException(ScimConstants.RESOURCE_TYPE_GROUP, resourceId, path);
     }
 
-    protected static class ResourceAccessException extends RuntimeException {
+    protected static class ResourceAccessException extends RuntimeException implements ApiException {
 
         private final String resourceType;
         private String resourceId;
@@ -176,12 +228,42 @@ public class ExceptionFactory {
         public void setResourceId(String resourceId) {
             this.resourceId = resourceId;
         }
+
+        @Override
+        public String messageCode() {
+            return "error." + this.getClass().getSimpleName();
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ resourceType, resourceId };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Failed to access %s[id=%s]", resourceType, resourceId);
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
     }
 
     public static class ResourceNotFoundException extends ResourceAccessException {
 
         public ResourceNotFoundException(String resourceType, String resourceId) {
             super(resourceType, resourceId);
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.NOT_FOUND;
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Could not find %s with id [%s]", getResourceType(), getResourceId());
         }
     }
 
@@ -196,6 +278,28 @@ public class ExceptionFactory {
 
         public Map<String, Object> getConflict() {
             return conflict;
+        }
+
+        private String conflictToString() {
+            return conflict.keySet()
+                    .stream()
+                    .map(s -> s + "=" + conflict.get(s))
+                    .collect(Collectors.joining(","));
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.CONFLICT;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), conflictToString() };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("%s with %s already exists", getResourceType(), conflictToString());
         }
     }
 
@@ -217,6 +321,21 @@ public class ExceptionFactory {
         public String getActualETag() {
             return actualETag;
         }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.PRECONDITION_FAILED;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), accessETag, actualETag };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Requested outdated resource. Requested ETag: [%s], latest ETag: [%s]", accessETag, actualETag);
+        }
     }
 
     public static class ResourceTooManyException extends ResourceAccessException {
@@ -237,6 +356,21 @@ public class ExceptionFactory {
         public int getActualCount() {
             return actualCount;
         }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), capacity, actualCount };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Requested resource count over the limit of [%s]. Try update or add filter.", capacity);
+        }
     }
 
     public static class ResourceUniquenessViolatedException extends ResourceAccessException {
@@ -250,6 +384,21 @@ public class ExceptionFactory {
 
         public String getPath() {
             return path;
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.CONFLICT;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), path };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Value of [%s] violated unique constraint.", path);
         }
     }
 
@@ -265,6 +414,21 @@ public class ExceptionFactory {
         public String getRequiredPath() {
             return requiredPath;
         }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), requiredPath };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Missing required attribute [%s]", requiredPath);
+        }
     }
 
     public static class ResourceReferenceViolatedException extends ResourceAccessException {
@@ -278,6 +442,21 @@ public class ExceptionFactory {
 
         public String getPath() {
             return path;
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), path };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Reference attribute [%s] did not resolve to any existing resource", path);
         }
     }
 
@@ -297,6 +476,21 @@ public class ExceptionFactory {
         public void setViolatedPath(String violatedPath) {
             this.violatedPath = violatedPath;
         }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), violatedPath };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Value change detected at immutable attribute [%s]", violatedPath);
+        }
     }
 
     // ~ generic =======================================================================================================
@@ -305,9 +499,29 @@ public class ExceptionFactory {
         return new ScimException(message);
     }
 
-    public static class ScimException extends RuntimeException {
+    public static class ScimException extends RuntimeException implements ApiException {
         public ScimException(String message) {
             super(message);
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+
+        @Override
+        public String messageCode() {
+            return "error." + this.getClass().getSimpleName();
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[0];
+        }
+
+        @Override
+        public String defaultMessage() {
+            return "Operation failed due to: " + this.getMessage();
         }
     }
 }

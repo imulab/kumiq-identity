@@ -2,7 +2,7 @@ package com.kumiq.identity.scim.task.group.replace;
 
 import com.kumiq.identity.scim.resource.group.Group;
 import com.kumiq.identity.scim.task.shared.LoadOriginalResourceByIdTask;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 
 /**
  * @author Weinan Qiu

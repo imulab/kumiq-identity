@@ -3,7 +3,7 @@ package com.kumiq.identity.scim.path;
 import com.kumiq.identity.scim.filter.FilterCompiler;
 import com.kumiq.identity.scim.filter.Predicate;
 import com.kumiq.identity.scim.resource.misc.Schema;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;

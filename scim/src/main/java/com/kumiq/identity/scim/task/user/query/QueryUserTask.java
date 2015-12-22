@@ -4,7 +4,7 @@ import com.kumiq.identity.scim.database.ResourceDatabase;
 import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.task.Task;
 import com.kumiq.identity.scim.task.UserQueryContext;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 import org.springframework.util.Assert;
 
 import java.util.List;

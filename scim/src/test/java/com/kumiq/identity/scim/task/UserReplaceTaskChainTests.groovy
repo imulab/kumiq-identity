@@ -6,7 +6,7 @@ import com.kumiq.identity.scim.database.InMemoryDatabase
 import com.kumiq.identity.scim.database.ResourceDatabase
 import com.kumiq.identity.scim.resource.core.Meta
 import com.kumiq.identity.scim.resource.user.User
-import com.kumiq.identity.scim.utils.ExceptionFactory
+import com.kumiq.identity.scim.exception.ExceptionFactory
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

@@ -3,7 +3,7 @@ package com.kumiq.identity.scim.task.group.create;
 import com.kumiq.identity.scim.database.ResourceDatabase;
 import com.kumiq.identity.scim.resource.group.Group;
 import com.kumiq.identity.scim.task.shared.CheckUniquenessTask;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 import org.springframework.util.Assert;
 
 import java.util.List;

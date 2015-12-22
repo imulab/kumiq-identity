@@ -1,7 +1,7 @@
 package com.kumiq.identity.scim.path
 
 import com.kumiq.identity.scim.resource.misc.Schema
-import com.kumiq.identity.scim.utils.ExceptionFactory.PathCompiledToVoidException
+import com.kumiq.identity.scim.exception.ExceptionFactory.PathCompiledToVoidException
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

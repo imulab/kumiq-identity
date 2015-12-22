@@ -6,7 +6,7 @@ import com.kumiq.identity.scim.resource.core.Resource;
 import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.task.ResourceOpContext;
 import com.kumiq.identity.scim.task.Task;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 import org.springframework.util.Assert;
 
 import java.util.Optional;

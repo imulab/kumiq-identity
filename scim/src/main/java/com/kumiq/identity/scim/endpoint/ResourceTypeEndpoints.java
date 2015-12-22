@@ -3,7 +3,7 @@ package com.kumiq.identity.scim.endpoint;
 import com.kumiq.identity.scim.database.ResourceDatabase;
 import com.kumiq.identity.scim.resource.constant.ScimConstants;
 import com.kumiq.identity.scim.resource.misc.ResourceType;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;

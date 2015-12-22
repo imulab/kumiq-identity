@@ -3,7 +3,7 @@ package com.kumiq.identity.scim.task.user.get;
 import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.task.Task;
 import com.kumiq.identity.scim.task.UserGetContext;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 
 /**
  * Ensure the user found in previous tasks actually exists (Separated for modularity)

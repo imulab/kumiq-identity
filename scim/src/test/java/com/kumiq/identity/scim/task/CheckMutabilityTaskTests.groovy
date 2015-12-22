@@ -5,7 +5,7 @@ import com.kumiq.identity.scim.resource.group.Group
 import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.task.group.replace.CheckGroupMutabilityTask
 import com.kumiq.identity.scim.task.shared.CheckMutabilityTask
-import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceImmutabilityViolatedException
+import com.kumiq.identity.scim.exception.ExceptionFactory.ResourceImmutabilityViolatedException
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

@@ -8,7 +8,7 @@ import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.resource.user.User
 import com.kumiq.identity.scim.task.shared.CheckReferenceTask
 import com.kumiq.identity.scim.task.user.create.CheckUserReferenceTask
-import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceReferenceViolatedException
+import com.kumiq.identity.scim.exception.ExceptionFactory.ResourceReferenceViolatedException
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before

@@ -9,12 +9,11 @@ import com.kumiq.identity.scim.resource.misc.ResourceType;
 import com.kumiq.identity.scim.resource.misc.Schema;
 import com.kumiq.identity.scim.resource.misc.ServiceProviderConfig;
 import com.kumiq.identity.scim.resource.user.User;
-import com.kumiq.identity.scim.utils.ExceptionFactory;
+import com.kumiq.identity.scim.exception.ExceptionFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.Assert;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

@@ -6,7 +6,7 @@ import com.kumiq.identity.scim.resource.constant.ScimConstants
 import com.kumiq.identity.scim.resource.misc.Schema
 import com.kumiq.identity.scim.resource.user.User
 import com.kumiq.identity.scim.task.user.create.CheckUserUniquenessTask
-import com.kumiq.identity.scim.utils.ExceptionFactory.ResourceUniquenessViolatedException
+import com.kumiq.identity.scim.exception.ExceptionFactory.ResourceUniquenessViolatedException
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
