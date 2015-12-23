@@ -14,6 +14,10 @@
 
        <bean id="assertUserExistsTask" class="com.kumiq.identity.scim.task.user.get.AssertUserExistsTask" />
 
+       <bean id="syncGroupTask" class="com.kumiq.identity.scim.task.shared.SyncGroupTask">
+              <property name="groupDatabase" ref="groupDatabase" />
+       </bean>
+
        <bean id="populateETagHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateETagHeaderTask" />
 
        <bean id="populateLocationHeaderTask" class="com.kumiq.identity.scim.task.shared.PopulateLocationHeaderTask" />
@@ -27,6 +31,7 @@
                             <ref bean="setUserSchemaTask" />
                             <ref bean="lookupUserByIdTask" />
                             <ref bean="assertUserExistsTask" />
+                            <ref bean="syncGroupTask" />
                             <ref bean="populateETagHeaderTask" />
                             <ref bean="populateLocationHeaderTask" />
                             <ref bean="convertUserToMapTask" />

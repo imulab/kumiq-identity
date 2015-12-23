@@ -12,6 +12,10 @@
 
        <bean id="paginateUserTask" class="com.kumiq.identity.scim.task.user.query.PaginateUserTask" />
 
+       <bean id="syncEachGroupTask" class="com.kumiq.identity.scim.task.user.query.SyncEachGroupTask">
+              <property name="syncGroupTask" ref="syncGroupTask" />
+       </bean>
+
        <bean id="mapUserAttributeTask" class="com.kumiq.identity.scim.task.user.query.MapUserAttributeTask" />
 
        <bean id="userQueryTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
@@ -22,6 +26,7 @@
                             <ref bean="assignUserQueryContextTask" />
                             <ref bean="queryUserTask" />
                             <ref bean="paginateUserTask" />
+                            <ref bean="syncEachGroupTask" />
                             <ref bean="mapUserAttributeTask" />
                      </list>
               </property>

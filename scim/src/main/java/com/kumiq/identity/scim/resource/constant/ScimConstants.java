@@ -78,6 +78,7 @@ public class ScimConstants {
     public static final String FILTER_LESS_THAN = "lt";
     public static final String FILTER_LESS_EQUAL = "le";
 
-
+    public static final String GROUP_TYPE_DIRECT = "direct";
+    public static final String GROUP_TYPE_INDIRECT = "indirect";
 
 }
