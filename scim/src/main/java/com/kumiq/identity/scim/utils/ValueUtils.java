@@ -83,4 +83,8 @@ public class ValueUtils {
     public static boolean isQuoted(String value) {
         return value.startsWith("\"") || value.endsWith("\"");
     }
+
+    public static boolean nullSafeEquals(Object a, Object b) {
+        return (a == null && b == null) || (a == b) && (a != null && a.equals(b));
+    }
 }

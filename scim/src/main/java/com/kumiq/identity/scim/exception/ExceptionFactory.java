@@ -493,6 +493,39 @@ public class ExceptionFactory {
         }
     }
 
+    public static class ResourceMultiplePrimaryException extends ResourceAccessException {
+
+        private String path;
+
+        public ResourceMultiplePrimaryException(String resourceType, String resourceId, String path) {
+            super(resourceType, resourceId);
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[]{ getResourceType(), getResourceId(), path };
+        }
+
+        @Override
+        public String defaultMessage() {
+            return String.format("Multiple primary element at attribute [%s]", path);
+        }
+
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
     // ~ generic =======================================================================================================
 
     public static ScimException fail(String message) {

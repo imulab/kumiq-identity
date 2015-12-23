@@ -25,6 +25,8 @@
                             <ref bean="checkUserRequiredTask" />
                             <ref bean="checkUserUniquenessTaskAllowSelf" />
                             <ref bean="checkNewUserReferenceTask" />
+                            <ref bean="switchUserPrimaryTaskChain" />
+                            <ref bean="checkUserUniquePrimaryTaskChain" />
                             <ref bean="updateMetaTask" />
                             <ref bean="saveUserTask" />
                             <ref bean="updateGroupMembershipForNewUserTask" />

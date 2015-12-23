@@ -26,6 +26,22 @@
               <property name="groupDatabase" ref="groupDatabase" />
        </bean>
 
+       <bean id="checkUserUniquePrimaryTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="CheckUserUniquePrimaryTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckEmailUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckPhoneNumberUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckIMSUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckPhotoUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckAddressUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckEntitlementUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckRoleUniquePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.CheckUniquePrimaryTask$CheckX509CertificateUniquePrimaryTask" />
+                     </list>
+              </property>
+       </bean>
+
        <bean id="saveUserTask" class="com.kumiq.identity.scim.task.user.create.SaveUserTask">
               <property name="userDatabase" ref="userDatabase" />
        </bean>
@@ -45,6 +61,7 @@
                             <ref bean="checkUserRequiredTask" />
                             <ref bean="checkUserUniquenessTask" />
                             <ref bean="checkNewUserReferenceTask" />
+                            <ref bean="checkUserUniquePrimaryTaskChain" />
                             <ref bean="saveUserTask" />
                             <ref bean="updateGroupMembershipForNewUserTask" />
                             <ref bean="populateETagHeaderTask" />

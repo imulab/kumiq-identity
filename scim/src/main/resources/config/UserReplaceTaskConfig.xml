@@ -20,6 +20,22 @@
 
        <bean id="arrayProtectionTask" class="com.kumiq.identity.scim.task.shared.PostModificationNullArrayProtectionTask" />
 
+       <bean id="switchUserPrimaryTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
+              <property name="taskName" value="SwitchUserPrimaryTaskChain" />
+              <property name="tasks">
+                     <list>
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchEmailPrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchPhoneNumberPrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchIMSPrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchPhotoPrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchAddressPrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchEntitlementPrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchRolePrimaryTask" />
+                            <bean class="com.kumiq.identity.scim.task.shared.SwitchPrimaryTask$SwitchX509CertificatePrimaryTask" />
+                     </list>
+              </property>
+       </bean>
+
        <bean id="userReplaceTaskChain" class="com.kumiq.identity.scim.task.SimpleTaskChain">
               <property name="taskName" value="UserReplaceTaskChain" />
               <property name="tasks">
@@ -33,6 +49,8 @@
                             <ref bean="checkUserRequiredTask" />
                             <ref bean="checkUserUniquenessTaskAllowSelf" />
                             <ref bean="checkNewUserReferenceTask" />
+                            <ref bean="switchUserPrimaryTaskChain" />
+                            <ref bean="checkUserUniquePrimaryTaskChain" />
                             <ref bean="updateMetaTask" />
                             <ref bean="saveUserTask" />
                             <ref bean="updateGroupMembershipForNewUserTask" />
