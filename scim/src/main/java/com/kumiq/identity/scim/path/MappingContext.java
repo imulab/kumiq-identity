@@ -44,50 +44,46 @@ public class MappingContext {
         Assert.isTrue(schema != null, "Schema is not set");
         Assert.isTrue(!CollectionUtils.isEmpty(this.includePaths), "Include paths are not set");
 
-        updateIncludePaths();
-        updateExcludePaths();
+        updatePaths();
+    }
+
+    private void updatePaths() {
+        List<String> paths = this.schema.findAllPaths();
+        paths.addAll(this.includePaths);
+        paths.addAll(this.excludePaths);
+        List<String> alwaysPaths = new ArrayList<>();
+        List<String> neverPaths = new ArrayList<>();
+        for (String path : paths) {
+            Schema.Attribute attribute = this.schema.findAttributeByPath(path);
+            if (attribute == null) {
+                neverPaths.add(path);
+                continue;
+            }
+
+            if (ScimConstants.RETURNED_ALWAYS.equals(attribute.getReturned()))
+                alwaysPaths.add(path);
+            else if (ScimConstants.RETURNED_NEVER.equals(attribute.getReturned()))
+                neverPaths.add(path);
+        }
+
+        alwaysPaths.forEach(s -> {
+            if (!this.includePaths.contains(s))
+                this.includePaths.add(s);
+            if (this.excludePaths.contains(s))
+                this.excludePaths.remove(s);
+        });
+        neverPaths.forEach(s -> {
+            if (this.includePaths.contains(s))
+                this.includePaths.remove(s);
+            if (!this.excludePaths.contains(s))
+                this.excludePaths.add(s);
+        });
     }
 
     private List<String> defaultPaths() {
         List<String> paths = new ArrayList<>();
         schema.getAttributes().forEach(attribute -> paths.add(attribute.getName()));
         return paths;
-    }
-
-    private void updateIncludePaths() {
-        List<String> pathsToRemove = new ArrayList<>();
-        for (String eachPath : this.includePaths) {
-            Schema.Attribute attribute = this.schema.findAttributeByPath(eachPath);
-
-            if (attribute == null) {
-                pathsToRemove.add(eachPath);
-                continue;
-            }
-
-            if (ScimConstants.RETURNED_NEVER.equals(attribute.getReturned())) {
-                pathsToRemove.add(eachPath);
-                continue;
-            }
-        }
-        includePaths.removeAll(pathsToRemove);
-    }
-
-    private void updateExcludePaths() {
-        List<String> pathsToRemove = new ArrayList<>();
-        for (String eachPath : this.excludePaths) {
-            Schema.Attribute attribute = schema.findAttributeByPath(eachPath);
-
-            if (attribute == null) {
-                pathsToRemove.add(eachPath);
-                continue;
-            }
-
-            if (ScimConstants.RETURNED_ALWAYS.equals(attribute.getReturned())) {
-                pathsToRemove.add(eachPath);
-                continue;
-            }
-        }
-        excludePaths.removeAll(pathsToRemove);
     }
 
     public Object getData() {
