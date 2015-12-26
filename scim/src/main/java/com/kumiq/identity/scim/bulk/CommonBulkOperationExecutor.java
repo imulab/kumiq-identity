@@ -33,7 +33,6 @@ public abstract class CommonBulkOperationExecutor<T extends ResourceOpContext> i
             handleSuccessfulExecution(operationContext, response);
         } catch (Exception ex) {
             handleErrorExecution(ex, response);
-            throw ex;
         }
 
         return response;

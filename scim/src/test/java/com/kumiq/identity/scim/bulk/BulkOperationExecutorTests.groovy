@@ -179,4 +179,22 @@ class BulkOperationExecutorTests {
         BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
         Assert.assertEquals(HttpStatus.NO_CONTENT, response.httpStatus)
     }
+
+    @Test
+    void testPatchGroup() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.PATCH,
+                bulkId: 'qwerty',
+                path: '/Groups/group1',
+                version: 'W/"1"',
+                jsonData: [
+                        'Operations': [
+                                ['op': 'replace', 'path': 'displayName', 'value': 'AdminGroup']
+                        ]
+                ]
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.httpStatus)
+    }
 }

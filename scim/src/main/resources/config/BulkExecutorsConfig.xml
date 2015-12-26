@@ -35,6 +35,10 @@
               <property name="task" ref="userPatchTaskChain" />
        </bean>
 
+       <bean id="patchGroupBulkOperationExecutor" class="com.kumiq.identity.scim.bulk.PatchGroupBulkOperationExecutor">
+              <property name="task" ref="groupPatchTaskChain" />
+       </bean>
+
        <bean id="bulkOperationExecutor" class="com.kumiq.identity.scim.bulk.DelegatingBulkOperationExecutor">
               <property name="executors">
                      <list>
@@ -45,6 +49,7 @@
                             <ref bean="createGroupBulkOperationExecutor" />
                             <ref bean="deleteGroupBulkOperationExecutor" />
                             <ref bean="replaceGroupBulkOperationExecutor" />
+                            <ref bean="patchGroupBulkOperationExecutor" />
                      </list>
               </property>
        </bean>
