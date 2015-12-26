@@ -85,4 +85,23 @@ class BulkOperationExecutorTests {
         BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
         Assert.assertEquals(HttpStatus.NO_CONTENT, response.httpStatus)
     }
+
+    @Test
+    void testReplaceUser() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.PUT,
+                bulkId: 'qwerty',
+                path: '/Users/user1',
+                version: 'W/"1"',
+                jsonData: [
+                        'schemas': [ScimConstants.URN_USER],
+                        'userName': 'davidiamyou'
+                ]
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+        Assert.assertEquals(HttpStatus.OK, response.httpStatus)
+        Assert.assertNotNull(response.version)
+        Assert.assertNotNull(response.response)
+    }
 }
