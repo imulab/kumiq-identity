@@ -561,6 +561,18 @@ public class ExceptionFactory {
     // ~ misc ==========================================================================================================
 
     public static class InvalidRequestBodyException extends RuntimeException implements ApiException {
+
+        private Map<String, Object> details;
+
+        public InvalidRequestBodyException() {
+            super();
+        }
+
+        public InvalidRequestBodyException(Map<String, Object> details) {
+            super();
+            this.details = details;
+        }
+
         @Override
         public HttpStatus httpStatus() {
             return HttpStatus.BAD_REQUEST;
@@ -579,6 +591,11 @@ public class ExceptionFactory {
         @Override
         public String defaultMessage() {
             return "Request Body is invalid.";
+        }
+
+        @Override
+        public Map<String, Object> userInfo() {
+            return this.details;
         }
     }
 }

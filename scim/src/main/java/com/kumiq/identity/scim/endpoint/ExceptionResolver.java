@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Weinan Qiu
@@ -69,11 +71,15 @@ public class ExceptionResolver {
         @JsonSerialize(using = BulkOpResponse.HttpStatusJsonSerializer.class)
         public HttpStatus statusCode;
 
+        @JsonProperty("details")
+        private Map<String, Object> details;
+
         public static ErrorResponse fromApiException(ApiException ex) {
             ErrorResponse response = new ErrorResponse();
             response.errorName = ex.getClass().getSimpleName();
             response.errorTime = new Date();
             response.statusCode = ex.httpStatus();
+            response.details = CollectionUtils.isEmpty(ex.userInfo()) ? null : ex.userInfo();
             return response;
         }
 

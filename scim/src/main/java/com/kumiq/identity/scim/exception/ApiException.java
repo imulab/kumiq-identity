@@ -2,6 +2,9 @@ package com.kumiq.identity.scim.exception;
 
 import org.springframework.http.HttpStatus;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Provides exception information which could be rendering in the API.
  *
@@ -36,4 +39,13 @@ public interface ApiException {
      * @return
      */
     String defaultMessage();
+
+    /**
+     * Extra error information
+     *
+     * @return
+     */
+    default Map<String, Object> userInfo() {
+        return new HashMap<>();
+    }
 }

@@ -18,11 +18,22 @@ import java.util.Map;
  */
 public class BulkOpRequest {
 
+    @JsonProperty("schemas")
+    private List<String> schemas;
+
     @JsonProperty("failOnErrors")
     private Integer failOnErrors = Integer.MAX_VALUE;
 
     @JsonProperty("Operations")
     private List<Operation> operations;
+
+    public List<String> getSchemas() {
+        return schemas;
+    }
+
+    public void setSchemas(List<String> schemas) {
+        this.schemas = schemas;
+    }
 
     public List<Operation> getOperations() {
         return operations;
