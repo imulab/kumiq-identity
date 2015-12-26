@@ -104,4 +104,22 @@ class BulkOperationExecutorTests {
         Assert.assertNotNull(response.version)
         Assert.assertNotNull(response.response)
     }
+
+    @Test
+    void testPatchUser() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.PATCH,
+                bulkId: 'qwerty',
+                path: '/Users/user1',
+                version: 'W/"1"',
+                jsonData: [
+                        'Operations': [
+                                ['op': 'replace', 'path': 'userName', 'value': 'davidqiu']
+                        ]
+                ]
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.httpStatus)
+    }
 }
