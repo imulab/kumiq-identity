@@ -112,6 +112,19 @@ class BulkOperationExecutorTests {
     }
 
     @Test
+    void testDeleteGroup() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.DELETE,
+                bulkId: 'qwerty',
+                path: '/Groups/group1',
+                version: 'W/"1"'
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.httpStatus)
+    }
+
+    @Test
     void testReplaceUser() {
         BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
                 method: HttpMethod.PUT,
