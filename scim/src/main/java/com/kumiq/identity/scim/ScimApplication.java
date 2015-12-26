@@ -10,7 +10,8 @@ import org.springframework.context.annotation.ImportResource;
  */
 @SpringBootApplication
 @ImportResource(value = {
-        "config/DataInitializationConfig.xml"
+        "config/DataInitializationConfig.xml",
+        "config/BulkExecutorsConfig.xml"
 })
 public class ScimApplication {
 

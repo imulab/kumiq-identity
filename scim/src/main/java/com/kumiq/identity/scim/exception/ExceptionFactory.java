@@ -557,4 +557,28 @@ public class ExceptionFactory {
             return "Operation failed due to: " + this.getMessage();
         }
     }
+
+    // ~ misc ==========================================================================================================
+
+    public static class InvalidRequestBodyException extends RuntimeException implements ApiException {
+        @Override
+        public HttpStatus httpStatus() {
+            return HttpStatus.BAD_REQUEST;
+        }
+
+        @Override
+        public String messageCode() {
+            return "error." + this.getClass().getSimpleName();
+        }
+
+        @Override
+        public Object[] messageArgs() {
+            return new Object[0];
+        }
+
+        @Override
+        public String defaultMessage() {
+            return "Request Body is invalid.";
+        }
+    }
 }

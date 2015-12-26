@@ -27,8 +27,11 @@ public class PopulateLocationHeaderTask<T extends Resource> implements Task<Reso
             return;
 
         String location = context.getResource().getMeta().getLocation();
-        if (!StringUtils.isEmpty(location))
-            context.getHttpResponse().setHeader(LOCATION, location);
+        if (!StringUtils.isEmpty(location)) {
+            if (context.getHttpResponse() != null)
+                context.getHttpResponse().setHeader(LOCATION, location);
+            context.getUserInfo().put(LOCATION, location);
+        }
     }
 
     @Override

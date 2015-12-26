@@ -2,6 +2,7 @@ package com.kumiq.identity.scim.endpoint;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kumiq.identity.scim.endpoint.support.BulkOpResponse;
 import com.kumiq.identity.scim.exception.ApiException;
 import com.kumiq.identity.scim.utils.JsonDateToUnixTimestampSerializer;
 import org.slf4j.Logger;
@@ -65,13 +66,14 @@ public class ExceptionResolver {
         public String message;
 
         @JsonProperty("statusCode")
-        public int statusCode;
+        @JsonSerialize(using = BulkOpResponse.HttpStatusJsonSerializer.class)
+        public HttpStatus statusCode;
 
         public static ErrorResponse fromApiException(ApiException ex) {
             ErrorResponse response = new ErrorResponse();
             response.errorName = ex.getClass().getSimpleName();
             response.errorTime = new Date();
-            response.statusCode = ex.httpStatus().value();
+            response.statusCode = ex.httpStatus();
             return response;
         }
 
@@ -80,7 +82,7 @@ public class ExceptionResolver {
             response.errorName = "GenericException";
             response.errorTime = new Date();
             response.message = ex.getLocalizedMessage();
-            response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR.value();
+            response.statusCode = HttpStatus.INTERNAL_SERVER_ERROR;
             return response;
         }
 
@@ -108,11 +110,11 @@ public class ExceptionResolver {
             this.message = message;
         }
 
-        public int getStatusCode() {
+        public HttpStatus getStatusCode() {
             return statusCode;
         }
 
-        public void setStatusCode(int statusCode) {
+        public void setStatusCode(HttpStatus statusCode) {
             this.statusCode = statusCode;
         }
     }

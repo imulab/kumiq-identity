@@ -27,7 +27,9 @@ public class PopulateETagHeaderTask<T extends Resource> implements Task<Resource
             return;
 
         String weakETag = ETagUtils.createWeakEtag(context.getResource().getMeta().getVersion());
-        context.getHttpResponse().setHeader(ETAG, weakETag);
+        if (context.getHttpResponse() != null)
+            context.getHttpResponse().setHeader(ETAG, weakETag);
+        context.getUserInfo().put(ETAG, weakETag);
     }
 
     @Override
