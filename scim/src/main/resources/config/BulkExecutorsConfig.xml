@@ -8,10 +8,15 @@
               <property name="userClazz" value="com.kumiq.identity.scim.resource.user.ScimUser" />
        </bean>
 
+       <bean id="deleteUserBulkOperationExecutor" class="com.kumiq.identity.scim.bulk.DeleteUserBulkOperationExecutor">
+              <property name="task" ref="deleteUserTaskChain" />
+       </bean>
+
        <bean id="bulkOperationExecutor" class="com.kumiq.identity.scim.bulk.DelegatingBulkOperationExecutor">
               <property name="executors">
                      <list>
                             <ref bean="createUserBulkOperationExecutor" />
+                            <ref bean="deleteUserBulkOperationExecutor" />
                      </list>
               </property>
        </bean>

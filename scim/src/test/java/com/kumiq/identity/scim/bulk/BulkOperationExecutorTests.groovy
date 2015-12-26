@@ -7,6 +7,7 @@ import com.kumiq.identity.scim.database.ResourceDatabase.UserDatabase
 import com.kumiq.identity.scim.endpoint.support.BulkOpRequest
 import com.kumiq.identity.scim.endpoint.support.BulkOpResponse
 import com.kumiq.identity.scim.resource.constant.ScimConstants
+import com.kumiq.identity.scim.resource.core.Meta
 import com.kumiq.identity.scim.resource.user.ScimUser
 import org.junit.After
 import org.junit.Assert
@@ -43,7 +44,7 @@ class BulkOperationExecutorTests {
 
     @Before
     void setup() {
-        ScimUser user = new ScimUser(id: 'user1', userName: 'user1')
+        ScimUser user = new ScimUser(id: 'user1', meta: new Meta(version: 1l), userName: 'user1')
         userDatabase.save(user)
     }
 
@@ -70,5 +71,18 @@ class BulkOperationExecutorTests {
         Assert.assertNotNull(response.location)
         Assert.assertNotNull(response.version)
         Assert.assertNotNull(response.response)
+    }
+
+    @Test
+    void testDeleteUser() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.DELETE,
+                bulkId: 'qwerty',
+                path: '/Users/user1',
+                version: 'W/"1"'
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+        Assert.assertEquals(HttpStatus.NO_CONTENT, response.httpStatus)
     }
 }

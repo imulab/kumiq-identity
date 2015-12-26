@@ -33,6 +33,7 @@ public abstract class CommonBulkOperationExecutor<T extends ResourceOpContext> i
             handleSuccessfulExecution(operationContext, response);
         } catch (Exception ex) {
             handleErrorExecution(ex, response);
+            throw ex;
         }
 
         return response;
@@ -54,8 +55,10 @@ public abstract class CommonBulkOperationExecutor<T extends ResourceOpContext> i
 
     protected void handleSuccessfulExecution(T context, BulkOpResponse.Operation response) {
         response.setHttpStatus(successHttpStatus());
-        response.setVersion(context.getUserInfo().get(PopulateETagHeaderTask.ETAG).toString());
-        response.setLocation(context.getUserInfo().get(PopulateLocationHeaderTask.LOCATION).toString());
+        if (context.getUserInfo().containsKey(PopulateETagHeaderTask.ETAG))
+            response.setVersion(context.getUserInfo().get(PopulateETagHeaderTask.ETAG).toString());
+        if (context.getUserInfo().containsKey(PopulateLocationHeaderTask.LOCATION))
+            response.setLocation(context.getUserInfo().get(PopulateLocationHeaderTask.LOCATION).toString());
     }
 
     protected void handleErrorExecution(Exception exception, BulkOpResponse.Operation response) {
