@@ -144,6 +144,25 @@ class BulkOperationExecutorTests {
     }
 
     @Test
+    void testReplaceGroup() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.PUT,
+                bulkId: 'qwerty',
+                path: '/Groups/group1',
+                version: 'W/"1"',
+                jsonData: [
+                        'schemas': [ScimConstants.URN_GROUP],
+                        'displayName': 'FooBarGroupChanged'
+                ]
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+        Assert.assertEquals(HttpStatus.OK, response.httpStatus)
+        Assert.assertNotNull(response.version)
+        Assert.assertNotNull(response.response)
+    }
+
+    @Test
     void testPatchUser() {
         BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
                 method: HttpMethod.PATCH,
