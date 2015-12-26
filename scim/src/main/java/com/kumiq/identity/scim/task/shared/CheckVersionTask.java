@@ -22,6 +22,7 @@ import java.util.Optional;
 public abstract class CheckVersionTask<T extends Resource> implements Task<ResourceOpContext<T>> {
 
     public static final String IF_MATCH = "If-Match";
+    public static final String VERSION_KEY = "Version";
 
     @Autowired
     private Environment environment;
@@ -45,7 +46,9 @@ public abstract class CheckVersionTask<T extends Resource> implements Task<Resou
 
         T resource = result.get();
         String actualETag = ETagUtils.createWeakEtag(resource.getMeta().getVersion());
-        String accessETag = context.getHttpRequest().getHeader(IF_MATCH);
+        String accessETag = context.getUserInfo().containsKey(VERSION_KEY) ?
+                context.getUserInfo().get(VERSION_KEY).toString() :
+                context.getHttpRequest().getHeader(IF_MATCH);
 
         if (!actualETag.equals(accessETag))
             throw versionMismatchException(context.getId(), accessETag, actualETag);
