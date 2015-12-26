@@ -8,6 +8,7 @@ import com.kumiq.identity.scim.endpoint.support.BulkOpRequest
 import com.kumiq.identity.scim.endpoint.support.BulkOpResponse
 import com.kumiq.identity.scim.resource.constant.ScimConstants
 import com.kumiq.identity.scim.resource.core.Meta
+import com.kumiq.identity.scim.resource.group.ScimGroup
 import com.kumiq.identity.scim.resource.user.ScimUser
 import org.junit.After
 import org.junit.Assert
@@ -46,11 +47,15 @@ class BulkOperationExecutorTests {
     void setup() {
         ScimUser user = new ScimUser(id: 'user1', meta: new Meta(version: 1l), userName: 'user1')
         userDatabase.save(user)
+
+        ScimGroup group = new ScimGroup(id: 'group1', meta: new Meta(version: 1l), displayName: 'group1')
+        groupDatabase.save(group)
     }
 
     @After
     void cleanUp() {
         (userDatabase as InMemoryDatabase.UserInMemoryDatabase).reset()
+        (groupDatabase as InMemoryDatabase.GroupInMemoryDatabase).reset()
     }
 
     @Test
@@ -62,6 +67,26 @@ class BulkOperationExecutorTests {
                 jsonData: [
                         'schemas': [ScimConstants.URN_USER],
                         'userName': 'davidiamyou'
+                ]
+        )
+
+        BulkOpResponse.Operation response = bulkOperationExecutor.execute(operation)
+
+        Assert.assertEquals(HttpStatus.CREATED, response.httpStatus)
+        Assert.assertNotNull(response.location)
+        Assert.assertNotNull(response.version)
+        Assert.assertNotNull(response.response)
+    }
+
+    @Test
+    void testCreateGroup() {
+        BulkOpRequest.Operation operation = new BulkOpRequest.Operation(
+                method: HttpMethod.POST,
+                bulkId: 'qwerty',
+                path: '/Groups',
+                jsonData: [
+                        'schemas': [ScimConstants.URN_GROUP],
+                        'displayName': 'MyGroup'
                 ]
         )
 

@@ -8,6 +8,11 @@
               <property name="userClazz" value="com.kumiq.identity.scim.resource.user.ScimUser" />
        </bean>
 
+       <bean id="createGroupBulkOperationExecutor" class="com.kumiq.identity.scim.bulk.CreateGroupBulkOperationExecutor">
+              <property name="task" ref="createGroupTaskChain" />
+              <property name="groupClazz" value="com.kumiq.identity.scim.resource.group.ScimGroup" />
+       </bean>
+
        <bean id="deleteUserBulkOperationExecutor" class="com.kumiq.identity.scim.bulk.DeleteUserBulkOperationExecutor">
               <property name="task" ref="deleteUserTaskChain" />
        </bean>
@@ -28,6 +33,7 @@
                             <ref bean="deleteUserBulkOperationExecutor" />
                             <ref bean="replaceUserBulkOperationExecutor" />
                             <ref bean="patchUserBulkOperationExecutor" />
+                            <ref bean="createGroupBulkOperationExecutor" />
                      </list>
               </property>
        </bean>

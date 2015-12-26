@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kumiq.identity.scim.endpoint.support.BulkOpRequest;
 import com.kumiq.identity.scim.endpoint.support.PatchOpBody;
 import com.kumiq.identity.scim.exception.ExceptionFactory;
-import com.kumiq.identity.scim.resource.user.User;
 import com.kumiq.identity.scim.task.UserPatchContext;
 import com.kumiq.identity.scim.task.shared.CheckVersionTask;
 import org.springframework.http.HttpMethod;
