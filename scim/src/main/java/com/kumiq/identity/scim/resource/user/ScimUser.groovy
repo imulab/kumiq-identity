@@ -12,5 +12,5 @@ import com.kumiq.identity.scim.resource.extension.EnterpriseExtension
 class ScimUser extends User implements EnterpriseExtension {
 
     @JsonProperty('urn:ietf:params:scim:schemas:extension:enterprise:2.0:User')
-    EnterpriseExtension enterpriseExtension
+    EnterpriseExtension.Extension enterpriseExtension
 }
