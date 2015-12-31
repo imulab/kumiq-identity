@@ -2,7 +2,7 @@
 
 ## Overview
 
-The KUMIQ Identity project is an implementation of [SCIM v2.0](http://www.simplecloud.info) by [Weinan Qiu](http://weinanqiu.com). It supports most of the features specified in the documentation and provides an easy way to add custom extensions to the resource schema.
+The KUMIQ Identity project is an implementation of [SCIM v2.0](http://www.simplecloud.info) by Weinan Qiu. It supports most of the features specified in the documentation and provides an easy way to add custom extensions to the resource schema.
 
 ## Features
 
