@@ -1,5 +1,9 @@
 # KUMIQ Identity
 
+## Shameless Plug before Everything Else
+
+If you are interested in SCIM v2 implemention in Go, please check out [go-scim](https://github.com/davidiamyou/go-scim)
+
 ## Overview
 
 The KUMIQ Identity project is an implementation of [SCIM v2.0](http://www.simplecloud.info) by Weinan Qiu. It supports most of the features specified in the documentation and provides an easy way to add custom extensions to the resource schema.
